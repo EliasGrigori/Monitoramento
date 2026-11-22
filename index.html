@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR" data-t="claro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#121524">
-<title>Monitoramento · Fazenda Matriz</title>
+<title>Monitoramento</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>/* ===== leaflet.css (BSD-2) ===== */
@@ -668,7 +668,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
 /* ===== estilo.css ===== */
 :root{--ab0:#f7f5ef;--ab1:#fffefb;--ab2:#f2eee4;--abd:#e6dfcf;--atx:#1e1b14;--atx2:#5b5443;--atx3:#746c55;--aa:#9a7128;--aaTx:#7d5a1c;--aaS:rgba(154,113,40,.12);--aok:#2f7d4f;--awa:#86590a;--acr:#b33a32;--ouro:linear-gradient(135deg,#f7df9e 0%,#d9b46a 42%,#b4862f 100%);
---mE:#2e8b57;--mC:#d9a227;--mD:#cf4a3c;--mX:#9aa0a6;--fd:'Fraunces',Georgia,serif;--f:'Source Sans 3',system-ui,-apple-system,'Segoe UI',sans-serif;--r:10px;--rs:7px;--eo:cubic-bezier(.22,1,.36,1);--sh:0 10px 30px rgba(20,15,5,.16)}
+--mE:#2e8b57;--mC:#d9a227;--mD:#cf4a3c;--mX:#9aa0a6;--mS:#cfd3d8;--fd:'Fraunces',Georgia,serif;--f:'Source Sans 3',system-ui,-apple-system,'Segoe UI',sans-serif;--r:10px;--rs:7px;--eo:cubic-bezier(.22,1,.36,1);--sh:0 10px 30px rgba(20,15,5,.16)}
 :root[data-t=escuro]{--ab0:#0b0d16;--ab1:#121524;--ab2:#181c2e;--abd:#2a2b3b;--atx:#f3eee3;--atx2:#bcb3a1;--atx3:#948c7c;--aa:#d9b46a;--aaTx:#f0d48f;--aaS:rgba(217,180,106,.15);--aok:#7fbf98;--awa:#e2b55f;--acr:#e38b7d;--sh:0 10px 30px rgba(0,0,0,.5);color-scheme:dark}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html{height:100%;margin:0;overflow:hidden}body{margin:0;position:fixed;inset:0;width:100%;overflow:clip}
@@ -726,8 +726,8 @@ svg{display:block}
 .sh-b{padding:4px 14px 12px;overflow:auto;display:flex;flex-direction:column;gap:12px;min-height:0}
 .sh-f{padding:8px 14px 12px;border-top:1px solid var(--abd);flex:none}
 .pil{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border-radius:12px;font:600 12.5px/1 var(--f);color:#fff}
-.pil.E{background:#23764a}.pil.C{background:var(--mC);color:#2a1f00}.pil.D{background:#b23a2f}.pil.X{background:var(--mX);color:#222}
-.sw{width:10px;height:10px;border-radius:3px;display:inline-block}.sw.E{background:var(--mE)}.sw.C{background:var(--mC)}.sw.D{background:var(--mD)}
+.pil.E{background:#23764a}.pil.C{background:var(--mC);color:#2a1f00}.pil.D{background:#b23a2f}.pil.X{background:var(--mX);color:#222}.pil.S{background:var(--mS);color:#222}.pil.V{background:var(--mX);color:#222}.pil.F{background:#5f6368;color:#fff}
+.sw{width:10px;height:10px;border-radius:3px;display:inline-block}.sw.E{background:var(--mE)}.sw.C{background:var(--mC)}.sw.D{background:var(--mD)}.sw.S{background:var(--mS)}.sw.V{background:var(--mX)}.sw.F{background:#5f6368}
 .reg{display:flex;flex-direction:column;gap:5px}
 .reg .l{display:flex;justify-content:space-between;gap:8px;font-size:14px}.reg .l b{font-variant-numeric:tabular-nums}
 .reg .b{position:relative;height:10px;border-radius:5px;display:flex;overflow:visible}
@@ -777,7 +777,7 @@ textarea.inp{height:90px;padding:10px 12px;resize:none}
 .faixa .ft svg.f{width:100%;height:100%}
 .pr-l{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--abd)}.pr-l .g{flex:1;min-width:0}.pr-l small{color:var(--atx3);display:block;font-size:12.5px}
 .pr-l .step{width:134px;flex:none}.pr-l .step button{width:44px;height:44px}
-.aviso{padding:10px 12px;border-radius:var(--rs);font-size:14px;border:1px solid}
+.aviso{padding:10px 12px;border-radius:var(--rs);font-size:14px;border:1px solid var(--abd)}
 .aviso.D{border-color:var(--acr);background:color-mix(in srgb,var(--acr) 10%,transparent);color:var(--acr)}.aviso.C{border-color:var(--awa);background:color-mix(in srgb,var(--awa) 10%,transparent)}
 .aviso a{font-weight:700;text-decoration:underline;cursor:pointer}
 .sem{padding:12px 14px;background:var(--ab1);border-bottom:1px solid var(--abd)}
@@ -915,6 +915,9 @@ textarea.inp{height:90px;padding:10px 12px;resize:none}
 .hist{display:flex;align-items:flex-end;gap:4px;margin-top:6px;height:76px}.hist div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;min-width:0;font-size:11.5px;color:var(--atx3)}
 .hist i{display:block;width:100%;max-width:28px;background:var(--aa);opacity:.55;border-radius:3px 3px 0 0}.hist b{font-weight:600;color:var(--atx2)}
 .rv-nao{padding:10px 0;font-size:14px;color:var(--atx2)}.rv-nao b{display:block;color:var(--atx3);font-size:12.5px}
+
+/* v0.6.0 · ITEM 251: no PC não aparece o Monitorar (a visita é no celular, dentro da área) */
+.pc [data-act=mon],.pc [data-act=monit],.pc [data-act=retomaAb]{display:none!important}
 </style></head><body>
 <div id="app"><nav class="rail" id="rail"></nav><div id="view"></div><nav class="nav" id="nav"></nav></div>
 <div class="sheet cheia" id="gsh" style="z-index:900"></div><div class="sheet" id="gsh2" style="z-index:910"></div><div class="ft-fund" id="fg" style="z-index:950"></div><div class="toast" id="toast" role="status" style="z-index:990"></div>
@@ -928,7 +931,7 @@ textarea.inp{height:90px;padding:10px 12px;resize:none}
 //# sourceMappingURL=leaflet.js.map
 /* ===== versao.js ===== */
 /* Monitoramento · versão do módulo (o montar.py lê esta linha e carimba o cache do sw.js). */
-const VERSAO = '0.5.0';
+const VERSAO = '0.6.0';
 
 /* ===== icones.js ===== */
 /* Monitoramento · icones.js — ícones do módulo (traço de 24 px, cor herdada) e atalhos. Os 4 estádios têm ícone próprio. Prefixo: ico/P. */
@@ -966,12 +969,17 @@ const esc = s => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({ "&": "&am
    - (até a v0.4.1: a praga ficava no pior ponto; desde a v0.5.0, no resultado da visita, ver abaixo);
    - o talhão fica com o PIOR nível entre as pragas;
    - a cor vem da ÚLTIMA visita e não envelhece (a idade aparece em dias, ao lado);
-   - os limites mudam por metodologia (ex.: Podridão de Raízes, mamão de Russas x Jaguaruana).
+   - os limites mudam por metodologia (ex.: a mesma praga com limites diferentes em duas fazendas).
    SUPOSIÇÃO (não observada no Cropwise): valor IGUAL ao limite já conta como o nível do limite.
    Está concentrada em IGUAL_AO_LIMITE_CONTA para ser trocada num lugar só. */
 const Sev = (function () {
   const ORDEM = { E: 0, C: 1, D: 2 };
-  const NOMES = { E: 'Equilíbrio', C: 'Controle', D: 'Dano', X: 'Sem visita' };
+  /* v0.6.0 · 'S' = monitorado, mas sem situação (nenhuma praga com limite foi avaliada): na Cropwise a célula fica cinza (C11) */
+  const NOMES = { E: 'Equilíbrio', C: 'Controle', D: 'Dano', X: 'Sem visita', S: 'Sem situação', V: 'Vencida', F: 'Encerrado' };
+  /* v0.6.0 · C12 · "Limite de dias" da Cropwise: passou de N dias da última visita, a cor deixa de valer (0 = sempre vale) */
+  const vencida = (dias, limite) => +limite > 0 && dias != null && dias > +limite;
+  /* v0.6.0 · inimigos naturais (ex.: crisopídeo) são anotados, mas nunca pintam a área (na Cropwise ficam sem cor: C10) */
+  const naoPinta = praga => /inimigo/i.test(String((praga && praga.categoria) || ''));
   const IGUAL_AO_LIMITE_CONTA = true; /* suposição */
   const PRAZO_PADRAO_DIAS = 7;
 
@@ -991,6 +999,7 @@ const Sev = (function () {
   const pior = (a, b) => (a == null ? b : b == null ? a : ORDEM[b] > ORDEM[a] ? b : a);
   /* indicadores que entram no mapa: marcados e com limite */
   function contam(praga, metodologia) {
+    if (naoPinta(praga)) return [];
     return (praga.indicadores || []).filter(i => i.mapa && limitesDe(i, metodologia));
   }
   /* v0.5.0 · contagem no estilo Cropwise (aprovado no ITEM 250, 22/11/2026), visto no Cropwise Protector:
@@ -1031,11 +1040,15 @@ const Sev = (function () {
   function nivelPraga(visita, praga, metodologia) {
     let r = null; contam(praga, metodologia).forEach(i => { r = pior(r, nivelIndicador(visita, i, metodologia)); }); return r;
   }
-  /* nível da área = o pior entre as pragas; 'X' se não há visita ou nada conta */
+  /* nível de uma categoria (Doença, Inseto...) = a pior praga dela (a linha da categoria na tabela da Cropwise: C9) */
+  function nivelCategoria(visita, pragas, categoria, metodologia) {
+    let r = null; (pragas || []).filter(p => (p.categoria || 'Sem categoria') === categoria).forEach(p => { r = pior(r, nivelPraga(visita, p, metodologia)); }); return r;
+  }
+  /* nível da área = o pior entre as pragas; 'X' se não há visita; 'S' se houve visita mas nada com limite foi avaliado */
   function nivelArea(visita, pragas, metodologia) {
     if (!visita) return 'X';
     let r = null; (pragas || []).forEach(p => { r = pior(r, nivelPraga(visita, p, metodologia)); });
-    return r == null ? 'X' : r;
+    return r == null ? 'S' : r;
   }
   /* pior amostra de um indicador: { v, n } (v na escala do limite); fica para mostrar ao lado da média */
   function piorLeitura(visita, ind, metodologia) {
@@ -1062,13 +1075,14 @@ const Sev = (function () {
   /* vencimento: dias que faltam para a próxima visita (negativo = atrasado) */
   function vencimento(dias, prazo) { return (prazo || PRAZO_PADRAO_DIAS) - dias; }
   /* estado completo da área para o mapa */
-  function estadoArea(area, visitas, pragas, hoje) {
+  function estadoArea(area, visitas, pragas, hoje, limiteDias) {
     const v = ultimaVisita(visitas, area.id);
     if (!v) return { nivel: 'X', dias: null, venc: null, visita: null };
     const dias = diasDesde(v.data, hoje);
-    return { nivel: nivelArea(v, pragas, area.metodologia), dias: dias, venc: vencimento(dias, area.prazoDias), visita: v };
+    const n = nivelArea(v, pragas, area.metodologia);
+    return { nivel: vencida(dias, limiteDias) ? 'V' : n, nivelVisita: n, dias: dias, venc: vencimento(dias, area.prazoDias), visita: v };
   }
-  return { ORDEM, NOMES, IGUAL_AO_LIMITE_CONTA, PRAZO_PADRAO_DIAS, limitesDe, nivel, pior, contam, tipoDe, baseDe, escalaAmostra, resultado, texto, nivelPonto, nivelIndicador, nivelPraga, nivelArea, piorLeitura, ultimaVisita, diasDesde, vencimento, estadoArea };
+  return { vencida, naoPinta, nivelCategoria, ORDEM, NOMES, IGUAL_AO_LIMITE_CONTA, PRAZO_PADRAO_DIAS, limitesDe, nivel, pior, contam, tipoDe, baseDe, escalaAmostra, resultado, texto, nivelPonto, nivelIndicador, nivelPraga, nivelArea, piorLeitura, ultimaVisita, diasDesde, vencimento, estadoArea };
 })();
 if (typeof module !== 'undefined') module.exports = Sev;
 
@@ -1484,10 +1498,10 @@ const Saida = (function () {
 if (typeof module !== 'undefined') module.exports = Saida;
 
 /* ===== seed.js ===== */
-/* Monitoramento · seed.js — dados de demonstração (inventados) com coordenadas perto de Russas-CE. Prefixo: Seed.
+/* Monitoramento · seed.js — dados de demonstração (inventados) num lugar neutro (sem relação com a fazenda real). Prefixo: Seed.
    Só roda no modo local e só se as coleções estiverem vazias. Nada daqui vai para a conta real. */
 const Seed = (function () {
-  const BASE = [-4.9118, -37.9755];
+  const BASE = [-5.2731, -38.1547];
   const rng = s => () => (s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296;
   const dataAntes = (hoje, n) => { const d = new Date(hoje + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() - n); return d.toISOString().slice(0, 10); };
   /* v0.5.0 · pragas no estilo Cropwise (tipos e limites INVENTADOS para a demonstração; os reais vêm do técnico):
@@ -1499,6 +1513,8 @@ const Seed = (function () {
     ['pulgao', 'Pulgão', 'Aphis spp.', 'Inseto', [['pulgao_i', 'Ramos com colônia', 'porcentagem', 'ramos', 6, 20, 40]]],
     ['antrac', 'Antracnose', 'Colletotrichum sp.', 'Doença', [['antrac_i', 'Plantas com lesão', 'presenca', '', 0, 25, 50]]]
   ].map(p => ({ id: p[0], nome: p[1], cientifico: p[2], categoria: p[3], indicadores: p[4].map(q => Object.assign({ id: q[0], nome: q[1], tipo: q[2], mapa: true, limites: { padrao: { c: q[5], d: q[6] } } }, q[3] ? { unidade: q[3] } : {}, q[4] ? { base: q[4] } : {})) }));
+  /* v0.6.0 · inimigo natural (C10): é contado, mas não pinta. Valores tirados de uma conta fixa, sem mexer no sorteio das outras pragas */
+  const INIMIGO = { id: 'cris', nome: 'Crisopídeo', cientifico: 'Chrysoperla sp.', categoria: 'Inimigo natural', indicadores: [{ id: 'cris_i', nome: 'Larvas e adultos', tipo: 'media', unidade: 'insetos', mapa: false }] };
   /* uma área: pontos em serpentina dentro do polígono, com um foco de infestação */
   function pontosDe(area, hot, idade, semente) {
     const R = rng(semente), P = area.poly, cx = Geo.caixa(P), alt = Geo.dist(cx[0], [cx[1][0], cx[0][1]]), larg = Geo.dist(cx[0], [cx[0][0], cx[1][1]]);
@@ -1512,24 +1528,25 @@ const Seed = (function () {
     return linhas.flat().map((p, i) => {
       const d = Geo.dist(p, foco) / esp, v = {};
       PRAGAS.forEach((g, j) => g.indicadores.forEach((ind, k) => { const pico = (hot * 2 + j % 2) * Math.exp(-d * d / 5) * (idade ? .7 : 1), x = Math.max(0, Math.round(pico + R() * 1.6 - .6 - j * .3 - k * .5)); v[ind.id] = ind.tipo === 'porcentagem' ? Math.min(ind.base, x) : ind.tipo === 'presenca' ? (x > 1 ? 1 : 0) : x; }));
+      v.cris_i = (i * 7 + semente) % 5 === 0 ? 1 : 0;
       return { i: i + 1, lat: +p[0].toFixed(6), lng: +p[1].toFixed(6), hora: (7 + Math.floor(i / 6)) + ':' + String((i * 7) % 60).padStart(2, '0'), estadio: 2, foto: i % 3 === 0, v: v };
     });
   }
   function gerar(hoje) {
     const pivos = [], areas = [], visitas = [], notas = [], fixos = [];
     const novoPivo = (id, nome, centro, raio, n, cultura, setores) => {
-      pivos.push({ id, nome, centro, raioM: raio, n, cultura, fazenda: 'Russas' });
+      pivos.push({ id, nome, centro, raioM: raio, n, cultura, fazenda: 'Demonstração' });
       Geo.dividirPivo(centro, raio, n).forEach((s, k) => {
-        const [nm, dias, hot] = setores[k]; areas.push({ id: nm, nome: nm, tipo: 'setor', pivoId: id, rumo0: s.rumo0, rumo1: s.rumo1, poly: s.poly, ha: +s.ha.toFixed(2), cultura, metodologia: 'padrao', prazoDias: 7, fazenda: 'Russas', _dias: dias, _hot: hot });
+        const [nm, dias, hot] = setores[k]; areas.push({ id: nm, nome: nm, tipo: 'setor', pivoId: id, rumo0: s.rumo0, rumo1: s.rumo1, poly: s.poly, ha: +s.ha.toFixed(2), cultura, metodologia: 'padrao', prazoDias: 7, fazenda: 'Demonstração', _dias: dias, _hot: hot });
       });
     };
     const c1 = Geo.destino(BASE, 0, 0), c2 = Geo.destino(BASE, 90, 640);
-    novoPivo('P4', 'Pivô RU4', c1, 260, 4, 'Acerola', [['RU45', 3, 0], ['RU46', 9, 3], ['RU47', 3, 1], ['RU48', 3, 0]]);
-    novoPivo('P5', 'Pivô RU5', c2, 220, 2, 'Mamão', [['RU51', 7, 2], ['RU52', 2, 0]]);
+    novoPivo('P4', 'Pivô A', c1, 260, 4, 'Acerola', [['TD01', 3, 0], ['TD02', 9, 3], ['TD03', 3, 1], ['TD04', 3, 0]]);
+    novoPivo('P5', 'Pivô B', c2, 220, 2, 'Mamão', [['TD05', 7, 2], ['TD06', 2, 0]]);
     const sul = Geo.destino(BASE, 180, 420);
-    [['CV1930919', 'Acerola', 0, 0, 21, 3], ['GR0623520', 'Goiaba', 1, 0, 15, 1], ['RU23', 'Mamão', 2, 0, 8, 0], ['CV0423519', 'Acerola', 0, 1, 6, 0], ['GR0423520', 'Goiaba', 1, 1, 4, 1], ['CV0830919', 'Acerola', 2, 1, 2, 0]].forEach((t, i) => {
+    [['TD07', 'Acerola', 0, 0, 21, 3], ['TD08', 'Goiaba', 1, 0, 15, 1], ['TD09', 'Mamão', 2, 0, 8, 0], ['TD10', 'Acerola', 0, 1, 6, 0], ['TD11', 'Goiaba', 1, 1, 4, 1], ['TD12', 'Acerola', 2, 1, 2, 0]].forEach((t, i) => {
       const o = Geo.destino(Geo.destino(sul, 90, t[2] * 230 - 230), 180, t[3] * 230), a = [o, Geo.destino(o, 0, 160 + (i % 2) * 20), Geo.destino(Geo.destino(o, 0, 170), 90, 190 - (i % 3) * 15), Geo.destino(o, 90, 180)];
-      areas.push({ id: t[0], nome: t[0], tipo: 'talhao', pivoId: null, poly: a, ha: +Geo.areaHa(a).toFixed(2), cultura: t[1], metodologia: 'padrao', prazoDias: 7, fazenda: 'Russas', _dias: t[4], _hot: t[5] });
+      areas.push({ id: t[0], nome: t[0], tipo: 'talhao', pivoId: null, poly: a, ha: +Geo.areaHa(a).toFixed(2), cultura: t[1], metodologia: 'padrao', prazoDias: 7, fazenda: 'Demonstração', _dias: t[4], _hot: t[5] });
     });
     areas.forEach((a, i) => {
       [0, 7, 14].forEach((extra, k) => {
@@ -1537,21 +1554,26 @@ const Seed = (function () {
         visitas.push({ id: 'v_' + a.id + '_' + k, areaId: a.id, data, executor: 'Elias', distM: Math.round(Geo.caminho(a.poly) * 1.4), minutos: 60 + i * 3, pontos: pontosDe(a, a._hot, idade, i * 31 + k * 7 + 5) });
       });
     });
+    /* C11: na última visita do TD12 só o inimigo natural foi contado; a área fica 'Monitorado, sem situação' */
+    visitas.filter(v => v.id === 'v_TD12_0').forEach(v => v.pontos.forEach(p => { p.v = { cris_i: p.v.cris_i }; }));
     areas.forEach(a => { delete a._dias; delete a._hot; });
-    notas.push({ id: 'n1', assunto: 'Falha na irrigação do RU46', areaId: 'RU46', data: dataAntes(hoje, 2), avisar: true, texto: '' }, { id: 'n2', assunto: 'Folhas amareladas perto do canal', areaId: 'CV1930919', data: dataAntes(hoje, 7), avisar: false, texto: '' });
+    notas.push({ id: 'n1', assunto: 'Falha na irrigação do TD02', areaId: 'TD02', data: dataAntes(hoje, 2), avisar: true, texto: '' }, { id: 'n2', assunto: 'Folhas amareladas perto do canal', areaId: 'TD07', data: dataAntes(hoje, 7), avisar: false, texto: '' });
     fixos.push({ id: 'f1', tipo: 'Pluviômetro', nome: 'PL-01', pos: Geo.destino(BASE, 270, 330) }, { id: 'f2', tipo: 'Ponto genérico', nome: 'Formigueiro 3', pos: Geo.destino(sul, 90, 120) });
     /* C2: o cadastro é o talhão (formato do sv2_talhoes, com o desenho codificado) */
     const talhoes = areas.map(a => ({ id: a.id, codigo: a.nome, pivo: a.pivoId ? (pivos.find(p => p.id === a.pivoId) || {}).nome || '' : '', hectares: +a.ha.toFixed(1), cultura: a.cultura.toUpperCase(), variedade: '',
       ativo: true, geo: Geo.codifica(a.poly), geoHa: a.ha, geoFonte: a.tipo === 'setor' ? 'pivo' : 'cantos', pivoGeo: a.tipo === 'setor' ? { pivoId: a.pivoId, rumo0: a.rumo0, rumo1: a.rumo1 } : null,
-      metodologia: 'padrao', prazoDias: 7, fazenda: 'Russas', inicio: '2026-01-01' }));
-    return { pragas: PRAGAS, pivos, areas, talhoes, visitas, notas, fixos, centro: BASE };
+      metodologia: 'padrao', prazoDias: 7, fazenda: 'Demonstração', inicio: '2026-01-01' }));
+    /* C12: um talhão encerrado (safra fechada), que só aparece com "Mostrar encerrados" */
+    { const o = Geo.destino(Geo.destino(sul, 90, 460), 180, 230), P = [o, Geo.destino(o, 0, 160), Geo.destino(Geo.destino(o, 0, 160), 90, 180), Geo.destino(o, 90, 180)];
+      talhoes.push({ id: 'TD13', codigo: 'TD13', pivo: '', hectares: +Geo.areaHa(P).toFixed(1), cultura: 'GOIABA', variedade: '', ativo: false, fim: dataAntes(hoje, 40), geo: Geo.codifica(P), geoHa: +Geo.areaHa(P).toFixed(2), geoFonte: 'cantos', pivoGeo: null, metodologia: 'padrao', prazoDias: 7, fazenda: 'Demonstração', inicio: '2025-01-01' }); }
+    return { pragas: PRAGAS.concat([INIMIGO]), pivos, areas, talhoes, visitas, notas, fixos, centro: BASE };
   }
   /* grava no banco local se ainda estiver vazio */
   async function aplicar(dados, hoje) {
     if ((await dados.col('talhoes').all()).length) return false;
     const g = gerar(hoje);
     for (const k of ['pragas', 'pivos', 'talhoes', 'visitas', 'notas', 'fixos']) for (const x of g[k]) await dados.col(k).set(x.id, (({ id, ...r }) => r)(x));
-    await dados.col('config').set('geral', { centro: g.centro, hoje: hoje, zoom: 15 });
+    await dados.col('config').set('geral', { centro: g.centro, hoje: hoje, zoom: 15, limiteDias: 0 });
     return true;
   }
   return { gerar, aplicar, PRAGAS, BASE };
@@ -1593,7 +1615,7 @@ const REDUZ_MOV = () => typeof matchMedia !== 'undefined' && matchMedia('(prefer
 const Mapa = (function () {
   /* SATÉLITE: padrão Esri World Imagery (precisa de atribuição; conferir os termos de uso antes de publicar para a equipe) */
   const TILES = { url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', attr: 'Imagens © Esri, Maxar, Earthstar Geographics', maxNativeZoom: 18, maxZoom: 20 };
-  const HEX = { E: '#2e8b57', C: '#d9a227', D: '#cf4a3c', X: '#9aa0a6' };
+  const HEX = { E: '#2e8b57', C: '#d9a227', D: '#cf4a3c', X: '#9aa0a6', S: '#cfd3d8', V: '#9aa0a6', F: '#5f6368' };
   const RGB = { E: [46, 139, 87], C: [217, 162, 39], D: [207, 74, 60] };
   const mixc = (a, b, t) => a.map((v, i) => Math.round(v + (b[i] - v) * t));
 
@@ -1625,7 +1647,7 @@ const Mapa = (function () {
   });
 
   const pinoHtml = (nivel, num, o) => {
-    const cor = o.cor === false ? '#3a3f4a' : HEX[nivel] || HEX.X, tx = nivel === 'C' && o.cor !== false ? '#2a1f00' : '#fff';
+    const cor = o.cor === false ? '#3a3f4a' : HEX[nivel] || HEX.X, tx = (nivel === 'C' || nivel === 'S') && o.cor !== false ? '#2a1f00' : '#fff';
     return '<svg class="pn-s" width="34" height="44" viewBox="-17 -40 34 44"><ellipse cx="0" cy="0" rx="7" ry="2.4" fill="rgba(0,0,0,.35)"/><path d="M0 0L-6.5 -10A12 12 0 1 1 6.5 -10Z" fill="' + cor + '" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/>' +
       (o.num ? '<text x="0" y="-14.5" text-anchor="middle" font-size="11" font-weight="700" fill="' + tx + '" style="font-family:var(--f)">' + num + '</text>' : '<circle cx="0" cy="-18" r="3" fill="#fff"/>') + '</svg>' +
       (o.foto ? '<i class="pn-f"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.2"/></svg></i>' : '') + (o.val != null ? '<b class="pn-v">' + o.val + '</b>' : '');
@@ -1633,7 +1655,7 @@ const Mapa = (function () {
 
   function criar(el, op) {
     op = op || {};
-    const map = L.map(el, { zoomControl: false, attributionControl: true, zoomSnap: 0.25, zoomDelta: 1, wheelPxPerZoomLevel: 90, preferCanvas: false, tap: true, maxZoom: TILES.maxZoom, zoomAnimation: true }).setView(op.centro || [-4.9118, -37.9755], op.zoom || 15);
+    const map = L.map(el, { zoomControl: false, attributionControl: true, zoomSnap: 0.25, zoomDelta: 1, wheelPxPerZoomLevel: 90, preferCanvas: false, tap: true, maxZoom: TILES.maxZoom, zoomAnimation: true }).setView(op.centro || [-5.2731, -38.1547], op.zoom || 15);
     map.attributionControl.setPrefix(false);
     const tile = L.tileLayer(TILES.url, { attribution: TILES.attr, maxNativeZoom: TILES.maxNativeZoom, maxZoom: TILES.maxZoom, crossOrigin: true, keepBuffer: 4, updateWhenIdle: false }).addTo(map);
     const grupo = L.layerGroup().addTo(map), fixosG = L.layerGroup().addTo(map), rot = [];
@@ -1648,7 +1670,7 @@ const Mapa = (function () {
           const e = o.estado(a), esm = o.esmaecer && o.esmaecer(a), sel = o.sel === a.id;
           const pg = L.polygon(a.poly, { color: '#fff', weight: sel ? 3.5 : 2.2, fillColor: HEX[e.nivel] || HEX.X, fillOpacity: o.neutro ? .05 : esm ? .22 : .68, opacity: esm ? .5 : 1, lineJoin: 'round', className: 'mon-area', interactive: !o.neutro }).addTo(grupo);
           pg.on('click', ev => { L.DomEvent.stopPropagation(ev); o.onClick && o.onClick(a); });
-          if (o.rotulos !== false) { const c = Geo.centro(a.poly), ct = a.tipo === 'setor' && a.pivoId ? o.centroSetor && o.centroSetor(a) || c : c; const mk = L.marker(ct, { interactive: false, icon: L.divIcon({ className: 'mon-rot' + (esm ? ' esm' : ''), html: '<b>' + a.nome + '</b><span>' + (e.dias == null ? 'sem visita' : e.dias + ' d') + '</span>', iconSize: [90, 30], iconAnchor: [45, 15] }) }).addTo(grupo); rot.push([pg, mk]); }
+          if (o.rotulos !== false) { const c = Geo.centro(a.poly), ct = a.tipo === 'setor' && a.pivoId ? o.centroSetor && o.centroSetor(a) || c : c; const mk = L.marker(ct, { interactive: false, icon: L.divIcon({ className: 'mon-rot' + (esm ? ' esm' : ''), html: '<b>' + a.nome + '</b><span>' + (e.rot || (e.dias == null ? 'sem visita' : e.dias + ' d')) + '</span>', iconSize: [90, 30], iconAnchor: [45, 15] }) }).addTo(grupo); rot.push([pg, mk]); }
         });
         api.rotulosAuto();
       },
@@ -1695,8 +1717,11 @@ function areaDeTalhao(t) {
     metodologia: t.metodologia || 'padrao', prazoDias: t.prazoDias || 7, fazenda: t.fazenda || '', pivo: t.pivo || '' };
 }
 const areasDeTalhoes = l => l.filter(t => talhaoAtivo(t) && t.geo).map(areaDeTalhao);
+/* v0.6.0 · C12 · talhões encerrados (inativos ou com fim): só aparecem no mapa com "Mostrar encerrados" ligado, em cinza-escuro, sem toque */
+const areasEncerradas = l => l.filter(t => !talhaoAtivo(t) && t.geo).map(t => Object.assign(areaDeTalhao(t), { encerrado: true }));
+const limDias = () => +((D.cfg && D.cfg.limiteDias) || 0);
 let DB = null;
-const S = { tema: 'claro', stack: [], indG: 'todas', indA: null, cult: 'Todas', atr: false, visita: 0, viz: 'reg', o: { cor: 1, val: 0, num: 1, cam: 0, calor: 'off' }, pt: null, dsel: -1 };
+const S = { tema: 'claro', stack: [], indG: 'todas', enc: false, indA: null, cult: 'Todas', atr: false, visita: 0, viz: 'reg', o: { cor: 1, val: 0, num: 1, cam: 0, calor: 'off' }, pt: null, dsel: -1 };
 const layers = [];
 const T = {}, I = {};
 const hojeStr = () => { const m = /[?&]hoje=(\d{4}-\d\d-\d\d)/.exec(location.search); if (m) return m[1]; const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
@@ -1712,15 +1737,18 @@ const visitasDe = id => D.visitas.filter(v => v.areaId === id).sort((a, b) => (a
 const INDS = () => { const o = []; D.pragas.forEach(p => (p.indicadores || []).forEach(i => o.push({ id: i.id, nome: p.nome + ' · ' + i.nome, praga: p, ind: i }))); return o; };
 const indDe = id => { const x = INDS().find(i => i.id === id); return x ? x.ind : null; };
 const limDe = (ind, a) => Sev.limitesDe(ind, a && a.metodologia);
-const estado = a => Sev.estadoArea(a, D.visitas, D.pragas, hojeStr());
+const estado = a => Sev.estadoArea(a, D.visitas, D.pragas, hojeStr(), limDias());
 /* nível da área para o filtro do mapa geral: 'todas' = pior entre as pragas; senão, o indicador escolhido */
 function nivelFiltro(a, indId) {
+  if (a.encerrado) return 'F';
   const v = Sev.ultimaVisita(D.visitas, a.id); if (!v) return 'X';
+  if (Sev.vencida(Sev.diasDesde(v.data, hojeStr()), limDias())) return 'V';
   if (indId === 'todas') return Sev.nivelArea(v, D.pragas, a.metodologia);
-  const ind = indDe(indId); if (!ind) return 'X'; const n = Sev.nivelIndicador(v, ind, a.metodologia); return n == null ? 'X' : n;
+  if (/^cat:/.test(indId)) return Sev.nivelCategoria(v, D.pragas, indId.slice(4), a.metodologia) || 'S';
+  const ind = indDe(indId); if (!ind) return 'X'; const n = Sev.nivelIndicador(v, ind, a.metodologia); return n == null ? 'S' : n;
 }
 /* nível de um ponto para um indicador */
-const nivelPt = (p, ind, a) => Sev.nivelPonto(p, ind, a.metodologia) || 'X';
+const nivelPt = (p, ind, a) => Sev.nivelPonto(p, ind, a.metodologia) || 'S';
 const valPt = (p, ind) => (p.v && typeof p.v[ind.id] === 'number' ? p.v[ind.id] : 0);
 const centroSetor = a => { const pv = pivo(a.pivoId); if (!pv) return Geo.centro(a.poly); const n = D.areas.filter(x => x.pivoId === a.pivoId).length; const larg = ((a.rumo1 - a.rumo0) % 360 + 360) % 360 || 360; return Geo.destino(pv.centro, a.rumo0 + larg / 2, pv.raioM * (n > 2 ? .62 : .5)); };
 const polyPivo = pv => D.areas.filter(a => a.pivoId === pv.id).flatMap(a => a.poly);
@@ -1753,9 +1781,12 @@ const topoRaiz = (tit, sub, extra) => '<div class="top" style="padding-left:12px
 function refSync() { const b = $('#syncb'); if (b) b.outerHTML = syncIc(); }
 
 /* ---- roteador ---- */
+/* v0.6.0 · ITEM 251: no PC (sem toque) não se monitora; a visita é feita no celular, dentro da área. Desenhar o talhão à mão continua no PC. */
+const SO_PC = () => !((navigator.maxTouchPoints || 0) > 0 || (window.matchMedia && matchMedia('(any-pointer: coarse)').matches));
+document.documentElement.classList.toggle('pc', SO_PC());
 const NAV = [['mapa', 'mapa', 'Mapa'], ['semana', 'semana', 'Semana'], ['mon', null, 'Monitorar'], ['notas', 'nota', 'Notas'], ['mais', 'menu', 'Mais']];
 const navHTML = () => NAV.map(n => n[0] === 'mon' ? '<button class="mon" data-act="mon"><i>' + ico('play') + '</i><span>Monitorar</span></button>' : '<button data-act="root" data-v="' + n[0] + '" data-n="' + n[0] + '">' + ico(n[1]) + n[2] + '</button>').join('');
-const railHTML = () => '<div class="logo">Monitoramento<small>Fazenda Matriz</small></div>' + NAV.map(n => '<button class="it" data-act="' + (n[0] === 'mon' ? 'mon' : 'root') + '" data-v="' + n[0] + '" data-n="' + n[0] + '">' + ico(n[1] || 'play') + n[2] + '</button>').join('');
+const railHTML = () => '<div class="logo">Monitoramento<small>' + esc((D.cfg && D.cfg.fazenda) || 'Demonstração') + '</small></div>' + NAV.map(n => '<button class="it" data-act="' + (n[0] === 'mon' ? 'mon' : 'root') + '" data-v="' + n[0] + '" data-n="' + n[0] + '">' + ico(n[1] || 'play') + n[2] + '</button>').join('');
 const setNav = () => { const r = S.stack[0] && S.stack[0].t; $$('[data-n]').forEach(b => b.classList.toggle('on', b.dataset.n === r)); };
 const view = () => $('#view');
 function matarTela(old) {
@@ -1791,56 +1822,69 @@ function sheetTroca(id, html, aoFechar) {
 /* ===== telas1.js ===== */
 /* Monitoramento · telas1.js — Mapa geral, Pivô, Setor/Talhão (pinos, camadas, calor), Ponto e Resumo. */
 const iconeFixo = t => '<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">' + P[t === 'Pluviômetro' ? 'pluv' : 'ponto'] + '</svg>';
-const itensGerais = () => [['todas', 'Todas as pragas (pior nível)']].concat(INDS().map(i => [i.id, i.nome]));
+/* v0.6.0 · o filtro também tem as categorias (Doença, Inseto...): a área fica com a pior praga da categoria (C9) */
+const catsMapa = () => [...new Set(D.pragas.filter(p => !Sev.naoPinta(p) && Sev.contam(p, 'padrao').length).map(p => p.categoria || 'Sem categoria'))].sort();
+const INDSmapa = () => INDS().filter(x => !Sev.naoPinta(x.praga));
+const itensGerais = () => [['todas', 'Todas as pragas (pior nível)']].concat(catsMapa().map(c => ['cat:' + c, 'Categoria: ' + c]), INDSmapa().map(i => [i.id, i.nome]));
 const itensInd = () => INDS().map(i => [i.id, i.nome]);
 /* indicador mais grave da última visita da área (o que aparece primeiro) */
-function piorInd(a, v) {
+function piorInd(a, v, cat) {
   let best = null, bs = -1;
-  INDS().forEach(x => { const n = v ? Sev.nivelIndicador(v, x.ind, a.metodologia) : null, L = limDe(x.ind, a), sc = n == null ? -1 : Sev.ORDEM[n] * 1000 + Math.min(999, (Sev.resultado(v, x.ind, a.metodologia).v || 0) / (L && L.d ? L.d : 1) * 100); if (sc > bs) { bs = sc; best = x; } });
-  return best || INDS()[0];
+  INDSmapa().filter(x => cat == null || (x.praga.categoria || 'Sem categoria') === cat).forEach(x => { const n = v ? Sev.nivelIndicador(v, x.ind, a.metodologia) : null, L = limDe(x.ind, a), sc = n == null ? -1 : Sev.ORDEM[n] * 1000 + Math.min(999, (Sev.resultado(v, x.ind, a.metodologia).v || 0) / (L && L.d ? L.d : 1) * 100); if (sc > bs) { bs = sc; best = x; } });
+  if (cat != null) return best || INDSmapa().find(x => (x.praga.categoria || 'Sem categoria') === cat) || null;
+  return best || INDSmapa()[0] || INDS()[0];
 }
+/* o indicador que o filtro do mapa mostra na gaveta: o escolhido, ou o pior da categoria, ou o pior de todos */
+const indDoFiltro = (a, v) => (/^cat:/.test(S.indG) ? piorInd(a, v, S.indG.slice(4)) : S.indG !== 'todas' ? INDS().find(i => i.id === S.indG) : piorInd(a, v));
 const indSelA = a => { const x = INDS().find(i => i.id === S.indA); return x || piorInd(a, visitasDe(a.id)[0]); };
 const padSheet = () => (innerWidth >= 900 ? { paddingTopLeft: [30, 70], paddingBottomRight: [400, 30] } : { paddingTopLeft: [30, 70], paddingBottomRight: [30, 270] });
 const prox = ev => (ev < 0 ? 'atrasada ' + (-ev) + ' d' : ev === 0 ? 'vence hoje' : 'em ' + ev + ' d');
 
 /* ---- Mapa geral ---- */
-T.mapa = () => '<div class="tela" data-s="mapa">' + topoRaiz('Fazenda Russas', 'Matriz · Russas-CE') + '<div class="mapa" id="mp"><div class="mapael" id="mm"></div>' +
+T.mapa = () => '<div class="tela" data-s="mapa">' + topoRaiz((D.cfg.fazenda || 'Fazenda Demonstração'), (D.cfg.local || 'Dados inventados')) + '<div class="mapa" id="mp"><div class="mapael" id="mm"></div>' +
   '<div class="sobre mon-ab" id="mab" role="status" aria-live="polite"></div><div class="sobre" style="left:8px;top:8px;width:min(340px,calc(100% - 16px))"><div class="dd" data-dd="filtro"><button class="ddb" data-act="dd" data-id="filtro">' + ico('filtro') + '<b id="fsum"></b>' + ico('desce', 'ch') + '</button>' +
-  '<div class="ddl" style="padding:12px;overflow:visible;max-height:none"><div style="display:flex;flex-direction:column;gap:10px"><div id="f-cult"></div><div id="f-ind"></div><div style="display:flex;align-items:center;gap:10px;min-height:44px"><span style="flex:1;font-size:15px">Só atrasados</span><button class="sw2" id="f-atr" data-act="sw" data-id="atr" aria-label="Só atrasados"></button></div>' +
+  '<div class="ddl" style="padding:12px;overflow:visible;max-height:none"><div style="display:flex;flex-direction:column;gap:10px"><div id="f-cult"></div><div id="f-ind"></div><div style="display:flex;align-items:center;gap:10px;min-height:44px"><span style="flex:1;font-size:15px">Só atrasados</span><button class="sw2" id="f-atr" data-act="sw" data-id="atr" aria-label="Só atrasados"></button></div><div style="display:flex;align-items:center;gap:10px;min-height:44px"><span style="flex:1;font-size:15px">Mostrar encerrados</span><button class="sw2" id="f-enc" data-act="sw" data-id="enc" aria-label="Mostrar encerrados"></button></div>' +
   '<div style="border-top:1px solid var(--abd);padding-top:10px"><div class="tag" style="margin-bottom:6px">Cores, pelo último monitoramento</div><div id="f-leg" style="display:flex;flex-direction:column;gap:6px;font-size:14px"></div></div></div></div></div></div><div class="sheet" id="sh"></div></div></div>';
 function filtroGeral() {
+  if (!itensGerais().some(x => x[0] === S.indG)) S.indG = 'todas';
   const i = INDS().find(x => x.id === S.indG);
-  $('#fsum').textContent = (S.cult === 'Todas' ? 'Todas as culturas' : S.cult) + ' · ' + (i ? i.nome : 'Todas as pragas');
+  $('#fsum').textContent = (S.cult === 'Todas' ? 'Todas as culturas' : S.cult) + ' · ' + (i ? i.nome : /^cat:/.test(S.indG) ? S.indG.slice(4) : 'Todas as pragas');
   const culturas = [...new Set(D.areas.map(a => a.cultura))].sort();
   $('#f-cult').innerHTML = ddHTML('cult', 'Cultura', [['Todas', 'Todas']].concat(culturas.map(c => [c, c])), S.cult);
   $('#f-ind').innerHTML = ddHTML('indG', 'Indicador', itensGerais(), S.indG);
-  $('#f-atr').classList.toggle('on', S.atr);
+  $('#f-atr').classList.toggle('on', S.atr); $('#f-enc').classList.toggle('on', S.enc);
   const L = i ? Sev.limitesDe(i.ind, 'padrao') : null, li = (c, t) => '<div style="display:flex;gap:8px;align-items:center"><i class="sw ' + c + '"></i>' + t + '</div>';
   $('#f-leg').innerHTML = (L ? li('E', 'Equilíbrio: abaixo de ' + fmtV(L.c, i.ind)) + li('C', 'Controle: de ' + fmtV(L.c, i.ind) + ' a menos de ' + fmtV(L.d, i.ind)) + li('D', 'Dano: ' + fmtV(L.d, i.ind) + ' ou mais') : li('E', 'Equilíbrio') + li('C', 'Controle') + li('D', 'Dano')) +
-    '<div style="display:flex;gap:8px;align-items:center"><i class="sw" style="background:var(--mX)"></i>Sem visita</div><div style="color:var(--atx3);font-size:12.5px">' + (L ? 'Cada área mostra o resultado da última visita (' + (Sev.tipoDe(i.ind) === 'media' ? 'média das plantas' : Sev.tipoDe(i.ind) === 'presenca' ? '% das plantas' : 'porcentagem') + ').' : 'Cada área mostra o pior resultado entre as pragas, na última visita.') + '</div>';
+    '<div style="display:flex;gap:8px;align-items:center"><i class="sw S"></i>Monitorado, sem situação</div><div style="display:flex;gap:8px;align-items:center"><i class="sw" style="background:var(--mX)"></i>' + (limDias() ? 'Sem visita, ou visita com mais de ' + limDias() + (limDias() === 1 ? ' dia' : ' dias') : 'Sem visita') + '</div>' + (S.enc ? '<div style="display:flex;gap:8px;align-items:center"><i class="sw F"></i>Encerrado</div>' : '') + '<div style="display:flex;align-items:center;gap:10px;margin-top:4px"><span style="flex:1;font-size:15px">A cor vale por</span><div class="step" style="width:164px"><button data-act="ldias" data-d="-1" aria-label="Menos dias">−</button><b id="f-ld" style="font-size:15px">' + (limDias() ? limDias() + ' dias' : 'Sempre') + '</b><button data-act="ldias" data-d="1" aria-label="Mais dias">+</button></div></div><div style="color:var(--atx3);font-size:12.5px">' + (L ? 'Cada área mostra o resultado da última visita (' + (Sev.tipoDe(i.ind) === 'media' ? 'média das plantas' : Sev.tipoDe(i.ind) === 'presenca' ? '% das plantas' : 'porcentagem') + ').' : 'Cada área mostra o pior resultado entre as pragas, na última visita.') + '</div>';
 }
 function desenhaGeral() {
   const m = S.mapa; m.limpar();
-  m.areas(D.areas, { estado: a => ({ nivel: nivelFiltro(a, S.indG), dias: estado(a).dias }), centroSetor, esmaecer: a => (S.cult !== 'Todas' && a.cultura !== S.cult) || (S.atr && !(estado(a).venc < 0)), onClick: a => (a.tipo === 'setor' ? go('pivo', { id: a.pivoId, sel: a.id }) : abrirResumo(a)) });
+  m.areas(D.areas.concat(S.enc ? (D.encerradas || []) : []), { estado: a => (a.encerrado ? { nivel: 'F', dias: null, rot: 'encerrado' } : { nivel: nivelFiltro(a, S.indG), dias: estado(a).dias }), centroSetor, esmaecer: a => !a.encerrado && ((S.cult !== 'Todas' && a.cultura !== S.cult) || (S.atr && !(estado(a).venc < 0))), onClick: a => (a.encerrado ? toast(a.nome + ' está encerrado') : a.tipo === 'setor' ? go('pivo', { id: a.pivoId, sel: a.id }) : abrirResumo(a)) });
   m.fixos(D.fixos, iconeFixo);
 }
 /* v0.4.0: visita guardada para continuar depois (almoço) aparece como aviso no mapa, com Continuar */
 function avisoAberta() {
-  const el = $('#mab'); if (!el) return; const g = guardada(), a = g && g.deixada ? area(g.areaId) : null;
+  const el = $('#mab'); if (!el) return; const g = SO_PC() ? null : guardada(), a = g && g.deixada ? area(g.areaId) : null;
   if (!a) { el.classList.remove('on'); return; } /* some com o fade; o conteúdo fica até a próxima vez (sem troca seca) */
   const n = (g.pontos || []).length, de = g.executor && g.executor !== usuario() ? ' · de ' + g.executor : '';
   el.innerHTML = '<div class="mon-ab-t"><b>Visita do ' + esc(a.nome) + ' em aberto</b><small>Guardada ' + esc(quandoGuardou(g.em)) + (n ? ' · ' + n + (n === 1 ? ' ponto' : ' pontos') : '') + esc(de) + '</small></div><button class="btn pr sm" data-act="retomaAb">' + ico('play') + 'Continuar</button>';
   el.classList.add('on');
 }
-I.mapa = () => { S.mapa = Mapa.criar($('#mm'), { centro: (D.cfg.centro) || [-4.9118, -37.9755], zoom: D.cfg.zoom || 15 }); filtroGeral(); desenhaGeral(); if (D.areas.length) S.mapa.fit(todosPoly(), { animar: false }); S.mapa.map.on('click', () => fecharDDs()); avisoAberta(); };
+I.mapa = () => { S.mapa = Mapa.criar($('#mm'), { centro: (D.cfg.centro) || [-5.2731, -38.1547], zoom: D.cfg.zoom || 15 }); filtroGeral(); desenhaGeral(); if (D.areas.length) S.mapa.fit(todosPoly(), { animar: false }); S.mapa.map.on('click', () => fecharDDs()); avisoAberta(); };
+/* v0.6.0 · C12 · Limite de dias (como na legenda da Cropwise): fica na configuração geral, vale para todos */
+const PASSOS_DIAS = [0, 3, 5, 7, 10, 14, 21, 30, 45, 60];
+function mudaLimDias(d) {
+  const k = PASSOS_DIAS.indexOf(limDias()), i = Math.max(0, Math.min(PASSOS_DIAS.length - 1, (k < 0 ? 0 : k) + d)), n = PASSOS_DIAS[i]; if (n === limDias()) return;
+  const g = Object.assign({}, D.cfg); delete g.usuario; delete g.srv; g.limiteDias = n; D.cfg.limiteDias = n; DB.col('config').set('geral', g, 'Limite de dias'); refGeral();
+}
 const refGeral = () => { if (S.mapa && $('#fsum')) { filtroGeral(); desenhaGeral(); avisoAberta(); } };
 
 /* ---- Resumo (gaveta de baixo) ---- */
 function resumoHTML(a) {
-  const v = Sev.ultimaVisita(D.visitas, a.id), est = estado(a), x = S.stack[S.stack.length - 1].t === 'mapa' && S.indG !== 'todas' ? INDS().find(i => i.id === S.indG) : piorInd(a, v);
-  const lei = v && x ? Sev.resultado(v, x.ind, a.metodologia) : { v: null, n: null }, nv = est.nivel;
+  const v = Sev.ultimaVisita(D.visitas, a.id), est = estado(a), noMapa = ['mapa', 'pivo'].includes(S.stack[S.stack.length - 1].t), x = noMapa ? indDoFiltro(a, v) : piorInd(a, v);
+  const lei = v && x ? Sev.resultado(v, x.ind, a.metodologia) : { v: null, n: null }, nv = noMapa ? nivelFiltro(a, S.indG) : est.nivel;
   return '<div class="grip"></div><div class="sh-h"><div style="flex:1;min-width:0"><h2>' + esc(a.nome) + '</h2><small>' + esc(a.cultura) + (a.pivoId && pivo(a.pivoId) ? ' · ' + esc(pivo(a.pivoId).nome) : '') + ' · ' + virg(a.ha) + ' ha' + (v ? ' · ' + v.pontos.length + (v.pontos.length === 1 ? ' planta' : ' plantas') : '') + '</small></div><span class="pil ' + nv + '">' + NOMESEV[nv] + '</span><button class="ib" style="margin:-8px -8px 0 0" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button></div>' +
-    '<div class="sh-b">' + (v && x && lei.v != null ? regua(lei.v, x.ind, x.nome + ' · média de ' + lei.amostras + (lei.amostras === 1 ? ' planta' : ' plantas'), a) : (v ? '<div style="color:var(--atx3)">Este indicador não foi avaliado nesta visita.</div>' : '<div style="color:var(--atx3)">Sem visita registrada.</div>')) +
+    '<div class="sh-b">' + (v && x && lei.v != null ? regua(lei.v, x.ind, x.nome + ' · média de ' + lei.amostras + (lei.amostras === 1 ? ' planta' : ' plantas'), a) : (v ? '<div style="color:var(--atx3)">' + (nv === 'S' ? 'Nesta visita não foi avaliada nenhuma praga com Controle e Dano.' : 'Este indicador não foi avaliado nesta visita.') + '</div>' : '<div style="color:var(--atx3)">Sem visita registrada.</div>')) +
     '<div class="kv"><span>Última visita</span><b>' + (v ? 'há ' + est.dias + ' dias (' + fmtD(v.data) + ')' : '—') + '</b><span>Próxima</span><b>' + (v ? prox(est.venc) : 'agora') + '</b></div></div>' +
     '<div class="sh-f"><div class="lin"><button class="btn" data-act="abrir" data-v="' + esc(a.id) + '">' + ico('mapa') + 'Abrir ' + (a.tipo === 'setor' ? 'setor' : 'talhão') + '</button><button class="btn pr" data-act="monit" data-v="' + esc(a.id) + '">' + ico('play') + 'Monitorar</button></div></div>';
 }
@@ -1852,7 +1896,7 @@ function desenhaPivo() {
   const m = S.mapa, pv = S.pv; m.limpar();
   m.areas(D.areas.filter(a => a.pivoId === pv.id), { estado: a => ({ nivel: nivelFiltro(a, S.indG), dias: estado(a).dias }), centroSetor, sel: S.pvSel, esmaecer: a => S.pvSel && a.id !== S.pvSel, rotulos: !S.pvSel, onClick: a => zoomSetor(a) });
   if (S.pvSel && !area(S.pvSel)) S.pvSel = null;
-  if (S.pvSel) { const a = area(S.pvSel), v = Sev.ultimaVisita(D.visitas, a.id), x = S.indG !== 'todas' ? INDS().find(i => i.id === S.indG) : piorInd(a, v); if (v && x) m.pinos(v.pontos, { nivelDe: pt => nivelPt(pt, x.ind, a), cor: true, num: true, onClick: () => {} }); }
+  if (S.pvSel) { const a = area(S.pvSel), v = Sev.ultimaVisita(D.visitas, a.id), x = indDoFiltro(a, v); if (v && x) m.pinos(v.pontos, { nivelDe: pt => nivelPt(pt, x.ind, a), cor: true, num: true, onClick: () => {} }); }
 }
 I.pivo = (n, p) => {
   S.pv = pivo(p.id); S.pvSel = null; S.mapa = Mapa.criar($('#mm'), { centro: S.pv.centro, zoom: 16 }); $('#pind').innerHTML = ddHTML('indG', '', itensGerais(), S.indG);
@@ -1894,9 +1938,9 @@ function desenhaArea() {
 }
 /* valor de UMA planta: "3", "3 de 6 ramos", "Sim" */
 const valTxt = (v, ind) => { const t = Sev.tipoDe(ind); return t === 'presenca' ? (v ? 'Sim' : 'Não') : t === 'porcentagem' ? v + ' de ' + Sev.baseDe(ind) + (ind.unidade ? ' ' + ind.unidade : '') : String(v); };
-const indTab = (vals, a) => S.viz === 'tab'
-  ? '<div class="tbw"><table><tr><th>Indicador</th><th class="n">Valor</th><th>Situação</th></tr>' + INDS().map(x => { const v = vals[x.id] || 0, s = Sev.nivel(Sev.escalaAmostra(v, x.ind), limDe(x.ind, a)) || 'X'; return '<tr><td>' + esc(x.praga.nome) + '<small style="display:block;color:var(--atx3);font-size:12.5px">' + esc(x.ind.nome) + '</small></td><td class="n"><b>' + esc(valTxt(v, x.ind)) + '</b></td><td><span class="pil ' + s + '">' + NOMESEV[s] + '</span></td></tr>'; }).join('') + '</table></div>'
-  : INDS().map(x => regua(Sev.escalaAmostra(vals[x.id] || 0, x.ind), x.ind, x.nome + (Sev.tipoDe(x.ind) === 'porcentagem' ? ' · ' + valTxt(vals[x.id] || 0, x.ind) : ''), a)).join('');
+const indTab = (vals, a, jaEscala) => S.viz === 'tab'
+  ? '<div class="tbw"><table><tr><th>Indicador</th><th class="n">Valor</th><th>Situação</th></tr>' + INDS().map(x => { const v = vals[x.id] || 0, s = Sev.nivel(jaEscala ? v : Sev.escalaAmostra(v, x.ind), limDe(x.ind, a)) || 'S'; return '<tr><td>' + esc(x.praga.nome) + '<small style="display:block;color:var(--atx3);font-size:12.5px">' + esc(x.ind.nome) + '</small></td><td class="n"><b>' + esc(jaEscala ? fmtV(v, x.ind) : valTxt(v, x.ind)) + '</b></td><td><span class="pil ' + s + '">' + NOMESEV[s] + '</span></td></tr>'; }).join('') + '</table></div>'
+  : INDS().map(x => jaEscala ? regua(vals[x.id] || 0, x.ind, x.nome, a) : regua(Sev.escalaAmostra(vals[x.id] || 0, x.ind), x.ind, x.nome + (Sev.tipoDe(x.ind) === 'porcentagem' ? ' · ' + valTxt(vals[x.id] || 0, x.ind) : ''), a)).join('');
 const vizDD = () => ddHTML('viz', 'Ver como', [['reg', 'Réguas'], ['tab', 'Tabela']], S.viz);
 function abrirPonto(i) {
   const a = S.A, v = VIS(a)[S.visita], p = v.pontos.find(q => q.i === i), x = indSelA(a); S.pt = i; desenhaArea();
@@ -1908,25 +1952,12 @@ function abrirPonto(i) {
   sheetTroca('sh', '<div class="grip"></div><div class="sh-h"><div style="flex:1"><h2>Ponto ' + i + ' de ' + v.pontos.length + '</h2><small>' + esc(a.nome) + ' · visita ' + fmtD(v.data) + ' · ' + esc(p.hora || '') + '</small></div><span class="pil ' + (nivelPt(p, x.ind, a)) + '">' + NOMESEV[nivelPt(p, x.ind, a)] + '</span><button class="ib" style="margin:-8px -8px 0 0" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button></div>' +
     '<div class="sh-b">' + ft + regua(Sev.escalaAmostra(val, x.ind), x.ind, x.nome + ' · esta planta' + (Sev.tipoDe(x.ind) === 'porcentagem' ? ' (' + valTxt(val, x.ind) + ')' : ''), a) + '<div id="ptv">' + vizDD() + '</div><div id="ptb">' + indTab(p.v || {}, a) + '</div><div class="kv"><span>Local</span><b>' + p.lat.toFixed(5) + ', ' + p.lng.toFixed(5) + '</b><span>Executor</span><b>' + esc(v.executor || '—') + '</b><span>Estádio</span><b>' + est + '</b></div></div>', () => { S.pt = null; desenhaArea(); });
 }
-/* v0.5.0 · resumo da visita no estilo Cropwise: por praga, o resultado de cada indicador (média, % ou presença) com a
-   situação e o histograma das plantas; no fim, as pragas não encontradas. */
-function histHTML(r, ind) {
-  const ks = Object.keys(r.dist).map(Number).sort((a, b) => a - b); if (ks.length < 2) return '';
-  const mx = Math.max.apply(null, ks.map(k => r.dist[k]));
-  return '<div class="hist" aria-label="Plantas por valor">' + ks.map(k => '<div><i style="height:' + Math.max(3, r.dist[k] / mx * 40).toFixed(0) + 'px"></i><b>' + r.dist[k] + '</b><span>' + (Sev.tipoDe(ind) === 'presenca' ? (k ? 'sim' : 'não') : k) + '</span></div>').join('') + '</div>';
-}
-function resumoVisitaHTML(v, a) {
-  const achadas = [], nao = [];
-  D.pragas.forEach(g => { const inds = (g.indicadores || []).map(i => ({ i, r: Sev.resultado(v, i, a.metodologia) })).filter(x => x.r.amostras); if (!inds.length) return; (inds.some(x => x.r.total > 0) ? achadas : nao).push({ g, inds }); });
-  achadas.sort((x, y) => { const nv = q => Math.max.apply(null, q.inds.map(z => (z.r.n ? Sev.ORDEM[z.r.n] : -1))); return nv(y) - nv(x); });
-  return achadas.map(({ g, inds }) => '<div class="rv-p"><b>' + esc(g.nome) + '</b><small>' + esc(g.categoria || '') + '</small>' + inds.map(({ i, r }) => '<div class="rv-i"><div class="rv-l"><span>' + esc(i.nome) + '</span><b>' + esc(Sev.texto(r, i)) + '</b>' + (r.n && i.mapa !== false ? '<span class="pil ' + r.n + '">' + NOMESEV[r.n] + '</span>' : '') + '</div>' + histHTML(r, i) + '</div>').join('') + '</div>').join('') +
-    (achadas.length ? '' : '<div style="color:var(--atx3)">Nenhuma praga encontrada nesta visita.</div>') +
-    (nao.length ? '<div class="rv-nao"><b>Não encontradas · ' + nao.length + '</b><span>' + nao.map(x => esc(x.g.nome)).join(', ') + '</span></div>' : '');
-}
+/* Resumo da área: o layout da v0.4.1 (ITEM 258 reprovado em 22/11: "o outro está melhor"); o valor de cada indicador
+   é o RESULTADO DA VISITA (média), pela regra aprovada no ITEM 256. */
 function abrirResumoArea() {
-  const a = S.A, v = VIS(a)[S.visita]; if (!v) { toast('Esta área ainda não tem visita'); return; } S.pt = 'res'; const n = v.pontos.length;
-  const ficha = (v.minDentro != null ? '<div class="kv"><span>Amostras</span><b>' + n + (n === 1 ? ' planta' : ' plantas') + (a.ha ? ' · ' + virg(a.ha / Math.max(1, n), 2) + ' ha por amostra' : '') + '</b><span>Tempo na área</span><b>' + hm(v.minDentro * 60000) + (n ? ' · ' + virg(v.minDentro / n, 1) + ' min por amostra' : '') + '</b><span>Distância</span><b>' + (v.distM || 0) + ' m</b><span>Executor</span><b>' + esc(v.executor || '—') + '</b></div>' : '');
-  sheetTroca('sh', '<div class="grip"></div><div class="sh-h"><div style="flex:1"><h2>Resumo de ' + esc(a.nome) + '</h2><small>Média de ' + n + (n === 1 ? ' planta' : ' plantas') + ' · visita ' + fmtD(v.data) + '</small></div><button class="ib" style="margin:-8px -8px 0 0" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button></div><div class="sh-b">' + ficha + resumoVisitaHTML(v, a) + '</div><div class="sh-f"><div class="lin"><button class="btn" data-act="go" data-v="semana">' + ico('semana') + 'Semana</button><button class="btn pr" data-act="monit" data-v="' + esc(a.id) + '">' + ico('play') + 'Monitorar</button></div></div>', () => { S.pt = null; desenhaArea(); });
+  const a = S.A, v = VIS(a)[S.visita]; if (!v) { toast('Esta área ainda não tem visita'); return; } S.pt = 'res';
+  const vals = {}; INDS().forEach(x => { vals[x.id] = Sev.resultado(v, x.ind, a.metodologia).v || 0; });
+  sheetTroca('sh', '<div class="grip"></div><div class="sh-h"><div style="flex:1"><h2>Resumo de ' + esc(a.nome) + '</h2><small>Média de cada indicador · visita ' + fmtD(v.data) + '</small></div><button class="ib" style="margin:-8px -8px 0 0" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button></div><div class="sh-b"><div id="ptv">' + vizDD() + '</div><div id="ptb">' + indTab(vals, a, true) + '</div></div><div class="sh-f"><div class="lin"><button class="btn" data-act="go" data-v="semana">' + ico('semana') + 'Semana</button><button class="btn pr" data-act="monit" data-v="' + esc(a.id) + '">' + ico('play') + 'Monitorar</button></div></div>', () => { S.pt = null; });
 }
 
 /* ===== telas2.js ===== */
@@ -2030,6 +2061,9 @@ function travaMon(on) {
 function marcar() {
   if (M.salvando) return;
   if (!M.pos) { toast(M.semGps ? 'Toque no mapa para marcar onde você está' : 'Aguardando o GPS'); return; }
+  /* v0.6.0 · ITEM 251: só marca ponto quem está dentro da área (o motor confirmou a entrada, ou a posição está dentro do desenho) */
+  const aneis = M.a.aneis && M.a.aneis.length ? M.a.aneis : [M.a.poly], folga = Motor.PADRAO.folga || 10;
+  if (!((M.mo && M.mo.estado().dentro) || aneis.some(P => Geo.dentro(M.pos, P) || Motor.aBorda(M.pos, P) <= folga))) { toast('Você está fora do ' + M.a.nome + '. Entre na área para marcar o ponto'); return; }
   const i = M.pontos.length + 1; M.cur = { i, lat: +M.pos[0].toFixed(6), lng: +M.pos[1].toFixed(6), hora: new Date().toTimeString().slice(0, 5), estadio: M.estPadrao == null ? 2 : M.estPadrao, fotos: [], v: {} }; INDS().forEach(x => { M.cur.v[x.id] = 0; });
   sheet('sh', '<div class="top"><button class="ib" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button><h1>Ponto ' + i + '<small>' + esc(M.a.nome) + ' · agora</small></h1></div><div class="form larg" id="pf"></div><div class="rodape"><button class="btn" data-act="camera">' + ico('cam') + 'Câmera</button><button class="btn pr" data-act="salvarPt">' + ico('check') + 'Salvar ponto</button></div>'); pfBody();
 }
@@ -2072,7 +2106,6 @@ function finalizar() {
   sheet('sh', '<div class="top"><button class="ib" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button><h1>Finalizar visita<small>' + esc(M.a.nome) + '</small></h1></div><div class="form larg">' +
     '<div class="mon-res">' + big(hm(e.msDentro), 'dentro da área') + big(hm(e.msTotal), 'tempo total') + big(Math.round(e.distM) + ' m', 'distância') + big(n, n === 1 ? 'ponto' : 'pontos') + '</div>' +
     (extra.length ? '<div class="mon-ext">' + esc(extra.join(' · ')) + '</div>' : '') +
-    (n ? '<div class="mon-ext">' + n + (n === 1 ? ' amostra' : ' amostras') + (M.a.ha ? ' · ' + virg(M.a.ha / n, 2) + ' ha por amostra' : '') + ' · ' + virg(e.msDentro / 60000 / n, 1) + ' min por amostra</div><div class="fld"><span>Resultado desta visita</span>' + resumoVisitaHTML({ pontos: M.pontos }, M.a) + '</div>' : '') +
     (n ? '<div class="aviso C">Depois de salvar, a visita aparece no mapa e na Semana.</div>' : '<div class="aviso D">Marque pelo menos um ponto antes de salvar.</div>') +
     '<button class="btn mon-copia" data-act="copiaTeste">' + ico('nota') + 'Copiar o resultado para conferir com o cronômetro</button></div>' +
     '<div class="rodape"><button class="btn" data-act="fecha">Continuar</button><button class="btn pr ' + (n ? '' : 'des') + '" data-act="salvaVisita">' + ico('check') + 'Salvar visita</button></div>');
@@ -2123,7 +2156,7 @@ function quandoGuardou(ms) {
   return d === dia(Date.now()) ? h.slice(1) : d === dia(Date.now() - 864e5) ? 'ontem' + h : 'em ' + fmtD(d) + h;
 }
 function ofereceRetomar(abrindo, outraId) {
-  const g = guardada(); if (!g || (abrindo && g.deixada)) return; const a = area(g.areaId), n = (g.pontos || []).length, outra = outraId && area(outraId);
+  const g = guardada(); if (!g || (abrindo && g.deixada) || SO_PC()) return; const a = area(g.areaId), n = (g.pontos || []).length, outra = outraId && area(outraId);
   const de = g.executor && g.executor !== usuario() ? ' Começada por ' + g.executor + '.' : '';
   sheet('gsh2', '<div class="grip"></div><div class="sh-h"><h2>Continuar a visita do ' + esc(a.nome) + '?</h2></div><div class="sh-b"><div style="color:var(--atx2)" id="ret-txt">' +
     (outra ? 'Só uma visita fica aberta por vez no celular. Continue a do ' + esc(a.nome) + ' ou descarte para começar a do ' + esc(outra.nome) + '. ' : '') +
@@ -2158,7 +2191,7 @@ T.notas = () => '<div class="tela" data-s="notas">' + topoRaiz('Anotações', 'O
 let NF = { fotos: [], loc: null };
 function formNota() {
   NF = { fotos: [], loc: D.areas[0] && D.areas[0].id };
-  sheet('sh', '<div class="top"><button class="ib" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button><h1>Nova anotação</h1></div><div class="form larg"><label class="fld"><span>Assunto</span><input class="inp" id="n-ass" placeholder="Ex.: Cigarrinha na borda do RU46" autocomplete="off"></label><div id="n-loc">' + ddHTML('nloc', 'Local', D.areas.map(a => [a.id, a.nome]), NF.loc) + '</div><label class="fld"><span>O que você viu</span><textarea class="inp" id="n-txt" placeholder="Descreva rapidamente"></textarea></label><div class="faixa" id="n-fx"><button class="ft add" data-act="camera">' + ico('cam') + '<span>Foto</span></button></div><div style="display:flex;align-items:center;gap:10px;min-height:44px;border:1px solid var(--abd);border-radius:var(--rs);padding:0 12px;background:var(--ab1)"><span style="flex:1"><b>Avisar a equipe</b><small style="display:block;color:var(--atx3);font-size:12.5px">Quem monitora este local recebe o aviso</small></span><button class="sw2 on" id="n-av" data-act="swl" aria-label="Avisar a equipe"></button></div></div><div class="rodape"><button class="btn" data-act="fecha">Cancelar</button><button class="btn pr" data-act="salvaNota">Salvar anotação</button></div>');
+  sheet('sh', '<div class="top"><button class="ib" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button><h1>Nova anotação</h1></div><div class="form larg"><label class="fld"><span>Assunto</span><input class="inp" id="n-ass" placeholder="Ex.: Cigarrinha na borda do TD02" autocomplete="off"></label><div id="n-loc">' + ddHTML('nloc', 'Local', D.areas.map(a => [a.id, a.nome]), NF.loc) + '</div><label class="fld"><span>O que você viu</span><textarea class="inp" id="n-txt" placeholder="Descreva rapidamente"></textarea></label><div class="faixa" id="n-fx"><button class="ft add" data-act="camera">' + ico('cam') + '<span>Foto</span></button></div><div style="display:flex;align-items:center;gap:10px;min-height:44px;border:1px solid var(--abd);border-radius:var(--rs);padding:0 12px;background:var(--ab1)"><span style="flex:1"><b>Avisar a equipe</b><small style="display:block;color:var(--atx3);font-size:12.5px">Quem monitora este local recebe o aviso</small></span><button class="sw2 on" id="n-av" data-act="swl" aria-label="Avisar a equipe"></button></div></div><div class="rodape"><button class="btn" data-act="fecha">Cancelar</button><button class="btn pr" data-act="salvaNota">Salvar anotação</button></div>');
 }
 function salvarNota() {
   const as = $('#n-ass').value.trim(); if (!as) { toast('Escreva o assunto da anotação'); $('#n-ass').focus(); return; }
@@ -2192,7 +2225,7 @@ function refFila() { refCaixa(); refSync(); const f = $('#fila'); if (f) { f.inn
 function miniMapa(el, poly, extra) { const m = Mapa.criar(el, { centro: Geo.centro(poly), zoom: 16 }); m.map.dragging.disable(); m.map.touchZoom.disable(); m.map.doubleClickZoom.disable(); m.map.scrollWheelZoom.disable(); m.map.boxZoom.disable(); m.map.keyboard.disable(); L.polygon(poly, { color: '#fff', weight: 2.2, fillColor: '#d9b46a', fillOpacity: .5 }).addTo(m.grupo); if (extra) extra(m); m.map.fitBounds(L.latLngBounds(poly), { padding: [20, 20], animate: false }); return m; }
 /* como no EFClaudian: o código não pode repetir nem com talhão desativado */
 const nomeUsado = (n, exceto) => D.talhoes.some(t => t.id !== exceto && String(t.codigo || '').toUpperCase() === n.toUpperCase()) || D.pivos.some(p => p.nome.toUpperCase() === n.toUpperCase());
-/* o EFClaudian tira a fazenda do começo do código: letras e 2 números (RU01, CV1930919) */
+/* o EFClaudian tira a fazenda do começo do código: letras e 2 números (TD13, TD07) */
 const codigoNoPadrao = n => /^[A-Z]+\s*\d{2}/.test(String(n || '').toUpperCase());
 
 /* ---- C2 · Talhões: lista e detalhe ----
@@ -2225,7 +2258,7 @@ I.talDet = (n, p) => { const t = D.talhoes.find(x => x.id === p.id), el = n && n
 const PF = { nome: '', raio: 260, n: 3, cult: 'Acerola', cortes: [0, 120, 240], mexeu: false };
 const cortesIguais = n => Array.from({ length: n }, (_, k) => k * 360 / n);
 T.piv = () => { Object.assign(PF, { nome: '', raio: 260, n: 3, cult: 'Acerola', cortes: cortesIguais(3), mexeu: false }); return '<div class="tela" data-s="piv">' + topo('Novo pivô', 'Mova o mapa até o centro do pivô') + '<div class="form larg"><div style="position:relative;height:260px;border-radius:var(--r);overflow:hidden;border:1px solid var(--abd);flex:none" id="pvbox"><div id="pvmap" style="position:absolute;inset:0"></div><div class="mira" style="pointer-events:none"><i></i></div></div>' +
-  '<p class="dica">Arraste as alças da borda para pôr cada divisão no lugar real.</p><button class="btn" data-act="usaGps">' + ico('gps') + 'Usar minha posição como centro</button><label class="fld"><span>Nome do pivô</span><input class="inp" id="pf-n" placeholder="Ex.: RU06" autocomplete="off"></label><div id="pf-av"></div><label class="fld"><span>Raio (metros)</span><input class="inp" id="pf-r" inputmode="numeric" value="260"></label>' +
+  '<p class="dica">Arraste as alças da borda para pôr cada divisão no lugar real.</p><button class="btn" data-act="usaGps">' + ico('gps') + 'Usar minha posição como centro</button><label class="fld"><span>Nome do pivô</span><input class="inp" id="pf-n" placeholder="Ex.: TD14" autocomplete="off"></label><div id="pf-av"></div><label class="fld"><span>Raio (metros)</span><input class="inp" id="pf-r" inputmode="numeric" value="260"></label>' +
   '<div class="fld"><span>Áreas dentro do pivô (no máximo 4)</span><div class="step"><button data-act="pn" data-d="-1" aria-label="Menos">−</button><b id="pf-c">3</b><button data-act="pn" data-d="1" aria-label="Mais">+</button></div></div>' + ddHTML('pcult', 'Cultura', culturasItens(), 'Acerola') + '<div class="kv" id="pf-kv"></div></div><div class="rodape"><button class="btn" data-act="back">Cancelar</button><button class="btn pr" id="pf-sv" data-act="salvaPiv">Salvar pivô</button></div></div>'; };
 const culturasItens = () => [...new Set(D.areas.map(a => a.cultura).concat(['Acerola', 'Goiaba', 'Mamão']))].filter(Boolean).sort().map(c => [c, c]);
 const letra = k => String.fromCharCode(65 + k);
@@ -2245,11 +2278,11 @@ function desenhaKvPiv(partes) {
   const nm = PF.nome || 'RU', ha = Geo.areaPivoHa(PF.raio); $('#pf-c').textContent = PF.n;
   $('#pf-kv').innerHTML = '<span>Área total</span><b>' + virg(ha) + ' ha</b>' + partes.map((s, k) => '<span>' + esc(nm) + letra(k) + '</span><b>' + virg(s.ha) + ' ha · ' + Math.round(s.rumo1 - s.rumo0) + '°</b>').join('');
   const usado = PF.nome && (nomeUsado(PF.nome) || partes.some((_, k) => nomeUsado(PF.nome + letra(k)))), fino = PF.n > 1 && partes.some(s => s.rumo1 - s.rumo0 < 5 || s.rumo1 - s.rumo0 > 355), raioRuim = !(PF.raio >= 20 && PF.raio <= 1000);
-  $('#pf-av').innerHTML = usado ? '<div class="aviso D">Já existe um pivô ou talhão com o nome ' + esc(PF.nome) + '.</div>' : fino ? '<div class="aviso D">Duas divisões estão juntas demais: cada área precisa de pelo menos 5°.</div>' : raioRuim && PF.nome ? '<div class="aviso D">Raio entre 20 e 1.000 metros.</div>' : PF.nome && !codigoNoPadrao(PF.nome + 'A') ? '<div class="aviso D">As áreas vão se chamar ' + esc(PF.nome) + 'A, ' + esc(PF.nome) + 'B...: sem letras e 2 números (ex.: RU06) o EFCwork não acha a fazenda.</div>' : '';
+  $('#pf-av').innerHTML = usado ? '<div class="aviso D">Já existe um pivô ou talhão com o nome ' + esc(PF.nome) + '.</div>' : fino ? '<div class="aviso D">Duas divisões estão juntas demais: cada área precisa de pelo menos 5°.</div>' : raioRuim && PF.nome ? '<div class="aviso D">Raio entre 20 e 1.000 metros.</div>' : PF.nome && !codigoNoPadrao(PF.nome + 'A') ? '<div class="aviso D">As áreas vão se chamar ' + esc(PF.nome) + 'A, ' + esc(PF.nome) + 'B...: sem letras e 2 números (ex.: TD14) o EFCwork não acha a fazenda.</div>' : '';
   $('#pf-sv').classList.toggle('des', !PF.nome || usado || fino || raioRuim);
 }
 I.piv = n => {
-  S.mapa = Mapa.criar($('#pvmap'), { centro: (D.cfg.centro) || [-4.9118, -37.9755], zoom: 16 }); const ma = S.mapa.map; ma.on('moveend zoomend', prevPiv);
+  S.mapa = Mapa.criar($('#pvmap'), { centro: (D.cfg.centro) || [-5.2731, -38.1547], zoom: 16 }); const ma = S.mapa.map; ma.on('moveend zoomend', prevPiv);
   if (D.areas.length) { ma.fitBounds(L.latLngBounds(todosPoly()), { animate: false }); ma.setZoom(Math.min(ma.getZoom(), 16), { animate: false }); } prevPiv();
   $('#pf-n').oninput = e => { PF.nome = e.target.value.trim().toUpperCase(); prevPiv(); }; $('#pf-r').oninput = e => { PF.raio = +e.target.value || 0; prevPiv(); };
 };
@@ -2283,7 +2316,7 @@ I.tal = n => {
 function tPasso() {
   const p = TF.passo, c = $('#tcorpo'); $('#pas').innerHTML = ['Dados', 'Lugar no mapa', 'Revisar'].map((t, i) => '<div class="' + (i === p ? 'on' : i < p ? 'ok' : '') + '"><i></i>' + (i + 1) + '. ' + t + '</div>').join('');
   if (S.mapa) { try { S.mapa.destroy(); } catch (e) {} S.mapa = null; } if (TF.mini) { try { TF.mini.remove(); } catch (e) {} TF.mini = null; }
-  if (p === 0) c.innerHTML = '<div class="form larg"><label class="fld"><span>Código do talhão</span><input class="inp" id="t-n" value="' + esc(TF.nome) + '" placeholder="Ex.: RU0123456" autocomplete="off" style="text-transform:uppercase"></label><div id="t-av"></div>' + ddHTML('tcult', 'Cultura', culturasItens(), TF.cult) +
+  if (p === 0) c.innerHTML = '<div class="form larg"><label class="fld"><span>Código do talhão</span><input class="inp" id="t-n" value="' + esc(TF.nome) + '" placeholder="Ex.: TD1323456" autocomplete="off" style="text-transform:uppercase"></label><div id="t-av"></div>' + ddHTML('tcult', 'Cultura', culturasItens(), TF.cult) +
     '<label class="fld"><span>Variedade (opcional)</span><input class="inp" id="t-v" value="' + esc(TF.variedade) + '"></label><label class="fld"><span>Hectares do documento</span><input class="inp" id="t-h" inputmode="decimal" value="' + esc(TF.ha) + '" placeholder="Ex.: 4,5"></label>' +
     '<div class="fld"><span>Pontos de coleta por hectare (opcional)</span><div class="lin"><label class="fld" style="flex:1"><span>Solo</span><input class="inp" id="t-ps" inputmode="numeric" value="' + esc(TF.ps) + '"></label><label class="fld" style="flex:1"><span>Folha</span><input class="inp" id="t-pf" inputmode="numeric" value="' + esc(TF.pf) + '"></label><label class="fld" style="flex:1"><span>Fruto</span><input class="inp" id="t-pr" inputmode="numeric" value="' + esc(TF.pr) + '"></label></div></div></div>';
   else if (p === 1) {
@@ -2306,7 +2339,7 @@ function tLeDados() { TF.nome = $('#t-n').value.trim().toUpperCase(); TF.varieda
 function tVal() {
   const n = TF.nome.trim(), h = numBR(TF.ha), pt = [TF.ps, TF.pf, TF.pr];
   if (n.length < 2) return 'Escreva o código do talhão'; if (nomeUsado(n, TF.id)) return 'Já existe um talhão com o código ' + n + ' (mesmo desativado, o código não pode repetir)';
-  if (!codigoNoPadrao(n) && !TF.avisouCod) { TF.avisouCod = true; return 'O código ' + n + ' não começa com letras e 2 números (ex.: RU01): o EFCwork não acha a fazenda dele. Toque em Continuar de novo para usar assim mesmo.'; }
+  if (!codigoNoPadrao(n) && !TF.avisouCod) { TF.avisouCod = true; return 'O código ' + n + ' não começa com letras e 2 números (ex.: TD13): o EFCwork não acha a fazenda dele. Toque em Continuar de novo para usar assim mesmo.'; }
   if (!(h > 0 && h <= 10000)) return 'Informe os hectares do documento (ex.: 4,5)';
   if (pt.some(v => v !== '' && !(+v > 0 && +v < 1000))) return 'Pontos por hectare: use um número de 1 a 999';
   return '';
@@ -2349,7 +2382,7 @@ function setorLivre(pv) {
   return melhor && melhor[1] - melhor[0] >= 5 ? [melhor[0] % 360, melhor[1] % 360] : [0, 90];
 }
 function iniciaDesenho() {
-  const ref = TF.cant.length ? Geo.centro(TF.cant) : (D.cfg.centro || [-4.9118, -37.9755]);
+  const ref = TF.cant.length ? Geo.centro(TF.cant) : (D.cfg.centro || [-5.2731, -38.1547]);
   S.mapa = Mapa.criar($('#dmm'), { centro: ref, zoom: 17 }); const mp = S.mapa.map;
   if (TF.cant.length > 2) mp.fitBounds(L.latLngBounds(TF.cant), { animate: false, padding: [60, 60] }); else if (D.areas.length) { mp.fitBounds(L.latLngBounds(todosPoly()), { animate: false }); mp.setZoom(Math.min(18, mp.getZoom() + 1), { animate: false }); }
   /* contornos que já existem, em tom neutro, para encostar o novo talhão */
@@ -2428,7 +2461,7 @@ function salvarTalhao() {
 T.pfx = () => '<div class="tela" data-s="pfx">' + topo('Pontos fixos', 'Toque no mapa para marcar um ponto') + '<div class="mapa" id="mp"><div class="mapael" id="mm"></div><div class="sheet" id="sh"></div></div></div>';
 let FX = { tipo: 'Pluviômetro', tmp: null, mk: null };
 I.pfx = () => {
-  S.mapa = Mapa.criar($('#mm'), { centro: D.cfg.centro || [-4.9118, -37.9755], zoom: 15 }); const m = S.mapa;
+  S.mapa = Mapa.criar($('#mm'), { centro: D.cfg.centro || [-5.2731, -38.1547], zoom: 15 }); const m = S.mapa;
   m.areas(D.areas, { estado: a => ({ nivel: 'X', dias: null }), neutro: true, rotulos: false, onClick: () => {} }); m.fixos(D.fixos, iconeFixo); if (D.areas.length) m.fit(todosPoly(), { animar: false });
   m.map.on('click', ev => {
     FX.tmp = [+ev.latlng.lat.toFixed(6), +ev.latlng.lng.toFixed(6)]; if (FX.mk) m.map.removeLayer(FX.mk); FX.mk = L.circleMarker(FX.tmp, { radius: 9, color: '#fff', weight: 2.5, fillColor: '#d9b46a', fillOpacity: 1 }).addTo(m.map);
@@ -2451,7 +2484,7 @@ function indForm(k, x) {
   return '<div class="pg-ind" data-k="' + k + '"><div class="lin" style="align-items:flex-end"><label class="fld" style="flex:1"><span>Indicador ' + (k + 1) + ' · o que se conta</span><input class="inp" data-pg="nome" value="' + esc(x.nome || '') + '" placeholder="Ex.: Folhas atacadas"></label>' + (k ? '<button class="ib" data-act="pgTira" data-v="' + k + '" aria-label="Tirar o indicador ' + (k + 1) + '">' + ico('lixo') + '</button>' : '') + '</div>' +
     ddHTML('pgt' + k, 'Tipo', TIPOS_IND, x.tipo || 'media') +
     '<div class="lin">' + (x.tipo === 'presenca' ? '' : '<label class="fld" style="flex:1"><span>Unidade</span><input class="inp" data-pg="unidade" value="' + esc(x.unidade || '') + '" placeholder="folhas, frutos, ramos"></label>') + (x.tipo === 'porcentagem' ? '<label class="fld" style="flex:1"><span>Avaliados por planta</span><input class="inp" data-pg="base" inputmode="numeric" value="' + esc(x.base || '') + '" placeholder="6"></label>' : '') + '</div>' +
-    '<div class="lin"><label class="fld" style="flex:1"><span>Controle a partir de' + (x.tipo === 'media' || !x.tipo ? '' : ' (%)') + '</span><input class="inp" data-pg="c" inputmode="decimal" value="' + esc(x.c == null ? '' : x.c) + '" placeholder="' + (x.tipo === 'media' || !x.tipo ? '0,5' : '10') + '"></label><label class="fld" style="flex:1"><span>Dano a partir de' + (x.tipo === 'media' || !x.tipo ? '' : ' (%)') + '</span><input class="inp" data-pg="d" inputmode="decimal" value="' + esc(x.d == null ? '' : x.d) + '" placeholder="' + (x.tipo === 'media' || !x.tipo ? '1' : '25') + '"></label></div></div>';
+    (Sev.naoPinta({ categoria: PG.cat }) ? '</div>' : '') + (Sev.naoPinta({ categoria: PG.cat }) ? '' : '<div class="lin"><label class="fld" style="flex:1"><span>Controle a partir de' + (x.tipo === 'media' || !x.tipo ? '' : ' (%)') + '</span><input class="inp" data-pg="c" inputmode="decimal" value="' + esc(x.c == null ? '' : x.c) + '" placeholder="' + (x.tipo === 'media' || !x.tipo ? '0,5' : '10') + '"></label><label class="fld" style="flex:1"><span>Dano a partir de' + (x.tipo === 'media' || !x.tipo ? '' : ' (%)') + '</span><input class="inp" data-pg="d" inputmode="decimal" value="' + esc(x.d == null ? '' : x.d) + '" placeholder="' + (x.tipo === 'media' || !x.tipo ? '1' : '25') + '"></label></div></div>');
 }
 function pgLe() { $$('.pg-ind').forEach(el => { const x = PG.inds[+el.dataset.k]; el.querySelectorAll('[data-pg]').forEach(f => { x[f.dataset.pg] = f.value; }); }); }
 const num = v => parseFloat(String(v == null ? '' : v).replace(',', '.'));
@@ -2462,21 +2495,21 @@ function pgValida() {
   const nomes = PG.inds.map(x => x.nome.trim().toLowerCase()), falta = [];
   PG.inds.forEach((x, k) => { const q = 'Indicador ' + (k + 1) + ': ', t = x.tipo || 'media', c = num(x.c), d = num(x.d), b = num(x.base);
     if (!x.nome.trim()) falta.push(q + 'falta o nome'); else if (nomes.indexOf(nomes[k]) !== k) falta.push(q + 'nome repetido');
-    if (!(c > 0)) falta.push(q + 'Controle precisa ser maior que 0'); else if (!(d > c)) falta.push(q + 'Dano precisa ser maior que Controle'); else if (t !== 'media' && d > 100) falta.push(q + 'Dano não pode passar de 100 %');
+    if (Sev.naoPinta({ categoria: PG.cat })) { /* não pinta: sem limites */ } else if (!(c > 0)) falta.push(q + 'Controle precisa ser maior que 0'); else if (!(d > c)) falta.push(q + 'Dano precisa ser maior que Controle'); else if (t !== 'media' && d > 100) falta.push(q + 'Dano não pode passar de 100 %');
     if (t === 'porcentagem' && !(Number.isInteger(b) && b >= 1)) falta.push(q + 'avaliados por planta é um número inteiro, como 6'); });
   $('#pg-mot').innerHTML = v && !ex && falta.length ? '<div class="aviso C">' + falta.map(esc).join('<br>') + '</div>' : '';
   $('#pg-sv').classList.toggle('des', !v || !!ex || !PG.inds.length || falta.length > 0);
 }
-function pgInds() { $('#pg-is').innerHTML = PG.inds.map((x, k) => indForm(k, x)).join(''); $$('#pg-is input').forEach(f => { f.oninput = pgValida; }); pgValida(); }
+function pgInds() { const lim = $('#pg-lim'); if (lim) lim.hidden = Sev.naoPinta({ categoria: PG.cat }); $('#pg-is').innerHTML = (Sev.naoPinta({ categoria: PG.cat }) ? '<div class="aviso">Inimigo natural é contado na visita, mas não pinta o mapa nem entra no nível da área. Por isso não tem Controle nem Dano.</div>' : '') + PG.inds.map((x, k) => indForm(k, x)).join(''); $$('#pg-is input').forEach(f => { f.oninput = pgValida; }); pgValida(); }
 function formPraga() {
   PG.cat = 'Inseto'; PG.inds = [{ nome: '', tipo: 'media', unidade: '', base: '', c: '', d: '' }];
-  sheet('sh', '<div class="top"><button class="ib" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button><h1>Nova praga</h1></div><div class="form larg"><label class="fld"><span>Nome popular</span><input class="inp" id="pg-n" placeholder="Ex.: Nematoide" autocomplete="off"></label><div id="pg-av"></div><label class="fld"><span>Nome científico</span><input class="inp" id="pg-s"></label>' + ddHTML('pgc', 'Categoria', [['Inseto', 'Inseto'], ['Ácaro', 'Ácaro'], ['Doença', 'Doença'], ['Nematoide', 'Nematoide']], 'Inseto') +
-    '<div id="pg-is"></div><div id="pg-mot"></div><button class="btn" data-act="pgMais">' + ico('mais') + 'Adicionar indicador</button><div class="aviso C">Cada amostra é uma planta. Os limites de Controle e Dano valem para o resultado da visita inteira: a média das plantas, ou a porcentagem.</div></div><div class="rodape"><button class="btn" data-act="fecha">Cancelar</button><button class="btn pr des" id="pg-sv" data-act="salvaPraga">Salvar</button></div>');
+  sheet('sh', '<div class="top"><button class="ib" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button><h1>Nova praga</h1></div><div class="form larg"><label class="fld"><span>Nome popular</span><input class="inp" id="pg-n" placeholder="Ex.: Nematoide" autocomplete="off"></label><div id="pg-av"></div><label class="fld"><span>Nome científico</span><input class="inp" id="pg-s"></label>' + ddHTML('pgc', 'Categoria', [['Inseto', 'Inseto'], ['Ácaro', 'Ácaro'], ['Doença', 'Doença'], ['Nematoide', 'Nematoide'], ['Inimigo natural', 'Inimigo natural']], 'Inseto') +
+    '<div id="pg-is"></div><div id="pg-mot"></div><button class="btn" data-act="pgMais">' + ico('mais') + 'Adicionar indicador</button><div class="aviso C" id="pg-lim">Cada amostra é uma planta. Os limites de Controle e Dano valem para o resultado da visita inteira: a média das plantas, ou a porcentagem.</div></div><div class="rodape"><button class="btn" data-act="fecha">Cancelar</button><button class="btn pr des" id="pg-sv" data-act="salvaPraga">Salvar</button></div>');
   $('#pg-n').oninput = pgValida; pgInds();
 }
 function salvarPraga() {
   pgLe(); const n = $('#pg-n').value.trim(), id = DB.novoId();
-  const inds = PG.inds.map((x, k) => Object.assign({ id: id + '_' + (k + 1), nome: x.nome.trim(), tipo: x.tipo || 'media', mapa: true, limites: { padrao: { c: num(x.c), d: num(x.d) } } }, x.tipo !== 'presenca' && x.unidade.trim() ? { unidade: x.unidade.trim().toLowerCase() } : {}, x.tipo === 'porcentagem' ? { base: Math.round(num(x.base)) } : {}));
+  const inds = PG.inds.map((x, k) => Object.assign({ id: id + '_' + (k + 1), nome: x.nome.trim(), tipo: x.tipo || 'media' }, Sev.naoPinta({ categoria: PG.cat }) ? { mapa: false } : { mapa: true, limites: { padrao: { c: num(x.c), d: num(x.d) } } }, x.tipo !== 'presenca' && x.unidade.trim() ? { unidade: x.unidade.trim().toLowerCase() } : {}, x.tipo === 'porcentagem' ? { base: Math.round(num(x.base)) } : {}));
   DB.col('pragas').set(id, { nome: n, cientifico: $('#pg-s').value.trim(), categoria: PG.cat, indicadores: inds }, 'Praga ' + n); voltar(); toast('Praga cadastrada');
 }
 function abrirPraga(id) {
@@ -2501,7 +2534,7 @@ function setDD(id, v) {
   else if (id === 'viz') { S.viz = v; const a = S.A, vis = VIS(a)[S.visita]; if (S.pt === 'res') abrirResumoArea(); else if (S.pt) { $('#ptb').innerHTML = indTab(vis.pontos.find(x => x.i === S.pt).v || {}, a); } }
   else if (id === 'modo') mudaModoTF(v);
   else if (id === 'tpiv') { const pv = pivo(v); if (pv) { TF.pivoId = v; const [r0, r1] = setorLivre(pv); TF.r0 = r0; TF.r1 = r1; TF.mexeu = true; S.mapa.map.fitBounds(L.latLngBounds(Geo.fatia(pv.centro, pv.raioM, 0, 360)), { animate: false, padding: [40, 40] }); desenhoRender(); } }
-  else if (id === 'tcult') TF.cult = v; else if (id === 'pcult') PF.cult = v; else if (id === 'nloc') NF.loc = v; else if (id === 'pgc') PG.cat = v;
+  else if (id === 'tcult') TF.cult = v; else if (id === 'pcult') PF.cult = v; else if (id === 'nloc') NF.loc = v; else if (id === 'pgc') { pgLe(); PG.cat = v; pgInds(); }
   else if (/^pgt\d+$/.test(id)) { pgLe(); PG.inds[+id.slice(3)].tipo = v; pgInds(); }
 }
 function abrirEscolher() {
@@ -2524,8 +2557,10 @@ document.addEventListener('click', e => {
   if (a === 'back' || a === 'fecha' || a === 'gfecha') { voltar(); return; }
   if (a === 'root') { root(v); return; } if (a === 'go') { go(v); return; }
   if (a === 'tema') { S.tema = S.tema === 'claro' ? 'escuro' : 'claro'; document.documentElement.dataset.t = S.tema; $$('[data-act=tema]').forEach(b => { b.innerHTML = ico(S.tema === 'claro' ? 'lua' : 'sol'); }); return; }
+  if ((a === 'mon' || a === 'monit' || a === 'retomaAb') && SO_PC()) { toast('A visita é feita no celular, dentro da área'); return; }
   if (a === 'mon') { abrirEscolher(); return; }
-  if (a === 'sw') { const id = t.dataset.id; if (id === 'atr') { S.atr = !S.atr; t.classList.toggle('on', S.atr); refGeral(); } else { S.o[id] = S.o[id] ? 0 : 1; t.classList.toggle('on', !!S.o[id]); desenhaArea(); } return; }
+  if (a === 'ldias') { mudaLimDias(+t.dataset.d); return; }
+  if (a === 'sw') { const id = t.dataset.id; if (id === 'atr') { S.atr = !S.atr; t.classList.toggle('on', S.atr); refGeral(); } else if (id === 'enc') { S.enc = !S.enc; t.classList.toggle('on', S.enc); refGeral(); } else { S.o[id] = S.o[id] ? 0 : 1; t.classList.toggle('on', !!S.o[id]); desenhaArea(); } return; }
   if (a === 'swl') { t.classList.toggle('on'); return; }
   if (a === 'abrir') { $('#gsh').classList.remove('open'); layers.length = 0; S.stack.push({ t: 'area', p: { id: v } }); mostrar(1); return; }
   if (a === 'monit') { const g = guardada(); if (g && g.deixada && g.areaId === v) { $('#gsh').classList.remove('open'); layers.length = 0; S.stack.push({ t: 'monitorar', p: { id: v, retomar: true } }); mostrar(1); return; } if (g && (g.pontos.length || g.deixada)) { $('#gsh').classList.remove('open'); layers.length = 0; ofereceRetomar(false, g.areaId !== v ? v : null); return; } $('#gsh').classList.remove('open'); layers.length = 0; S.stack.push({ t: 'monitorar', p: { id: v } }); mostrar(1); return; }
@@ -2596,14 +2631,14 @@ function refTela(n) {
 }
 async function iniciar(op) {
   op = op || {}; Mon.modoLocal = !op.fdb; Mon.op = op;
-  DB = Dados.criar(op.fdb ? { fdb: op.fdb, serverTimestamp: op.serverTimestamp } : { guarda: Dados.guardaIDB(op.banco || 'monitoramento-demo-v5') /* v0.5.0: demonstração nova, com as pragas no estilo Cropwise */ });
+  DB = Dados.criar(op.fdb ? { fdb: op.fdb, serverTimestamp: op.serverTimestamp } : { guarda: Dados.guardaIDB(op.banco || 'monitoramento-demo-v6') /* v0.5.0: demonstração nova, com as pragas no estilo Cropwise */ });
   if (op.usuario) D.cfg.usuario = op.usuario;
   if (Mon.modoLocal) await Seed.aplicar(DB, hojeStr());
-  await Promise.all(Dados.COLECOES.map(n => new Promise(res => { let primeiro = true; DB.col(n).watch(l => { if (n === 'config') { const g = l.find(x => x.id === 'geral'); D.cfg = Object.assign({}, g || {}, op.usuario ? { usuario: op.usuario } : {}); } else if (n === 'talhoes') { D.talhoes = l; D.areas = areasDeTalhoes(l); } else D[n] = l; if (primeiro) { primeiro = false; res(); } else refTela(n); }); })));
+  await Promise.all(Dados.COLECOES.map(n => new Promise(res => { let primeiro = true; DB.col(n).watch(l => { if (n === 'config') { const g = l.find(x => x.id === 'geral'); D.cfg = Object.assign({}, g || {}, op.usuario ? { usuario: op.usuario } : {}); } else if (n === 'talhoes') { D.talhoes = l; D.areas = areasDeTalhoes(l); D.encerradas = areasEncerradas(l); } else D[n] = l; if (primeiro) { primeiro = false; res(); } else refTela(n); }); })));
   DB.fila.watch(refFila);
   $('#nav').innerHTML = navHTML(); $('#rail').innerHTML = railHTML(); root('mapa'); setTimeout(() => ofereceRetomar(true), 400);
   /* caixa de saída: o que ficou sem confirmação (sem sinal, app fechado, nuvem recusou) é enviado de novo, com o mesmo número */
-  const gs = Saida.guardaIDB(op.fdb ? 'monitoramento-caixa-nuvem' : (op.banco || 'monitoramento-demo-v5') + '-caixa');
+  const gs = Saida.guardaIDB(op.fdb ? 'monitoramento-caixa-nuvem' : (op.banco || 'monitoramento-demo-v6') + '-caixa');
   SAIDA = Saida.criar({ db: DB, guarda: gs || Saida.memoria() }); SAIDA.reenviar();
   /* v0.4.1 · pede ao navegador para não apagar sozinho o que está guardado (visitas em aberto e caixa) quando o celular fica sem espaço */
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persisted().then(j => { if (!j) navigator.storage.persist().catch(() => {}); }).catch(() => {}); } catch (e) {}
