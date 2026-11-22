@@ -931,7 +931,7 @@ textarea.inp{height:90px;padding:10px 12px;resize:none}
 //# sourceMappingURL=leaflet.js.map
 /* ===== versao.js ===== */
 /* Monitoramento · versão do módulo (o montar.py lê esta linha e carimba o cache do sw.js). */
-const VERSAO = '0.6.0';
+const VERSAO = '0.6.1';
 
 /* ===== icones.js ===== */
 /* Monitoramento · icones.js — ícones do módulo (traço de 24 px, cor herdada) e atalhos. Os 4 estádios têm ícone próprio. Prefixo: ico/P. */
@@ -1691,9 +1691,12 @@ const Mapa = (function () {
         lista.forEach(f => L.marker(f.pos, { icon: L.divIcon({ className: 'mon-fixo', html: '<i>' + icoHtml(f.tipo) + '</i><span>' + f.nome + '</span>', iconSize: [90, 44], iconAnchor: [45, 14] }), keyboard: false }).addTo(fixosG));
       },
       eu(pos, prec) {
+        /* v0.6.1 · com a precisão, um círculo azul claro mostra até onde o GPS pode errar */
+        if (!(prec > 0) && api._euC) { map.removeLayer(api._euC); api._euC = null; }
+        if (prec > 0) { if (!api._euC) api._euC = L.circle(pos, { radius: prec, color: '#4285f4', weight: 1, opacity: .55, fillColor: '#4285f4', fillOpacity: .1, interactive: false }).addTo(map); else { api._euC.setLatLng(pos); api._euC.setRadius(prec); } }
         if (!api._eu) { api._eu = L.marker(pos, { interactive: false, zIndexOffset: 2000, icon: L.divIcon({ className: 'mon-eu', html: '<i></i>', iconSize: [28, 28], iconAnchor: [14, 14] }) }).addTo(map); } else api._eu.setLatLng(pos);
       },
-      euSai() { if (api._eu) { map.removeLayer(api._eu); api._eu = null; } },
+      euSai() { if (api._eu) { map.removeLayer(api._eu); api._eu = null; } if (api._euC) { map.removeLayer(api._euC); api._euC = null; } },
       destroy() { map.remove(); }
     };
     map.on('zoomend', () => api.rotulosAuto());
@@ -1784,6 +1787,32 @@ function refSync() { const b = $('#syncb'); if (b) b.outerHTML = syncIc(); }
 /* v0.6.0 · ITEM 251: no PC (sem toque) não se monitora; a visita é feita no celular, dentro da área. Desenhar o talhão à mão continua no PC. */
 const SO_PC = () => !((navigator.maxTouchPoints || 0) > 0 || (window.matchMedia && matchMedia('(any-pointer: coarse)').matches));
 document.documentElement.classList.toggle('pc', SO_PC());
+/* v0.6.1 · "Onde estou": o ponto azul liga o GPS enquanto a tela está aberta e desliga ao sair dela (não grava nada) */
+const EU = { w: null, m: null, pos: null, prec: null, t: 0, erro: null, cb: null, voou: false, esperando: false };
+function euLiga(m, cb) {
+  euDesliga(); if (!navigator.geolocation || !m) return false; EU.m = m; EU.cb = cb || null;
+  EU.w = navigator.geolocation.watchPosition(p => { EU.pos = [p.coords.latitude, p.coords.longitude]; EU.prec = Math.round(p.coords.accuracy); EU.t = Date.now(); EU.erro = null; if (S.mapa === EU.m) EU.m.eu(EU.pos, EU.prec); if (EU.cb) EU.cb(); },
+    e => { EU.erro = e.code; if (e.code !== 3) EU.pos = null; const cb = EU.cb; if (cb) cb();
+      /* permissão negada: o GPS desliga, e o próximo "Onde estou" pede de novo (a pessoa pode ter liberado) */
+      if (e.code === 1 && EU.w != null) { navigator.geolocation.clearWatch(EU.w); EU.w = null; EU.m = null; EU.esperando = false; } }, { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 });
+  return true;
+}
+function euDesliga() { if (EU.w != null && navigator.geolocation) navigator.geolocation.clearWatch(EU.w); if (EU.m && EU.m.euSai) { try { EU.m.euSai(); } catch (e) {} } Object.assign(EU, { w: null, m: null, pos: null, prec: null, t: 0, erro: null, cb: null, voou: false, esperando: false }); }
+/* posição boa para usar agora: chegou há menos de 15 s */
+const euFresco = () => !!EU.pos && Date.now() - EU.t < 15000;
+/* zoom pela precisão: posição grosseira (PC pela internet) não vai até o zoom de rua */
+const euZoom = (m, prec) => (prec > 100 ? Math.min(m.map.getZoom(), 15) : Math.max(m.map.getZoom(), 17));
+const euErroTxt = () => (EU.erro === 1 ? 'A localização está bloqueada para este app. Libere nas configurações do navegador' : 'Sem sinal do GPS agora');
+/* botão "Onde estou": leva o mapa até você; na primeira vez liga o GPS e espera a primeira posição */
+function euVai() {
+  const m = S.mapa; if (!m) return; if (!navigator.geolocation) { toast('Este aparelho não tem GPS'); return; }
+  const voa = () => { m.map.setView(EU.pos, euZoom(m, EU.prec), { animate: !REDUZ_MOV() }); if (EU.prec > 100) toast('Posição aproximada (±' + (EU.prec >= 1000 ? virg(EU.prec / 1000, 1).replace(/,0$/, '') + ' km' : EU.prec + ' m') + ')'); };
+  if (EU.m === m && euFresco()) { voa(); return; }
+  if (EU.esperando && EU.m === m) return; /* já está procurando: um toque basta */
+  const antes = EU.m === m ? EU.cb : null;
+  if (EU.m !== m) euLiga(m); EU.voou = false; EU.esperando = true; toast('Procurando sua posição');
+  EU.cb = () => { if (antes) antes(); if (!EU.esperando) return; if (EU.pos) { EU.esperando = false; EU.voou = true; voa(); } else if (EU.erro != null && EU.erro !== 3) { EU.esperando = false; toast(euErroTxt()); } };
+}
 const NAV = [['mapa', 'mapa', 'Mapa'], ['semana', 'semana', 'Semana'], ['mon', null, 'Monitorar'], ['notas', 'nota', 'Notas'], ['mais', 'menu', 'Mais']];
 const navHTML = () => NAV.map(n => n[0] === 'mon' ? '<button class="mon" data-act="mon"><i>' + ico('play') + '</i><span>Monitorar</span></button>' : '<button data-act="root" data-v="' + n[0] + '" data-n="' + n[0] + '">' + ico(n[1]) + n[2] + '</button>').join('');
 const railHTML = () => '<div class="logo">Monitoramento<small>' + esc((D.cfg && D.cfg.fazenda) || 'Demonstração') + '</small></div>' + NAV.map(n => '<button class="it" data-act="' + (n[0] === 'mon' ? 'mon' : 'root') + '" data-v="' + n[0] + '" data-n="' + n[0] + '">' + ico(n[1] || 'play') + n[2] + '</button>').join('');
@@ -1841,7 +1870,7 @@ const padSheet = () => (innerWidth >= 900 ? { paddingTopLeft: [30, 70], paddingB
 const prox = ev => (ev < 0 ? 'atrasada ' + (-ev) + ' d' : ev === 0 ? 'vence hoje' : 'em ' + ev + ' d');
 
 /* ---- Mapa geral ---- */
-T.mapa = () => '<div class="tela" data-s="mapa">' + topoRaiz((D.cfg.fazenda || 'Fazenda Demonstração'), (D.cfg.local || 'Dados inventados')) + '<div class="mapa" id="mp"><div class="mapael" id="mm"></div>' +
+T.mapa = () => '<div class="tela" data-s="mapa">' + topoRaiz((D.cfg.fazenda || 'Fazenda Demonstração'), (D.cfg.local || 'Dados inventados')) + '<div class="mapa" id="mp"><div class="mapael" id="mm"></div><div class="sobre mon-ctl" style="top:auto;bottom:30px"><button class="ib" data-act="euVai" aria-label="Onde estou">' + ico('gps') + '</button></div>' +
   '<div class="sobre mon-ab" id="mab" role="status" aria-live="polite"></div><div class="sobre" style="left:8px;top:8px;width:min(340px,calc(100% - 16px))"><div class="dd" data-dd="filtro"><button class="ddb" data-act="dd" data-id="filtro">' + ico('filtro') + '<b id="fsum"></b>' + ico('desce', 'ch') + '</button>' +
   '<div class="ddl" style="padding:12px;overflow:visible;max-height:none"><div style="display:flex;flex-direction:column;gap:10px"><div id="f-cult"></div><div id="f-ind"></div><div style="display:flex;align-items:center;gap:10px;min-height:44px"><span style="flex:1;font-size:15px">Só atrasados</span><button class="sw2" id="f-atr" data-act="sw" data-id="atr" aria-label="Só atrasados"></button></div><div style="display:flex;align-items:center;gap:10px;min-height:44px"><span style="flex:1;font-size:15px">Mostrar encerrados</span><button class="sw2" id="f-enc" data-act="sw" data-id="enc" aria-label="Mostrar encerrados"></button></div>' +
   '<div style="border-top:1px solid var(--abd);padding-top:10px"><div class="tag" style="margin-bottom:6px">Cores, pelo último monitoramento</div><div id="f-leg" style="display:flex;flex-direction:column;gap:6px;font-size:14px"></div></div></div></div></div></div><div class="sheet" id="sh"></div></div></div>';
@@ -1870,7 +1899,7 @@ function avisoAberta() {
   el.innerHTML = '<div class="mon-ab-t"><b>Visita do ' + esc(a.nome) + ' em aberto</b><small>Guardada ' + esc(quandoGuardou(g.em)) + (n ? ' · ' + n + (n === 1 ? ' ponto' : ' pontos') : '') + esc(de) + '</small></div><button class="btn pr sm" data-act="retomaAb">' + ico('play') + 'Continuar</button>';
   el.classList.add('on');
 }
-I.mapa = () => { S.mapa = Mapa.criar($('#mm'), { centro: (D.cfg.centro) || [-5.2731, -38.1547], zoom: D.cfg.zoom || 15 }); filtroGeral(); desenhaGeral(); if (D.areas.length) S.mapa.fit(todosPoly(), { animar: false }); S.mapa.map.on('click', () => fecharDDs()); avisoAberta(); };
+I.mapa = n => { if (n) n._fim = euDesliga; S.mapa = Mapa.criar($('#mm'), { centro: (D.cfg.centro) || [-5.2731, -38.1547], zoom: D.cfg.zoom || 15 }); filtroGeral(); desenhaGeral(); if (D.areas.length) S.mapa.fit(todosPoly(), { animar: false }); S.mapa.map.on('click', () => fecharDDs()); avisoAberta(); };
 /* v0.6.0 · C12 · Limite de dias (como na legenda da Cropwise): fica na configuração geral, vale para todos */
 const PASSOS_DIAS = [0, 3, 5, 7, 10, 14, 21, 30, 45, 60];
 function mudaLimDias(d) {
@@ -1995,7 +2024,7 @@ function barraMon() {
   $('#mtm').textContent = hm(e.msDentro); $('#md').textContent = Math.round(e.distM); $('#mi').textContent = M.pontos.length; const ml = $('#mil'); if (ml) ml.textContent = M.pontos.length === 1 ? 'ponto' : 'pontos';
 }
 function gpsPos(c, prec) {
-  const t = Date.now(); M.pos = c; M.prec = prec; M.semGps = false; S.mapa && S.mapa.eu(c);
+  const t = Date.now(); M.pos = c; M.prec = prec; M.semGps = false; S.mapa && S.mapa.eu(c, prec);
   if (M.mo) {
     const r = M.mo.leitura({ lat: c[0], lng: c[1], prec: prec || 0, t }), e = M.mo.estado();
     if (r === 'ok' && e.nTrilha !== M.nTr) { trilhaMon(); S.mapa && S.mapa.limpar && refMon(); }
@@ -2306,23 +2335,23 @@ const areaTF = () => Geo.areaHa(TF.cant);
 const numBR = v => { v = String(v == null ? '' : v).trim(); if (v.indexOf(',') >= 0) v = v.replace(/\./g, '').replace(',', '.'); return v === '' ? NaN : +v; };
 T.tal = p => { const t = p && p.id ? D.talhoes.find(x => x.id === p.id) : null;
   Object.assign(TF, { avisouCod: false, passo: t ? 1 : 0, id: t ? t.id : null, nome: t ? t.codigo : '', cult: t ? capital(t.cultura) || 'Acerola' : 'Acerola', variedade: t ? capital(t.variedade) : '', ha: t ? String(t.hectares || '').replace('.', ',') : '', ps: t ? t.ptsSolo || '' : '', pf: t ? t.ptsFolha || '' : '', pr: t ? t.ptsFruta || '' : '',
-    cant: t && t.geo ? Geo.decodifica(t.geo)[0] : [], modo: t && t.pivoGeo ? 'setor' : 'cantos', andando: false, trilha: [], pivoId: t && t.pivoGeo ? t.pivoGeo.pivoId : (D.pivos[0] || {}).id || null, r0: t && t.pivoGeo ? t.pivoGeo.rumo0 : 0, r1: t && t.pivoGeo ? t.pivoGeo.rumo1 : 90, fonte: t && t.geoFonte || 'cantos' });
+    cant: t && t.geo ? Geo.decodifica(t.geo)[0] : [], modo: t && t.pivoGeo ? 'setor' : 'cantos', andando: false, trilha: [], pivoId: t && t.pivoGeo ? t.pivoGeo.pivoId : (D.pivos[0] || {}).id || null, r0: t && t.pivoGeo ? t.pivoGeo.rumo0 : 0, r1: t && t.pivoGeo ? t.pivoGeo.rumo1 : 90, fonte: t && t.geoFonte || 'cantos', voou: false });
   return '<div class="tela" data-s="tal">' + topo(t ? 'Lugar do ' + t.codigo : 'Novo talhão', '') + '<div class="passos" id="pas"></div><div id="tcorpo" style="flex:1;min-height:0;display:flex;flex-direction:column;position:relative"></div><div class="rodape" id="trod"></div><div class="sheet" id="sh"></div></div>'; };
 I.tal = n => {
   S.stack[S.stack.length - 1].guard = () => { if (!TF.id && (TF.nome || TF.cant.length) || TF.id && TF.mexeu) { sheet('sh', '<div class="grip"></div><div class="sh-h"><h2>Descartar o que você preencheu?</h2></div><div class="sh-b"><div style="color:var(--atx2)">' + (TF.id ? 'O novo lugar ainda não foi salvo.' : 'O talhão ainda não foi salvo.') + '</div></div><div class="sh-f"><div class="lin"><button class="btn" data-act="fecha">Continuar editando</button><button class="btn cr" data-act="descarta">Descartar</button></div></div>'); return true; } return false; };
-  n._fim = () => { if (TF.gps != null && navigator.geolocation) navigator.geolocation.clearWatch(TF.gps); TF.gps = null; TF.andando = false; };
+  n._fim = () => { if (TF.gps != null && navigator.geolocation) navigator.geolocation.clearWatch(TF.gps); TF.gps = null; TF.andando = false; euDesliga(); };
   TF.mexeu = false; tPasso();
 };
 function tPasso() {
   const p = TF.passo, c = $('#tcorpo'); $('#pas').innerHTML = ['Dados', 'Lugar no mapa', 'Revisar'].map((t, i) => '<div class="' + (i === p ? 'on' : i < p ? 'ok' : '') + '"><i></i>' + (i + 1) + '. ' + t + '</div>').join('');
-  if (S.mapa) { try { S.mapa.destroy(); } catch (e) {} S.mapa = null; } if (TF.mini) { try { TF.mini.remove(); } catch (e) {} TF.mini = null; }
+  euDesliga(); if (S.mapa) { try { S.mapa.destroy(); } catch (e) {} S.mapa = null; } if (TF.mini) { try { TF.mini.remove(); } catch (e) {} TF.mini = null; }
   if (p === 0) c.innerHTML = '<div class="form larg"><label class="fld"><span>Código do talhão</span><input class="inp" id="t-n" value="' + esc(TF.nome) + '" placeholder="Ex.: TD1323456" autocomplete="off" style="text-transform:uppercase"></label><div id="t-av"></div>' + ddHTML('tcult', 'Cultura', culturasItens(), TF.cult) +
     '<label class="fld"><span>Variedade (opcional)</span><input class="inp" id="t-v" value="' + esc(TF.variedade) + '"></label><label class="fld"><span>Hectares do documento</span><input class="inp" id="t-h" inputmode="decimal" value="' + esc(TF.ha) + '" placeholder="Ex.: 4,5"></label>' +
     '<div class="fld"><span>Pontos de coleta por hectare (opcional)</span><div class="lin"><label class="fld" style="flex:1"><span>Solo</span><input class="inp" id="t-ps" inputmode="numeric" value="' + esc(TF.ps) + '"></label><label class="fld" style="flex:1"><span>Folha</span><input class="inp" id="t-pf" inputmode="numeric" value="' + esc(TF.pf) + '"></label><label class="fld" style="flex:1"><span>Fruto</span><input class="inp" id="t-pr" inputmode="numeric" value="' + esc(TF.pr) + '"></label></div></div></div>';
   else if (p === 1) {
     c.innerHTML = '<div class="mapa" id="dm" style="touch-action:none"><div class="mapael" id="dmm"></div><div class="mira" id="mira"><i></i></div><div class="loupe" id="lp"></div><div class="sobre" style="left:8px;top:8px;width:190px" id="mdd">' + ddHTML('modo', '', [['cantos', 'Marcar cantos'], ['andar', 'Caminhar a borda'], ['setor', 'Setor de pivô'], ['arquivo', 'Importar arquivo']], TF.modo) + '</div>' +
-      '<div class="sobre" id="msetor" style="left:206px;right:8px;top:8px"></div>' +
-      '<div class="sobre" style="left:8px;right:8px;bottom:8px;display:flex;flex-direction:column;gap:8px"><div class="faixa" style="background:var(--ab1);border:1px solid var(--abd);border-radius:var(--rs);padding:8px 12px;justify-content:space-between;align-items:center;overflow:visible"><div class="cnt"><span>Cantos <b id="dc">0</b></span><span>Área <b id="da">0,0 ha</b></span></div><button class="btn sm" data-act="desfaz" id="bdesfaz">' + ico('desfaz') + 'Desfazer</button></div><div class="lin"><button class="btn pr" id="bmarca" data-act="marcaC"></button></div></div>' +
+      '<div class="sobre" id="msetor" style="left:206px;right:8px;top:8px"></div><div class="sobre mon-ctl" id="deu" style="top:64px"><button class="ib" data-act="euVai" aria-label="Onde estou">' + ico('gps') + '</button></div>' +
+      '<div class="sobre" style="left:8px;right:8px;bottom:8px;display:flex;flex-direction:column;gap:8px"><div class="faixa" style="background:var(--ab1);border:1px solid var(--abd);border-radius:var(--rs);padding:8px 12px;justify-content:space-between;align-items:center;overflow:visible"><div class="cnt"><span>Cantos <b id="dc">0</b></span><span>Área <b id="da">0,0 ha</b></span></div><button class="btn" data-act="desfaz" id="bdesfaz" style="min-height:44px">' + ico('desfaz') + 'Desfazer</button></div><div class="lin"><button class="btn" id="bcanteu" data-act="cantoEu">' + ico('gps') + 'Canto onde estou</button><button class="btn pr" id="bmarca" data-act="marcaC"></button></div></div>' +
       '<input type="file" id="tarq" accept=".kml,.geojson,.json,application/vnd.google-earth.kml+xml,application/geo+json" hidden></div>';
     iniciaDesenho();
   } else {
@@ -2351,7 +2380,9 @@ function desenhoRender() {
   if (P.length > 1) (P.length > 2 ? L.polygon : L.polyline)(P, { color: '#d9b46a', weight: 2.6, fillColor: '#d9b46a', fillOpacity: .24, lineJoin: 'round', interactive: false, _tf: 1 }).addTo(m.grupo);
   if (!setorOn && P.length <= 80) P.forEach((p, i) => { const mk = L.marker(p, { icon: cantoIcon(i), draggable: true, keyboard: false }).addTo(m.grupo); mk.on('dragend', () => { const q = mk.getLatLng(); TF.cant[i] = [q.lat, q.lng]; TF.mexeu = true; desenhoRender(); }); });
   const graus = Math.round(((TF.r1 - TF.r0) % 360 + 360) % 360 || 360), dc = $('#dc'); if (dc) { dc.parentNode.firstChild.textContent = setorOn ? 'Setor ' : 'Cantos '; dc.textContent = setorOn ? graus + '°' : P.length; $('#da').textContent = virg(areaTF()) + ' ha'; const b = $('#trod .btn.pr'); if (b) b.classList.toggle('des', P.length < 3 || setorOn && (graus < 5 || !pivo(TF.pivoId))); }
-  const bm = $('#bmarca'); if (bm) { bm.style.display = setorOn ? 'none' : ''; bm.innerHTML = TF.modo === 'andar' ? (TF.andando ? ico('para') + 'Parar de caminhar' : ico('caminhar') + 'Começar a caminhar') : TF.modo === 'arquivo' ? ico('nota') + 'Escolher arquivo (KML ou GeoJSON)' : ico('pino') + 'Marcar canto aqui'; }
+  const bm = $('#bmarca'); if (bm) { bm.style.display = setorOn ? 'none' : ''; bm.innerHTML = TF.modo === 'andar' ? (TF.andando ? ico('para') + 'Parar de caminhar' : ico('caminhar') + 'Começar a caminhar') : TF.modo === 'arquivo' ? ico('nota') + 'Escolher arquivo (KML ou GeoJSON)' : ico('pino') + 'Canto na mira'; }
+  const be = $('#bcanteu'); if (be) be.style.display = TF.modo === 'cantos' ? '' : 'none';
+  const de = $('#deu'); if (de) de.style.display = setorOn ? 'none' : ''; /* no setor de pivô a lista de pivôs fica nesse canto */
   const bd = $('#bdesfaz'); if (bd) bd.style.display = setorOn ? 'none' : '';
   $('#mira').style.display = TF.modo === 'cantos' ? '' : 'none';
   const ms = $('#msetor'); if (ms) ms.innerHTML = setorOn ? (D.pivos.length ? ddHTML('tpiv', '', D.pivos.map(p => [p.id, p.nome]), TF.pivoId) : '<div class="aviso D">Cadastre o pivô primeiro (Mais › Novo pivô).</div>') : '';
@@ -2389,6 +2420,11 @@ function iniciaDesenho() {
   D.areas.filter(a => a.id !== TF.id).forEach(a => L.polygon(a.poly, { color: '#fff', weight: 1.4, fillOpacity: .06, opacity: .7, interactive: false }).addTo(mp));
   $('#tarq').onchange = ev => { const f = ev.target.files[0]; ev.target.value = ''; if (f) lerArquivo(f); };
   desenhoRender();
+  /* v0.6.1 · o GPS liga com a tela: ponto azul; talhão novo e vazio abre onde você está */
+  /* voa uma vez só, e só se a pessoa ainda não mexeu no mapa nem marcou canto, e com a posição boa (até 100 m) */
+  const m0 = S.mapa; TF.mexeuMapa = false; mp.on('dragstart', () => { TF.mexeuMapa = true; });
+  euLiga(m0, () => { if (S.mapa !== m0) return; if (EU.pos && EU.prec <= 100 && !TF.voou && !TF.mexeuMapa && !TF.id && !TF.cant.length && TF.modo !== 'setor') { TF.voou = true; mp.setView(EU.pos, 18, { animate: !REDUZ_MOV() }); } });
+  if (!TF.id && !TF.cant.length) setTimeout(() => { if (S.mapa === m0 && !EU.pos && !TF.voou && !TF.mexeuMapa && !TF.cant.length) toast(EU.erro === 1 ? euErroTxt() : 'Sem sinal do GPS ainda. O mapa abriu nos talhões que já existem'); }, 8000);
   mp.on('click', ev => { if (TF.modo !== 'cantos' || (S._lupaFim && Date.now() - S._lupaFim < 400)) return; TF.cant.push([ev.latlng.lat, ev.latlng.lng]); TF.fonte = 'cantos'; TF.mexeu = true; desenhoRender(); });
   /* toque longo: lupa para escolher o ponto com precisão */
   const el = $('#dmm'); let st = null, mini = null;
@@ -2441,7 +2477,7 @@ function caminhar() {
     TF.andando = false; navigator.geolocation.clearWatch(TF.gps); TF.gps = null; const P = Geo.simplificar(TF.trilha, 3); TF.cant = P.length > 24 ? Geo.simplificar(TF.trilha, 6) : P; if (TF.cant.length > 3 && Geo.dist(TF.cant[0], TF.cant[TF.cant.length - 1]) < 15) TF.cant.pop(); TF.fonte = 'gps'; desenhoRender(); if (TF.cant.length > 2) S.mapa.map.fitBounds(L.latLngBounds(TF.cant), { padding: [60, 60] }); return;
   }
   TF.andando = true; TF.trilha = []; TF.cant = []; TF.mexeu = true;
-  TF.gps = navigator.geolocation.watchPosition(pos => { if (pos.coords.accuracy > 20) return; const c = [pos.coords.latitude, pos.coords.longitude], u = TF.trilha[TF.trilha.length - 1]; if (!u || Geo.dist(u, c) >= Math.max(4, pos.coords.accuracy)) { TF.trilha.push(c); TF.cant = TF.trilha.slice(); desenhoRender(); S.mapa.eu(c); S.mapa.map.panTo(c, { animate: !REDUZ_MOV(), duration: .25 }); } }, err => { if (err && err.code === 3) return; toast('Sem GPS agora'); TF.andando = false; desenhoRender(); }, { enableHighAccuracy: true, maximumAge: 0 });
+  TF.gps = navigator.geolocation.watchPosition(pos => { if (pos.coords.accuracy > 20) return; const c = [pos.coords.latitude, pos.coords.longitude], u = TF.trilha[TF.trilha.length - 1]; if (!u || Geo.dist(u, c) >= Math.max(4, pos.coords.accuracy)) { TF.trilha.push(c); TF.cant = TF.trilha.slice(); desenhoRender(); S.mapa.eu(c); S.mapa.map.panTo(c, { animate: !REDUZ_MOV(), duration: .25 }); } }, err => { if (err && err.code === 3) return; toast('Sem GPS agora'); if (TF.gps != null) navigator.geolocation.clearWatch(TF.gps); TF.gps = null; TF.andando = false; desenhoRender(); }, { enableHighAccuracy: true, maximumAge: 0 });
   desenhoRender();
 }
 function salvarTalhao() {
@@ -2518,6 +2554,15 @@ function abrirPraga(id) {
     (p.indicadores || []).map(i => { const L = Sev.limitesDe(i, 'padrao'); return '<div class="rv-p"><b>' + esc(i.nome) + '</b><small>' + esc(descInd(i)) + ' · ' + esc(limTxt(i)) + '</small>' + (L ? regua(L.c, i, 'Régua de limites', { metodologia: 'padrao' }) : '') + '</div>'; }).join('') + '</div>');
 }
 
+/* v0.6.1 · "Canto onde estou": marca o canto na posição do GPS (só com precisão de até 10 m) */
+const PREC_CANTO = 10;
+function cantoEu() {
+  if (!euFresco()) { toast(EU.erro === 1 ? euErroTxt() : 'Aguardando o GPS'); return; }
+  if (EU.prec > PREC_CANTO) { toast('GPS fraco agora (±' + EU.prec + ' m). Espere ficar em até ' + PREC_CANTO + ' m'); return; }
+  const u = TF.cant[TF.cant.length - 1]; if (u && Geo.dist(u, EU.pos) < Math.max(5, EU.prec)) { toast('Você ainda está no mesmo canto. Ande até o próximo'); return; }
+  TF.cant.push(EU.pos.slice()); TF.fonte = 'cantos'; TF.mexeu = true; desenhoRender(); toast('Canto ' + TF.cant.length + ' marcado (±' + EU.prec + ' m)');
+}
+
 /* ===== app.js ===== */
 /* Monitoramento · app.js — eventos, início e ponto de integração. Prefixo: Mon.
    Standalone: abre sozinho no modo local (demonstração). No EFCwork: Monitoramento.iniciar({ fdb, usuario, serverTimestamp, raiz }). */
@@ -2560,6 +2605,8 @@ document.addEventListener('click', e => {
   if ((a === 'mon' || a === 'monit' || a === 'retomaAb') && SO_PC()) { toast('A visita é feita no celular, dentro da área'); return; }
   if (a === 'mon') { abrirEscolher(); return; }
   if (a === 'ldias') { mudaLimDias(+t.dataset.d); return; }
+  if (a === 'euVai') { euVai(); return; }
+  if (a === 'cantoEu') { cantoEu(); return; }
   if (a === 'sw') { const id = t.dataset.id; if (id === 'atr') { S.atr = !S.atr; t.classList.toggle('on', S.atr); refGeral(); } else if (id === 'enc') { S.enc = !S.enc; t.classList.toggle('on', S.enc); refGeral(); } else { S.o[id] = S.o[id] ? 0 : 1; t.classList.toggle('on', !!S.o[id]); desenhaArea(); } return; }
   if (a === 'swl') { t.classList.toggle('on'); return; }
   if (a === 'abrir') { $('#gsh').classList.remove('open'); layers.length = 0; S.stack.push({ t: 'area', p: { id: v } }); mostrar(1); return; }
