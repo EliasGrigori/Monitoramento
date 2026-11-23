@@ -1,8 +1,8 @@
 /* Monitoramento — sw.js (mesmo desenho do EFCwork): guarda a TELA do app e os QUADROS DO MAPA no aparelho.
    Os DADOS não passam por aqui: o Firestore guarda o cache dele e sincroniza quando a conexão volta.
-   O nome do cache sobe a cada versão (tools/montar.py troca monitoramento-0.6.8). Os quadros do mapa ficam num cache à parte,
+   O nome do cache sobe a cada versão (tools/montar.py troca monitoramento-0.6.9). Os quadros do mapa ficam num cache à parte,
    para não se perderem a cada versão nova; o limite evita encher o celular. */
-const VERSAO = 'monitoramento-0.6.8';
+const VERSAO = 'monitoramento-0.6.9';
 const TILES = 'monitoramento-quadros-v1', MAX_QUADROS = 3000;
 const TELA = ['./', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png'];
 const ESPERA_REDE_MS = 3500;

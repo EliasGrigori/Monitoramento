@@ -965,6 +965,13 @@ textarea.inp{height:90px;padding:10px 12px;resize:none}
 @media (min-width:900px){.mon-dias{right:396px}.fd-in{margin-left:0}} /* revisor 8: no PC, a gaveta abre à direita */
 .pes-c{display:inline-block;width:16px;height:4px;border-radius:2px;vertical-align:middle;box-shadow:0 0 0 1px rgba(0,0,0,.35);flex:none}
 .cart-mon{margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--abd)}.cart-mon .tag{margin-bottom:4px}
+/* v0.6.9 · ferramentas do mapa: botão ligado, barra de medir, halos */
+.mon-ctl .ib{position:relative}.mon-ctl .ib::after{content:'';position:absolute;inset:-1px;border:2px solid var(--aa);border-radius:inherit;opacity:0;transition:opacity .15s;pointer-events:none}.mon-ctl .ib.on::after{opacity:1} /* revisor 16: ligado com um anel que aparece em 150 ms */
+.medindo,.medindo .leaflet-interactive{cursor:crosshair}.medindo .leaflet-interactive,.medindo .leaflet-marker-icon{pointer-events:none}
+.mon-med{left:8px;right:64px;bottom:30px;z-index:402;display:flex;align-items:center;gap:6px;padding:6px 6px 6px 12px;background:var(--ab1);border:1px solid var(--abd);border-radius:var(--rs);opacity:0;transform:translateY(8px);pointer-events:none;transition:opacity .15s,transform .15s}
+.mon-med.on{opacity:1;transform:none;pointer-events:auto}.mon-med .med-tx{flex:1;min-width:0;display:flex;flex-direction:column}.mon-med .med-tx b{font-size:15px}.mon-med .med-tx small{font-size:12.5px;color:var(--atx2)}
+.mon-med .ib{transition:opacity .15s}.mon-med .ib:disabled{opacity:.4}
+@media (prefers-reduced-motion:reduce){.mon-med{transition:none;transform:none}}
 </style></head><body>
 <div id="app"><nav class="rail" id="rail"></nav><div id="view"></div><nav class="nav" id="nav"></nav></div>
 <div class="sheet cheia" id="gsh" style="z-index:900"></div><div class="sheet" id="gsh2" style="z-index:910"></div><div class="ft-fund" id="fg" style="z-index:950"></div><div class="toast" id="toast" role="status" style="z-index:990"></div>
@@ -979,7 +986,7 @@ textarea.inp{height:90px;padding:10px 12px;resize:none}
 //# sourceMappingURL=leaflet.js.map
 /* ===== versao.js ===== */
 /* Monitoramento · versão do módulo (o montar.py lê esta linha e carimba o cache do sw.js). */
-const VERSAO = '0.6.8';
+const VERSAO = '0.6.9';
 
 /* ===== icones.js ===== */
 /* Monitoramento · icones.js — ícones do módulo (traço de 24 px, cor herdada) e atalhos. Os 4 estádios têm ícone próprio. Prefixo: ico/P. */
@@ -1000,7 +1007,7 @@ lupa:'<circle cx="11" cy="11" r="6"/><path d="M16 16l4.5 4.5"/>',dir:'<path d="M
 pluv:'<path d="M12 3c3 4 5 6.5 5 9.5a5 5 0 0 1-10 0C7 9.5 9 7 12 3z"/>',ponto:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/>',
 praga:'<ellipse cx="12" cy="13" rx="4" ry="5.5"/><path d="M12 7.5V4M8.5 10L4 8M8.5 14L4 16M15.5 10L20 8M15.5 14L20 16"/>',
 baixar:'<path d="M12 4v11M7 10.5l5 5 5-5"/><path d="M5 19.5h14"/>',enviar:'<circle cx="6" cy="12" r="2.5"/><circle cx="17.5" cy="5.5" r="2.5"/><circle cx="17.5" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.1-4M8.2 13.2l7.1 4"/>',
-lapis:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',abrir:'<path d="M3.5 7V18a1.5 1.5 0 0 0 1.5 1.5h14a1.5 1.5 0 0 0 1.5-1.5V9a1.5 1.5 0 0 0-1.5-1.5h-7l-2-2.5H5A1.5 1.5 0 0 0 3.5 6.5z"/><path d="M12 16.5v-6M9.5 13l2.5-2.5 2.5 2.5"/>',bateria:'<rect x="3" y="7" width="16" height="10" rx="2"/><path d="M21 10.5v3"/><path d="M6 10v4"/>',
+regua:'<path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/>',halo:'<rect x="8" y="8" width="8" height="8" rx="1"/><rect x="3" y="3" width="18" height="18" rx="4" stroke-dasharray="3 3"/>',lapis:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',abrir:'<path d="M3.5 7V18a1.5 1.5 0 0 0 1.5 1.5h14a1.5 1.5 0 0 0 1.5-1.5V9a1.5 1.5 0 0 0-1.5-1.5h-7l-2-2.5H5A1.5 1.5 0 0 0 3.5 6.5z"/><path d="M12 16.5v-6M9.5 13l2.5-2.5 2.5 2.5"/>',bateria:'<rect x="3" y="7" width="16" height="10" rx="2"/><path d="M21 10.5v3"/><path d="M6 10v4"/>',
 /* v0.6.7 · estruturas da fazenda */
 fazenda:'<path d="M3 20h18"/><path d="M5 20V9l7-5 7 5v11"/><path d="M9 20v-6h6v6"/>',sede:'<path d="M4 11l8-6 8 6"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/>',
 galpao:'<path d="M3 20V10l9-5 9 5v10z"/><path d="M7 20v-6h10v6M7 17h10"/>',packing:'<path d="M4 8l8-4 8 4v9l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v9"/>',
@@ -1259,9 +1266,111 @@ const Geo = (function () {
   function rumo(a, b) { const la1 = a[0] * RAD, la2 = b[0] * RAD, dl = (b[1] - a[1]) * RAD, y = Math.sin(dl) * Math.cos(la2), x = Math.cos(la1) * Math.sin(la2) - Math.sin(la1) * Math.cos(la2) * Math.cos(dl); return (Math.atan2(y, x) / RAD + 360) % 360; }
   /* setor do pivô de r0 até r1 no sentido horário (r1 pode passar de 360); setor de 360° é o círculo inteiro */
   function setor(c, raio, r0, r1, passo) { let a1 = r1; while (a1 <= r0) a1 += 360; return a1 - r0 >= 359.9 ? fatia(c, raio, 0, 360, passo).slice(1) : fatia(c, raio, r0, a1, passo); }
-  return { R, dist, caminho, plano, areaM2, areaHa, dentro, caixa, centro, destino, fatia, dividirPivo, simplificar, areaPivoHa, intensidade, codifica, decodifica, areaHaAneis, rumo, setor };
+  /* v0.6.9 · halo: o contorno a d metros para fora de um polígono [[lat,lng],...] (sem repetir o primeiro no fim).
+     Faz no plano local: cada lado vai d metros para fora; nos cantos para fora entra um arco (de 10 em 10 graus);
+     nos cantos para dentro, o encontro dos dois lados. Laços que se cruzam (canto para dentro muito fundo) são cortados.
+     Serve para faixas de 1 a algumas centenas de metros em talhões; não é um "buffer" geral de SIG. */
+  function halo(P, d) { const r = haloAneis(P, d); return r ? r.ext : null; }
+  /* devolve { ext: contorno de fora, furos: [miolos que ficam a mais de d metros (talhão em C em volta de uma mata)] } */
+  function haloAneis(P, d) {
+    if (!P || P.length < 3 || !(d > 0)) return null;
+    let Q = P.slice(); if (dist(Q[0], Q[Q.length - 1]) < 0.01) Q = Q.slice(0, -1);
+    const ref = centro(Q), k = Math.cos(ref[0] * RAD), M = R * RAD;
+    let X = Q.map(p => [(p[1] - ref[1]) * M * k, (p[0] - ref[0]) * M]);
+    X = X.filter((p, i) => { const q = X[(i + 1) % X.length]; return Math.hypot(p[0] - q[0], p[1] - q[1]) > 1e-6; });
+    let s = 0; for (let i = 0; i < X.length; i++) { const a = X[i], b = X[(i + 1) % X.length]; s += a[0] * b[1] - b[0] * a[1]; }
+    if (s < 0) X.reverse(); /* anti-horário: a normal para fora de um lado (dx,dy) é (dy,-dx) */
+    const n = X.length, out = [], nor = (a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], l = Math.hypot(dx, dy); return [dy / l, -dx / l]; };
+    for (let i = 0; i < n; i++) {
+      const p0 = X[(i - 1 + n) % n], p1 = X[i], p2 = X[(i + 1) % n], n1 = nor(p0, p1), n2 = nor(p1, p2), cr = (p1[0] - p0[0]) * (p2[1] - p1[1]) - (p1[1] - p0[1]) * (p2[0] - p1[0]);
+      if (cr >= 0) { /* canto para fora (ou reto): arco de n1 até n2 */
+        let a0 = Math.atan2(n1[1], n1[0]), a1 = Math.atan2(n2[1], n2[0]); while (a1 < a0) a1 += 2 * Math.PI;
+        const passos = Math.max(1, Math.ceil((a1 - a0) / (10 * RAD)));
+        for (let j = 0; j <= passos; j++) { const t = a0 + (a1 - a0) * j / passos; out.push([p1[0] + d * Math.cos(t), p1[1] + d * Math.sin(t)]); }
+      } else { /* canto para dentro: encontro das duas paralelas (com limite) */
+        const bx = n1[0] + n2[0], by = n1[1] + n2[1], bl = Math.hypot(bx, by), c = (n1[0] * n2[0] + n1[1] * n2[1]);
+        const m = d / Math.sqrt(Math.max((1 + c) / 2, 1e-6));
+        if (bl > 1e-9 && m < d * 8) out.push([p1[0] + bx / bl * m, p1[1] + by / bl * m]); else { out.push([p1[0] + n1[0] * d, p1[1] + n1[1] * d]); out.push([p1[0] + n2[0] * d, p1[1] + n2[1] * d]); }
+      }
+    }
+    /* corta laços: se o lado i cruza um lado j mais adiante, os pontos entre eles saem (fica o encontro) */
+    const cruza = (a, b, c, e) => { const d1 = (b[0] - a[0]) * (e[1] - c[1]) - (b[1] - a[1]) * (e[0] - c[0]); if (Math.abs(d1) < 1e-12) return null; const t = ((c[0] - a[0]) * (e[1] - c[1]) - (c[1] - a[1]) * (e[0] - c[0])) / d1, u = ((c[0] - a[0]) * (b[1] - a[1]) - (c[1] - a[1]) * (b[0] - a[0])) / d1; return t > 1e-9 && t < 1 - 1e-9 && u > 1e-9 && u < 1 - 1e-9 ? [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])] : null; };
+    const dseg = (p, a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], l2 = dx * dx + dy * dy; let t = l2 ? ((p[0] - a[0]) * dx + (p[1] - a[1]) * dy) / l2 : 0; t = Math.max(0, Math.min(1, t)); return Math.hypot(a[0] + t * dx - p[0], a[1] + t * dy - p[1]); };
+    const distPol = q => { let m = Infinity; for (let i = 0; i < n; i++) m = Math.min(m, dseg(q, X[i], X[(i + 1) % n])); return m; };
+    const ar = A => { let t = 0; for (let q = 0; q < A.length; q++) { const a = A[q], b = A[(q + 1) % A.length]; t += a[0] * b[1] - b[0] * a[1]; } return t / 2; };
+    /* corta os laços de um anel: fica o pedaço maior (pela área com sinal, no anel de fora; pelo tamanho, num pedaço);
+       devolve também os pedaços cortados */
+    function corta(Z, porTamanho) {
+      const ped = []; let mexeu = true, voltas = 0;
+      while (mexeu && voltas++ < 80) { mexeu = false; const m = Z.length;
+        for (let i = 0; i < m && !mexeu; i++) for (let j = i + 2; j < m && !mexeu; j++) { if (i === 0 && j === m - 1) continue;
+          const x = cruza(Z[i], Z[i + 1], Z[j], Z[(j + 1) % m]); if (!x) continue;
+          const A1 = [x].concat(Z.slice(i + 1, j + 1)), A2 = Z.slice(j + 1).concat(Z.slice(0, i + 1)).concat([x]);
+          const fica = porTamanho ? (Math.abs(ar(A1)) > Math.abs(ar(A2)) ? A1 : A2) : (ar(A1) > ar(A2) ? A1 : A2);
+          ped.push(fica === A1 ? A2 : A1); Z = fica; mexeu = true; } }
+      return { Z, ped };
+    }
+    /* revisor 1 (v0.6.9): um pedaço cortado é um furo de verdade quando, limpo dos próprios laços, fica todo a d metros
+       ou mais do talhão (o miolo de um C de boca estreita em volta de uma mata); senão é sobra de canto e sai */
+    const furos = [], olha = (A, nivel) => { if (nivel > 3 || A.length < 3) return; const c = corta(A, true);
+      if (Math.abs(ar(c.Z)) > 1 && c.Z.every(q => distPol(q) >= d * 0.98)) furos.push(c.Z); else c.ped.forEach(q => olha(q, nivel + 1)); };
+    const prim = corta(out, false), Y = prim.Z; prim.ped.forEach(q => olha(q, 0));
+    if (Y.length < 3) return null; /* revisor 15: polígono degenerado */
+    const volta = A => A.map(p => [ref[0] + p[1] / M, ref[1] + p[0] / (M * k)]);
+    return { ext: volta(Y), furos: furos.map(volta) };
+  }
+  return { R, dist, caminho, plano, areaM2, areaHa, dentro, caixa, centro, destino, fatia, dividirPivo, simplificar, areaPivoHa, intensidade, codifica, decodifica, areaHaAneis, rumo, setor, halo, haloAneis };
 })();
 if (typeof module !== 'undefined') module.exports = Geo;
+
+/* ===== exporta.js ===== */
+/* Monitoramento · exporta.js — v0.6.9: baixar contornos e halos em KML (Google Earth) e GeoJSON (QGIS e outros).
+   Recebe "feições" simples: { nome, desc?, aneis: [externo, buraco1, ...] } (cada anel [[lat,lng],...]) ou { nome, desc?, ponto: [lat,lng] }.
+   Sem dependência; o KML volta no próprio app por "Importar arquivo". Prefixo: Exporta. */
+const Exporta = (function () {
+  const xml = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' }[c]));
+  const r7 = x => Math.round(x * 1e7) / 1e7;
+  /* anel fechado (o primeiro ponto repete no fim) e sem pontos repetidos em seguida */
+  function fecha(A) { A = A.map(p => [r7(p[0]), r7(p[1])]); /* revisor 15: arredonda antes de tirar os repetidos */ const B = A.filter((p, i) => !i || p[0] !== A[i - 1][0] || p[1] !== A[i - 1][1]); if (B.length && (B[0][0] !== B[B.length - 1][0] || B[0][1] !== B[B.length - 1][1])) B.push(B[0]); return B; }
+  /* área com sinal no plano lng × lat (positivo = anti-horário) */
+  const sinal = A => { let s = 0; for (let i = 0; i + 1 < A.length; i++) s += A[i][1] * A[i + 1][0] - A[i + 1][1] * A[i][0]; return s; };
+  const gira = (A, anti) => ((sinal(A) > 0) === anti ? A : A.slice().reverse());
+  /* revisor 6: com estilo, para o Google Earth não pintar de branco por cima do satélite (KML usa aabbggrr) */
+  const ESTILOS = '<Style id="contorno"><LineStyle><color>ffffffff</color><width>2</width></LineStyle><PolyStyle><color>26ffffff</color></PolyStyle></Style>' +
+    '<Style id="halo"><LineStyle><color>ff4ec1f2</color><width>1.5</width></LineStyle><PolyStyle><color>404ec1f2</color></PolyStyle></Style>';
+  function kml(feicoes, titulo) {
+    const pm = f => '<Placemark><name>' + xml(f.nome) + '</name>' + (f.desc ? '<description>' + xml(f.desc) + '</description>' : '') + (f.ponto ? '' : '<styleUrl>#' + (f.estilo === 'halo' ? 'halo' : 'contorno') + '</styleUrl>') +
+      (f.ponto ? '<Point><coordinates>' + r7(f.ponto[1]) + ',' + r7(f.ponto[0]) + ',0</coordinates></Point>' :
+        '<Polygon>' + f.aneis.map((A, i) => (i ? '<innerBoundaryIs>' : '<outerBoundaryIs>') + '<LinearRing><coordinates>' + gira(fecha(A), !i).map(p => r7(p[1]) + ',' + r7(p[0]) + ',0').join(' ') + '</coordinates></LinearRing>' + (i ? '</innerBoundaryIs>' : '</outerBoundaryIs>')).join('') + '</Polygon>') + '</Placemark>';
+    return '<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>' + xml(titulo) + '</name>' + ESTILOS + '\n' + feicoes.map(pm).join('\n') + '\n</Document></kml>\n';
+  }
+  function geojson(feicoes) {
+    return JSON.stringify({ type: 'FeatureCollection', features: feicoes.map(f => ({ type: 'Feature', properties: Object.assign({ nome: f.nome }, f.desc ? { descricao: f.desc } : {}),
+      geometry: f.ponto ? { type: 'Point', coordinates: [r7(f.ponto[1]), r7(f.ponto[0])] } : { type: 'Polygon', coordinates: f.aneis.map((A, i) => gira(fecha(A), !i).map(p => [r7(p[1]), r7(p[0])])) } })) }, null, 1) + '\n';
+  }
+  /* nome de arquivo sem acento nem símbolo: "TD03 contorno.kml" → "TD03-contorno.kml" */
+  const nomeArq = (base, ext) => String(base || 'contorno').normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) + '.' + ext;
+  function baixar(nome, txt, tipo) {
+    const blob = new Blob([txt], { type: tipo }), url = URL.createObjectURL(blob), a = document.createElement('a');
+    a.href = url; a.download = nome; a.rel = 'noopener'; a.style.display = 'none'; document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 60000); /* revisor 5: o Safari pode pedir confirmação; o link vive 1 minuto */
+  }
+  function arquivo(feicoes, base, formato) {
+    if (formato === 'geojson') baixar(nomeArq(base, 'geojson'), geojson(feicoes), 'application/geo+json');
+    else baixar(nomeArq(base, 'kml'), kml(feicoes, base), 'application/vnd.google-earth.kml+xml');
+    return nomeArq(base, formato === 'geojson' ? 'geojson' : 'kml');
+  }
+  /* revisor 5: no celular, a folha de compartilhar com o arquivo (iPhone: Salvar em Arquivos); se não der, o download.
+     Devolve { como: 'share' | 'baixou' | 'cancelou', nome } */
+  async function entrega(feicoes, base, formato, celular) {
+    const gj = formato === 'geojson', nome = nomeArq(base, gj ? 'geojson' : 'kml'), txt = gj ? geojson(feicoes) : kml(feicoes, base), tipo = gj ? 'application/geo+json' : 'application/vnd.google-earth.kml+xml';
+    if (celular && typeof File === 'function' && navigator.canShare) { try { const fl = new File([txt], nome, { type: tipo }); if (navigator.canShare({ files: [fl] })) { await navigator.share({ files: [fl], title: nome }); return { como: 'share', nome }; } }
+      catch (e) { if (e && e.name === 'AbortError') return { como: 'cancelou', nome }; } }
+    baixar(nome, txt, tipo); return { como: 'baixou', nome };
+  }
+  return { kml, geojson, nomeArq, baixar, arquivo, entrega, fecha };
+})();
+if (typeof module !== 'undefined') module.exports = Exporta;
 
 /* ===== motor.js ===== */
 /* Monitoramento · motor.js — motor de entrada e saída da área (C1, 21/11/2026). Lógica pura, sem tela. Prefixo: Motor.
@@ -1814,6 +1923,8 @@ const Mapa = (function () {
     const tile = L.tileLayer(TILES.url, { attribution: TILES.attr, maxNativeZoom: TILES.maxNativeZoom, maxZoom: TILES.maxZoom, crossOrigin: true, keepBuffer: 4, updateWhenIdle: false }).addTo(map);
     /* v0.6.7 revisor 14: a fazenda tem a sua própria camada, por baixo dos talhões (o SVG dos talhões fica por cima) */
     map.createPane('fzPane').style.zIndex = 390; const fzR = L.svg({ pane: 'fzPane' });
+    map.createPane('haloPane').style.zIndex = 385; const haloR = L.svg({ pane: 'haloPane' }); /* revisor 12: halos numa camada própria, abaixo da fazenda e dos talhões */
+    const haloG = L.layerGroup().addTo(map);
     let fazG = L.layerGroup().addTo(map); const grupo = L.layerGroup().addTo(map), fixosG = L.layerGroup().addTo(map), rot = [];
     const api = {
       map, tile, grupo,
@@ -1834,7 +1945,7 @@ const Mapa = (function () {
         lista.forEach(a => {
           const e = o.estado(a), esm = o.esmaecer && o.esmaecer(a), sel = o.sel === a.id;
           const pg = L.polygon(Mapa.forma(a), { smoothFactor: 0.2 /* ITEM 279: o Leaflet não simplifica a curva do pivô (antes tirava pontos até 1 px e voltavam as quinas) */, color: '#fff', weight: sel ? 3.5 : 2.2, fillColor: HEX[e.nivel] || HEX.X, fillOpacity: o.neutro ? .05 : esm ? .22 : .68, opacity: esm ? .5 : 1, lineJoin: 'round', className: 'mon-area', interactive: !o.neutro }).addTo(grupo);
-          pg.on('click', ev => { L.DomEvent.stopPropagation(ev); o.onClick && o.onClick(a); });
+          pg.on('click', ev => { L.DomEvent.stopPropagation(ev); if (api.captura) { api.captura([ev.latlng.lat, ev.latlng.lng]); return; } o.onClick && o.onClick(a); }); /* v0.6.9: medindo, o toque marca o ponto */
           if (o.rotulos !== false) { const c = Geo.centro(a.poly), ct = a.tipo === 'setor' && a.pivoId ? o.centroSetor && o.centroSetor(a) || c : c; const mk = L.marker(ct, { interactive: false, icon: L.divIcon({ className: 'mon-rot' + (esm ? ' esm' : ''), html: '<b>' + String(a.nome).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) + '</b><span>' + (e.rot || (e.dias == null ? 'sem visita' : e.dias + ' d')) + '</span>' /* revisor 5: nome com escape */, iconSize: [90, 30], iconAnchor: [45, 15] }) }).addTo(grupo); rot.push([pg, mk]); }
         });
         api.rotulosAuto();
@@ -1846,7 +1957,7 @@ const Mapa = (function () {
         pontos.forEach(p => {
           const nivel = o.nivelDe(p), val = o.val ? o.valorDe(p) : null;
           const m = L.marker([p.lat, p.lng], { icon: L.divIcon({ className: 'mon-pino' + (o.sel === p.i ? ' sel' : ''), html: pinoHtml(nivel, p.ordem != null ? p.ordem : p.i, { cor: o.cor, num: o.num, val: val, foto: p.foto || (p.fotos && p.fotos.length) }), iconSize: [34, 44], iconAnchor: [17, 42] }), riseOnHover: true, keyboard: false }).addTo(grupo);
-          m.on('click', ev => { L.DomEvent.stopPropagation(ev); o.onClick && o.onClick(p); });
+          m.on('click', ev => { L.DomEvent.stopPropagation(ev); if (api.captura) { api.captura([ev.latlng.lat, ev.latlng.lng]); return; } o.onClick && o.onClick(p); });
         });
       },
       caminho(pts, cor) { if (pts.length > 1) L.polyline(pts, { color: cor || '#fff', weight: cor ? 3 : 2.5, dashArray: cor ? null : '7 6', opacity: .95, lineCap: 'round', interactive: false }).addTo(grupo); }, /* v0.6.8: cor = a da pessoa (linha cheia) */
@@ -1883,6 +1994,13 @@ const Mapa = (function () {
         if (suave) fazG.eachLayer(l => { const el = l.getElement && l.getElement(); if (el) { el.classList.add('mon-entra'); setTimeout(() => el.classList.remove('mon-entra'), 160); } });
       },
       /* nomes das estruturas só de perto (zoom 17 ou mais); de longe ficariam um em cima do outro. A escolhida mostra sempre */
+      /* v0.6.9 · halos: faixas (anel externo e o buraco), por baixo dos talhões; aparecem e somem em 150 ms */
+      halos(lista) {
+        const red = typeof REDUZ_MOV === 'function' && REDUZ_MOV(), velhos = haloG.getLayers();
+        velhos.forEach(l => { const el = l.getElement && l.getElement(); if (el && !red) { el.classList.add('mon-sai'); setTimeout(() => haloG.removeLayer(l), 150); } else haloG.removeLayer(l); });
+        (lista || []).forEach(f => { const pg = L.polygon(f.aneis, { pane: 'haloPane', renderer: haloR, interactive: false, className: 'mon-halo', color: '#f2c14e', weight: 1.5, opacity: .95, dashArray: f.faixa === 2 ? '4 6' : null, fillColor: '#f2c14e', fillOpacity: f.faixa === 2 ? .1 : .22 }).addTo(haloG);
+          const el = pg.getElement(); if (el && !red) { el.classList.add('mon-entra'); setTimeout(() => el.classList.remove('mon-entra'), 160); } });
+      },
       fzPerto() { const el = map.getContainer(); el.classList.toggle('fz-longe', map.getZoom() < 17); },
       euRumo(g) { const el = api._eu && api._eu.getElement(), s = el && el.querySelector('.mon-eu-s'); if (!s) return;
         if (g == null) { s.classList.remove('on'); return; } api._rumoAng = Rumo.suave(api._rumoAng, g); s.style.transform = 'rotate(' + api._rumoAng.toFixed(1) + 'deg)'; s.classList.add('on'); },
@@ -2129,7 +2247,7 @@ const padSheet = () => (innerWidth >= 900 ? { paddingTopLeft: [30, 70], paddingB
 const prox = ev => (ev < 0 ? 'atrasada ' + (-ev) + ' d' : ev === 0 ? 'vence hoje' : 'em ' + ev + ' d');
 
 /* ---- Mapa geral ---- */
-T.mapa = () => '<div class="tela" data-s="mapa">' + topoRaiz((D.cfg.fazenda || 'Fazenda Demonstração'), (D.cfg.local || 'Dados inventados')) + '<div class="mapa" id="mp"><div class="mapael" id="mm"></div><div class="sobre mon-ctl" style="top:auto;bottom:30px"><button class="ib" data-act="euVai" aria-label="Onde estou">' + ico('gps') + '</button></div>' +
+T.mapa = () => '<div class="tela" data-s="mapa">' + topoRaiz((D.cfg.fazenda || 'Fazenda Demonstração'), (D.cfg.local || 'Dados inventados')) + '<div class="mapa" id="mp"><div class="mapael" id="mm"></div><div class="sobre mon-ctl" style="top:auto;bottom:30px"><button class="ib" data-act="medir" aria-pressed="false" aria-label="Medir distância e área" title="Medir distância e área">' + ico('regua') + '</button><button class="ib" data-act="haloAb" aria-pressed="false" aria-label="Halos" title="Halos (faixas em volta dos talhões)">' + ico('halo') + '</button><button class="ib" data-act="euVai" aria-label="Onde estou" title="Onde estou">' + ico('gps') + '</button></div>' + medBarHTML() +
   '<div class="sobre mon-ab" id="mab" role="status" aria-live="polite"></div><div class="sobre" style="left:8px;top:8px;width:min(340px,calc(100% - 16px))"><div class="dd" data-dd="filtro"><button class="ddb" data-act="dd" data-id="filtro">' + ico('filtro') + '<b id="fsum"></b>' + ico('desce', 'ch') + '</button>' +
   '<div class="ddl" style="padding:12px;overflow:visible;max-height:none"><div style="display:flex;flex-direction:column;gap:10px"><div id="f-cult"></div><div id="f-ind"></div><div style="display:flex;align-items:center;gap:10px;min-height:44px"><span style="flex:1;font-size:15px">Só atrasados</span><button class="sw2" id="f-atr" data-act="sw" data-id="atr" aria-label="Só atrasados"></button></div><div style="display:flex;align-items:center;gap:10px;min-height:44px"><span style="flex:1;font-size:15px">Mostrar encerrados</span><button class="sw2" id="f-enc" data-act="sw" data-id="enc" aria-label="Mostrar encerrados"></button></div><div style="display:flex;align-items:center;gap:10px;min-height:44px"><span style="flex:1;font-size:15px">Fazenda e estruturas</span><button class="sw2" id="f-fz" data-act="sw" data-id="fz" aria-label="Fazenda e estruturas"></button></div>' +
   '<div style="border-top:1px solid var(--abd);padding-top:10px"><div class="tag" style="margin-bottom:6px">Cores, pelo último monitoramento</div><div id="f-leg" style="display:flex;flex-direction:column;gap:6px;font-size:14px"></div></div></div></div></div></div><div class="sheet" id="sh"></div></div></div>';
@@ -2154,6 +2272,7 @@ function desenhaGeral() {
   m.fixos(D.fixos, iconeFixo);
   /* v0.6.7: contorno da fazenda e estruturas, discretos, com o botão do filtro (sem toque: o mapa geral é dos talhões) */
   m.fazenda(S.fz ? fazContorno() : null, S.fz ? estruturasLista() : [], { icone: c => ico(estIco(c)), nomes: false, suave: true });
+  desenhaHalos(); /* v0.6.9 */
 }
 /* v0.4.0: visita guardada para continuar depois (almoço) aparece como aviso no mapa, com Continuar */
 function avisoAberta() {
@@ -2163,7 +2282,9 @@ function avisoAberta() {
   el.innerHTML = '<div class="mon-ab-t"><b>Visita do ' + esc(a.nome) + ' em aberto</b><small>Guardada ' + esc(quandoGuardou(g.em)) + (n ? ' · ' + n + (n === 1 ? ' ponto' : ' pontos') : '') + esc(de) + '</small></div><button class="btn pr sm" data-act="retomaAb">' + ico('play') + 'Continuar</button>';
   el.classList.add('on');
 }
-I.mapa = n => { if (n) n._fim = euDesliga; S.mapa = Mapa.criar($('#mm'), { centro: (D.cfg.centro) || [-5.2731, -38.1547], zoom: D.cfg.zoom || 15 }); filtroGeral(); desenhaGeral(); if (D.areas.length) S.mapa.fit(todosPoly(), { animar: false }); S.mapa.map.on('click', () => fecharDDs()); avisoAberta(); };
+I.mapa = n => { MED.on = false; MED.g = null; if (n) n._fim = () => { euDesliga(); medirFecha(); }; S.mapa = Mapa.criar($('#mm'), { centro: (D.cfg.centro) || [-5.2731, -38.1547], zoom: D.cfg.zoom || 15 }); filtroGeral(); desenhaGeral(); if (D.areas.length) S.mapa.fit(todosPoly(), { animar: false }); S.mapa.map.on('click', ev => { fecharDDs(); if (MED.on) medirPonto([ev.latlng.lat, ev.latlng.lng]); });
+  /* revisor 11: com o filtro aberto, o toque só fecha o filtro (vê antes de o clique fechar) */
+  $('#mm').addEventListener('pointerdown', () => { MED.ddAberto = !!document.querySelector('.dd.open'); }, true); avisoAberta(); };
 /* v0.6.0 · C12 · Limite de dias (como na legenda da Cropwise): fica na configuração geral, vale para todos */
 const PASSOS_DIAS = [0, 3, 5, 7, 10, 14, 21, 30, 45, 60];
 function mudaLimDias(d) {
@@ -2770,7 +2891,7 @@ T.talDet = p => { const t = D.talhoes.find(x => x.id === p.id); if (!t) return '
     kv('Hectares do documento', virg(t.hectares || 0, 2) + ' ha') + (t.geo ? kv('Hectares do desenho', virg(t.geoHa, 2) + ' ha') + kv('Diferença', (d >= 0 ? '+' : '') + virg(d * 100, 1) + '%') + kv('Lugar marcado por', esc(FONTE[t.geoFonte] || '—')) : '') +
     (t.inicio ? kv('Desde', fmtD(t.inicio) + '/' + t.inicio.slice(0, 4)) : '') + '</div>' +
     (t.geo && Math.abs(d) > .05 ? '<div class="aviso D">O desenho tem ' + virg(Math.abs(d) * 100, 0) + '% ' + (d > 0 ? 'a mais' : 'a menos') + ' que o documento. Confira o contorno ou os hectares.</div>' : '') +
-    '</div><div class="rodape"><button class="btn pr" data-act="talMarca" data-v="' + esc(t.id) + '">' + ico('retang') + (t.geo ? 'Refazer o lugar no mapa' : 'Marcar o lugar no mapa') + '</button></div></div>'; };
+    '</div><div class="rodape"><div class="lin">' + (t.geo ? '<button class="btn" data-act="talBaixa" data-v="' + esc(t.id) + '">' + ico('baixar') + 'Baixar</button>' : '') + '<button class="btn pr" data-act="talMarca" data-v="' + esc(t.id) + '">' + ico('retang') + (t.geo ? 'Refazer o lugar' : 'Marcar o lugar no mapa') + '</button></div></div></div>'; }; /* revisor 7: cabe ao lado de "Baixar" num celular de 360 px */
 I.talDet = (n, p) => { const t = D.talhoes.find(x => x.id === p.id), el = n && n.querySelector('#tdm'); if (t && t.geo && el && n.isConnected && !el._leaflet_id) S.mapa = miniMapa(el, Geo.decodifica(t.geo)); }; /* M60-01: todos os pedaços */
 
 /* ---- C2 · Novo pivô: centro, raio e as divisões no lugar real (arraste as alças na borda) ---- */
@@ -3118,7 +3239,7 @@ function fazEscolhe(id, doMapa) {
 function fazOpcoes(id, troca) {
   const e = fazItem(id); if (!e) return; const faz = id === 'fazenda', nome = faz ? 'o contorno da fazenda' : (e.nome || estTipo(e.cat)[1]);
   (troca ? sheetTroca : sheet)('gsh2', '<div class="grip"></div><div class="sh-h"><h2>' + esc(faz ? 'Contorno da fazenda' : nome) + '</h2></div><div class="sh-b"><div style="color:var(--atx2)" id="fz-txt">' + (faz ? virg(e.ha || 0, 1) + ' ha' : estTipo(e.cat)[1] + ' · ' + estLugar(e)) + '</div></div>' +
-    '<div class="sh-f" id="fz-f"><div class="lin"><button class="btn cr" data-act="fzApaga" data-v="' + esc(id) + '">' + ico('lixo') + 'Apagar</button><button class="btn pr" data-act="fzEdita" data-v="' + esc(id) + '">' + ico('lapis') + 'Editar</button></div></div>');
+    '<div class="sh-f" id="fz-f"><div class="lin"><button class="btn cr" data-act="fzApaga" data-v="' + esc(id) + '">' + ico('lixo') + 'Apagar</button>' + (e.geo || e.pos ? '<button class="btn" data-act="fzBaixa" data-v="' + esc(id) + '">' + ico('baixar') + 'Baixar</button>' : '') + '<button class="btn pr" data-act="fzEdita" data-v="' + esc(id) + '">' + ico('lapis') + 'Editar</button></div></div>');
 }
 function fazApaga(id, certeza) {
   const e = fazItem(id); if (!e) return; const nome = id === 'fazenda' ? 'o contorno da fazenda' : (e.nome || estTipo(e.cat)[1]);
@@ -3164,6 +3285,127 @@ async function salvarEstrutura() {
   S.stack[S.stack.length - 1].guard = null; S.stack.pop(); const cur = S.stack[S.stack.length - 1]; if (cur && cur.t === 'faz') cur.p = Object.assign({}, cur.p, { sel: id });
   mostrar(-1); toast('Salvo: ' + nm);
 }
+
+/* ===== telas6.js ===== */
+/* Monitoramento · telas6.js — v0.6.9 · ferramentas do mapa (itens 9 e 11 da varredura na Cropwise, função e não visual):
+   medir distância e área no mapa geral; halos (faixas de bordadura em volta dos talhões que estão no mapa);
+   baixar contornos e halos em KML ou GeoJSON (Exporta). Nenhum dado real: tudo vem do que está no app. */
+
+/* ---------- medir ---------- */
+const MED = { on: false, pts: [], g: null };
+/* revisor 19: milhar com ponto (pt-BR) */
+const milhar = n => Math.round(n).toLocaleString('pt-BR');
+const fmtM = m => (m >= 999.5 ? virg(m / 1000, m >= 10000 ? 1 : 2) + ' km' : milhar(m) + ' m');
+const fmtHa = ha => (ha >= 0.995 ? (ha >= 100 ? milhar(ha) : virg(ha, 2)) + ' ha' : milhar(ha * 10000) + ' m²');
+const MED_COR = '#ffffff'; /* revisor 19: a medida é branca; os halos são dourados */
+function medirLiga() {
+  if (MED.on) { medirFecha(); return; } if (!S.mapa) return; fecharDDs(); fechaHaloSh();
+  const mp = S.mapa.map; if (!mp.getPane('medPane')) { mp.createPane('medPane').style.zIndex = 450; } /* revisor 12: a medida fica por cima dos talhões, mesmo depois de um redesenho */
+  MED.r = MED.r && MED.r._map === mp ? MED.r : L.svg({ pane: 'medPane' });
+  MED.on = true; MED.pts = []; MED.g = L.layerGroup().addTo(mp); mp.getContainer().classList.add('medindo'); S.mapa.captura = medirPonto; mp.doubleClickZoom.disable(); /* revisor 11 */
+  const b = $('#medb'); if (b) { b.classList.add('on'); b.inert = false; b.removeAttribute('aria-hidden'); } $$('.mon-ctl [data-act=medir]').forEach(bt => { bt.classList.add('on'); bt.setAttribute('aria-pressed', 'true'); });
+  const f = () => medirFecha(true); f.sheet = 'medir'; layers.push(f); setTimeout(syncHist, 0); medirRender();
+}
+/* daCamada: veio do Voltar (a camada já saiu da pilha) */
+function medirFecha(daCamada) {
+  if (!MED.on) return; MED.on = false; MED.pts = [];
+  if (MED.g && S.mapa) { S.mapa.map.removeLayer(MED.g); S.mapa.map.getContainer().classList.remove('medindo'); S.mapa.captura = null; S.mapa.map.doubleClickZoom.enable(); } MED.g = null;
+  const b = $('#medb'); if (b) { b.classList.remove('on'); b.inert = true; b.setAttribute('aria-hidden', 'true'); } $$('.mon-ctl [data-act=medir]').forEach(bt => { bt.classList.remove('on'); bt.setAttribute('aria-pressed', 'false'); });
+  if (!daCamada) { const i = layers.findIndex(f => f.sheet === 'medir'); if (i >= 0) { layers.splice(i, 1); setTimeout(syncHist, 0); } }
+}
+function medirPonto(ll) { if (!MED.on) return; if (MED.ddAberto) { MED.ddAberto = false; return; } MED.pts.push(ll); medirRender(); }
+function medirRender() {
+  if (!MED.g) return; MED.g.clearLayers(); const P = MED.pts, cor = MED_COR, o = { pane: 'medPane', renderer: MED.r, interactive: false };
+  if (P.length > 2) L.polygon(P, Object.assign({ color: cor, weight: 0, fillColor: cor, fillOpacity: .16, className: 'mon-med-area' }, o)).addTo(MED.g);
+  if (P.length > 1) L.polyline(P, Object.assign({ color: cor, weight: 3, dashArray: '8 6', className: 'mon-med-linha' }, o)).addTo(MED.g);
+  if (P.length > 2) L.polyline([P[P.length - 1], P[0]], Object.assign({ color: cor, weight: 2, dashArray: '2 6', opacity: .8 }, o)).addTo(MED.g);
+  P.forEach((p, i) => L.circleMarker(p, Object.assign({ radius: i === P.length - 1 ? 6 : 5, color: '#1d1a14', weight: 2, fillColor: cor, fillOpacity: 1, className: 'mon-med-pt' }, o)).addTo(MED.g));
+  const t = $('#med-t'), s = $('#med-s'), d = Geo.caminho(P);
+  if (t) t.textContent = P.length < 2 ? (P.length ? (SO_PC() ? 'Clique' : 'Toque') + ' no próximo ponto' : (SO_PC() ? 'Clique' : 'Toque') + ' no mapa para marcar o primeiro ponto') : 'Distância ' + fmtM(d);
+  if (s) s.textContent = P.length > 2 ? 'Área ' + fmtHa(Geo.areaHa(P)) + ' · perímetro ' + fmtM(d + Geo.dist(P[P.length - 1], P[0])) : P.length === 2 ? 'Com 3 pontos ou mais, mostra a área' : '';
+  const u = $('#medb [data-act=medDesfaz]'), c = $('#medb [data-act=medLimpa]'); if (u) u.disabled = !P.length; if (c) c.disabled = !P.length;
+}
+const medBarHTML = () => '<div class="sobre mon-med" id="medb" role="status" aria-live="polite" inert aria-hidden="true"><div class="med-tx"><b id="med-t"></b><small id="med-s"></small></div>' +
+  '<button class="ib" data-act="medDesfaz" aria-label="Desfazer o último ponto">' + ico('desfaz') + '</button><button class="ib" data-act="medLimpa" aria-label="Limpar">' + ico('lixo') + '</button><button class="ib" data-act="medir" aria-label="Fechar a medida">' + ico('fecha') + '</button></div>';
+
+/* ---------- halos ---------- */
+const HALO_CH = 'monitoramento-halo'; /* revisor 20 */
+const HALO = (() => { try { const h = JSON.parse(localStorage.getItem(HALO_CH) || 'null'); return h && h.f1 > 0 ? { f1: +h.f1, f2: +h.f2 || 0, on: !!h.on } : { f1: 0, f2: 0, on: false }; } catch (e) { return { f1: 0, f2: 0, on: false }; } })();
+const guardaHalo = () => { try { localStorage.setItem(HALO_CH, JSON.stringify(HALO)); } catch (e) { /* sem armazenamento: vale só nesta sessão */ } };
+/* os talhões que estão no mapa geral (o filtro de cultura e o "só atrasados" valem; encerrados não entram);
+   setores de um pivô viram o pivô inteiro (um halo só em volta do círculo) */
+function haloBases() {
+  const vis = D.areas.filter(a => !((S.cult !== 'Todas' && a.cultura !== S.cult) || (S.atr && !(estado(a).venc < 0)))), out = [], pvs = {};
+  vis.forEach(a => {
+    if (a.tipo === 'setor' && a.pivoId) { const p = pivo(a.pivoId); if (p && p.centro && p.raioM && !pvs[p.id]) { pvs[p.id] = 1; out.push({ nome: p.nome, P: Geo.fatia(p.centro, p.raioM, 0, 360, 2).slice(1) }); } /* revisor 14: círculo fino, como o desenhado */ return; }
+    const an = a.aneis && a.aneis.length > 1 ? a.aneis : [a.poly]; an.forEach((P, i) => out.push({ nome: a.nome + (an.length > 1 ? ' (parte ' + (i + 1) + ')' : ''), P }));
+  });
+  return out;
+}
+const mNum = n => virg(n, n % 1 ? 1 : 0), r1 = n => Math.round(n * 10) / 10; /* revisor 10 */
+function haloFeicoes() {
+  const f = []; if (!(HALO.f1 > 0)) return f; const a = HALO.f1, z = r1(HALO.f1 + HALO.f2);
+  haloBases().forEach(bs => { const h1 = Geo.haloAneis(bs.P, a); if (!h1) return;
+    /* faixa 1: do talhão até a metros; os miolos que ficam mais longe (talhão em C) são furos */
+    f.push({ nome: bs.nome + ' · faixa até ' + mNum(a) + ' m', desc: 'Halo de ' + mNum(a) + ' m em volta de ' + bs.nome, aneis: [h1.ext, bs.P].concat(h1.furos), faixa: 1, estilo: 'halo' });
+    if (HALO.f2 > 0) { const h2 = Geo.haloAneis(bs.P, z); if (!h2) return; const desc = 'Segunda faixa, de ' + mNum(a) + ' a ' + mNum(z) + ' m de ' + bs.nome;
+      f.push({ nome: bs.nome + ' · faixa de ' + mNum(a) + ' a ' + mNum(z) + ' m', desc, aneis: [h2.ext, h1.ext], faixa: 2, estilo: 'halo' });
+      h1.furos.forEach(H => f.push({ nome: bs.nome + ' · faixa de ' + mNum(a) + ' a ' + mNum(z) + ' m (miolo)', desc, aneis: [H].concat(h2.furos.filter(q => Geo.dentro(q[0], H))), faixa: 2, estilo: 'halo' })); } });
+  return f;
+}
+/* revisor 13: só recalcula e troca quando algo dos halos mudou (o redesenho do mapa geral não faz piscar) */
+let HALO_K = null;
+function desenhaHalos(forca) {
+  const m = S.mapa; if (!m || !m.halos) return; const k = m.map._leaflet_id + '|' + JSON.stringify([HALO.on, HALO.f1, HALO.f2, S.cult, S.atr]), mesmo = k === HALO_K && HALO_K_AREAS === D.areas;
+  if (!mesmo || forca) { HALO_K = k; HALO_K_AREAS = D.areas; m.halos(HALO.on ? haloFeicoes() : []); }
+  $$('[data-act=haloAb]').forEach(bt => { bt.classList.toggle('on', HALO.on); bt.setAttribute('aria-pressed', String(HALO.on)); }); }
+let HALO_K_AREAS = null;
+function fechaHaloSh() { const i = layers.findIndex(f => f.sheet === 'gsh2'); if (i >= 0 && $('#gsh2 [data-act=haloMostra]')) layers.splice(i, 1)[0](); }
+function haloAbre() {
+  if (MED.on) medirFecha(); fecharDDs(); const n = haloBases().length;
+  sheet('gsh2', '<div class="grip"></div><div class="sh-h"><h2>Halos</h2><button class="ib" style="margin:-8px -8px 0 0" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button></div><div class="sh-b">' +
+    '<p style="margin:0 0 12px;color:var(--atx2)">Faixas em volta dos talhões que estão no mapa (o filtro vale). Para bordadura e divisa com vizinhos. ' + (n === 1 ? '1 área agora.' : n + ' áreas agora.') + '</p>' +
+    '<div class="lin" style="gap:10px;align-items:flex-end"><label class="fld" style="flex:1"><span>Faixa 1 (metros)</span><input class="inp" id="h-f1" inputmode="decimal" value="' + (HALO.f1 ? virg(HALO.f1, HALO.f1 % 1 ? 1 : 0) : '') + '" placeholder="Ex.: 10"></label><label class="fld" style="flex:1"><span>Faixa 2, depois da 1</span><input class="inp" id="h-f2" inputmode="decimal" value="' + (HALO.f2 ? virg(HALO.f2, HALO.f2 % 1 ? 1 : 0) : '') + '" placeholder="Ex.: 20"></label></div>' +
+    '<p style="margin:8px 0 0;color:var(--atx3);font-size:13px">A faixa 2 começa onde a faixa 1 termina: 10 e 20 marcam até 10 m e de 10 a 30 m da borda. Áreas encostadas (e as partes de um talhão juntado) têm faixas que se sobrepõem.</p>' +
+    '<div class="aviso D" id="h-av" style="display:none;margin-top:10px"></div>' +
+    '<div class="tag" style="margin:16px 0 6px">Baixar os halos</div><div class="lin"><button class="btn" data-act="haloBaixa" data-v="kml">' + ico('baixar') + 'KML</button><button class="btn" data-act="haloBaixa" data-v="geojson">' + ico('baixar') + 'GeoJSON</button></div></div>' +
+    '<div class="sh-f"><div class="lin"><button class="btn" data-act="haloDesliga"' + (HALO.on ? '' : ' disabled') + '>Desligar</button><button class="btn pr" data-act="haloMostra">Mostrar no mapa</button></div></div>');
+}
+/* lê e confere as larguras; devolve false (com o aviso) se não servem */
+function haloLe() {
+  const num = id => { const v = String(($('#' + id) || {}).value || '').trim().replace(',', '.'); return v === '' ? 0 : +v; }, f1 = num('h-f1'), f2 = num('h-f2'), av = $('#h-av');
+  /* revisor 9: de 1 a 500 de verdade (0,04 não passa e vira zero) */
+  const erro = !(f1 >= 1 && f1 <= 500) ? 'A faixa 1 precisa de um número de 1 a 500 metros.' : isNaN(f2) || !(f2 === 0 || (f2 >= 1 && f2 <= 500)) ? 'A faixa 2 precisa de um número de 1 a 500 metros (ou fica vazia).' : '';
+  if (av) { const novo = av.style.display === 'none' && erro; av.textContent = erro; av.style.display = erro ? '' : 'none'; if (novo) entra(av); } if (erro) return false;
+  HALO.f1 = Math.round(f1 * 10) / 10; HALO.f2 = Math.round(f2 * 10) / 10; return true;
+}
+
+/* ---------- baixar contornos ---------- */
+/* o talhão juntado tem vários contornos: cada um vira uma feição */
+function feicoesTalhao(t) {
+  const an = t.geo ? Geo.decodifica(t.geo) : []; const d = capital(t.cultura) + ' · ' + virg(t.hectares || 0, 2) + ' ha no documento';
+  return an.map((A, i) => ({ nome: (t.codigo || 'Talhão') + (an.length > 1 ? ' (parte ' + (i + 1) + ')' : ''), desc: d, aneis: [A], estilo: 'contorno' }));
+}
+function feicaoEst(e) {
+  const nome = e.id === 'fazenda' ? FAZ_NOME() : e.nome || estTipo(e.cat)[1], desc = e.id === 'fazenda' ? 'Contorno da fazenda' : estTipo(e.cat)[1];
+  if (e.geo) return Geo.decodifica(e.geo).map(A => ({ nome, desc, aneis: [A], estilo: 'contorno' })); if (e.pos) return [{ nome, desc, ponto: e.pos }]; return [];
+}
+/* gaveta com os dois formatos; alvo = 'tal:<id>', 'est:<id>' ou 'faz:tudo' */
+function baixarAbre(alvo, titulo, troca) {
+  (troca ? sheetTroca : sheet)('gsh2', '<div class="grip"></div><div class="sh-h"><h2>' + esc(titulo) + '</h2><button class="ib" style="margin:-8px -8px 0 0" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button></div><div class="sh-b"><p style="margin:0;color:var(--atx2)">KML abre no Google Earth e volta neste app por "Importar arquivo". GeoJSON serve para o QGIS e outros sistemas.</p></div>' +
+    (alvo === 'est:fazenda' ? '<div class="sh-b" style="padding-top:0"><div class="tag" style="margin-bottom:6px">O contorno e as estruturas, num arquivo só</div><div class="lin"><button class="btn" data-act="baixaFmt" data-v="faz:tudo|kml">' + ico('baixar') + 'KML</button><button class="btn" data-act="baixaFmt" data-v="faz:tudo|geojson">' + ico('baixar') + 'GeoJSON</button></div></div>' : '') +
+    '<div class="sh-f">' + (alvo === 'est:fazenda' ? '<div class="tag" style="margin-bottom:6px">Só o contorno</div>' : '') + '<div class="lin"><button class="btn" data-act="baixaFmt" data-v="' + esc(alvo) + '|kml">' + ico('baixar') + 'KML</button><button class="btn" data-act="baixaFmt" data-v="' + esc(alvo) + '|geojson">' + ico('baixar') + 'GeoJSON</button></div></div>');
+}
+function baixaFmt(v) {
+  const k = v.lastIndexOf('|'), alvo = v.slice(0, k), fmt = v.slice(k + 1), [tp, id] = [alvo.slice(0, 3), alvo.slice(4)]; let f = [], base = '';
+  if (tp === 'tal') { const t = D.talhoes.find(x => x.id === id); if (t) { f = feicoesTalhao(t); base = (t.codigo || 'talhao') + ' contorno'; } }
+  else if (tp === 'est') { const e = (D.estruturas || []).find(x => x.id === id); if (e) { f = feicaoEst(e); base = (e.id === 'fazenda' ? 'fazenda' : e.nome || estTipo(e.cat)[1]) + (e.geo ? ' contorno' : ' ponto'); } } /* revisor 19 */
+  else if (tp === 'faz') { f = (D.estruturas || []).slice().sort((a, b) => (a.id === 'fazenda' ? -1 : b.id === 'fazenda' ? 1 : 0)).flatMap(feicaoEst); base = FAZ_NOME() + ' estruturas'; }
+  if (!f.length) { toast('Nada para baixar: sem lugar marcado no mapa'); return; }
+  voltar(); entregaArq(f, base, fmt);
+}
+/* revisor 5: no celular, a folha de compartilhar (Salvar em Arquivos, Drive, WhatsApp); no PC, o download */
+function entregaArq(f, base, fmt) { Exporta.entrega(f, base, fmt, !SO_PC()).then(r => toast(r.como === 'share' ? 'Arquivo pronto: ' + r.nome : r.como === 'cancelou' ? 'Não foi salvo' : 'Baixado: ' + r.nome)); }
 
 /* ===== copia.js ===== */
 /* Monitoramento · copia.js — cópia de segurança do que ainda não foi para a nuvem (v0.6.4, 23/11/2026). Prefixo: Copia.
@@ -3501,6 +3743,17 @@ document.addEventListener('click', e => {
   if (a === 'retDescarta') { seLivre(confirmaDescarte); return; }
   if (a === 'retDescartaOk') { seLivre(descartaOkAcao); return; }
   if (a === 'resumoA') { abrirResumoArea(); return; }
+  /* v0.6.9 · ferramentas do mapa e baixar */
+  if (a === 'medir') { medirLiga(); return; }
+  if (a === 'medDesfaz') { MED.pts.pop(); medirRender(); return; }
+  if (a === 'medLimpa') { MED.pts = []; medirRender(); return; }
+  if (a === 'haloAb') { haloAbre(); return; }
+  if (a === 'haloMostra') { if (!haloLe()) return; HALO.on = true; guardaHalo(); voltar(); desenhaHalos(true); const n = haloBases().length; toast(n ? 'Halos ligados em ' + (n === 1 ? '1 área' : n + ' áreas') : 'Nenhuma área no mapa com o filtro atual'); return; }
+  if (a === 'haloDesliga') { HALO.on = false; guardaHalo(); voltar(); desenhaHalos(); toast('Halos desligados'); return; }
+  if (a === 'haloBaixa') { if (!haloLe()) return; guardaHalo(); desenhaHalos(); /* revisor 3 */ const f = haloFeicoes(); if (!f.length) { toast('Nenhuma área no mapa com o filtro atual'); return; } entregaArq(f, 'halos ' + mNum(HALO.f1) + (HALO.f2 ? ' a ' + mNum(r1(HALO.f1 + HALO.f2)) : '') + ' m', v); return; }
+  if (a === 'baixaFmt') { baixaFmt(v); return; }
+  if (a === 'talBaixa') { const t = D.talhoes.find(x => x.id === v); if (t) baixarAbre('tal:' + v, 'Baixar o contorno de ' + (t.codigo || 'talhão')); return; }
+  if (a === 'fzBaixa') { const e = fazItem(v); if (e) baixarAbre('est:' + v, v === 'fazenda' ? 'Baixar o contorno da fazenda' : 'Baixar: ' + (e.nome || estTipo(e.cat)[1]), true); return; }
   if (a === 'fdia') { escolheDia(+v); return; } /* revisor 1: 'dia' é da Semana */
   if (a === 'swp') { S.oculto = S.oculto || {}; S.oculto[v] = !S.oculto[v]; t.classList.toggle('on', !S.oculto[v]); fechaShArea(); S.pt = null; desenhaArea(); return; }
   if (a === 'fotoG') { const dia = diaSel(), p = dia && dia.pontos.find(q => q.i === +v); if (!p) return; const pOrd = p.ordem != null ? p.ordem : p.i, x = indSelA(S.A), val = valPt(p, x.ind); $('#fg').innerHTML = (p.fotos && p.fotos.length ? '<img src="' + p.fotos[0] + '" alt="" style="max-width:min(92%,640px);max-height:70%;border-radius:10px">' : fotoSVG(val, +v + S.A.id.length)) + '<div style="font-weight:600">' + esc(S.A.nome) + ' · ponto ' + pOrd + ' · ' + esc(x.ind.nome) + ': ' + val + '</div>' + (p.fotos && p.fotos.length ? '' : '<div style="font-size:12.5px;opacity:.75">Imagem ilustrativa da demonstração</div>') + '<button class="btn" style="margin-top:6px" data-act="fgfecha">Fechar</button>'; $('#fg').classList.add('on'); const f = () => $('#fg').classList.remove('on'); layers.push(f); return; }
