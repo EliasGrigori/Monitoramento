@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR" data-t="claro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#121524">
+<html lang="pt-BR" data-t="claro"><head><meta charset="utf-8"><script>/* v0.6.2 · tema antes do primeiro desenho (sem piscar claro) */try{var t=localStorage.getItem('monitoramento-tema');if(t!=='claro'&&t!=='escuro')t=matchMedia('(prefers-color-scheme: dark)').matches?'escuro':'claro';document.documentElement.dataset.t=t}catch(e){}</script><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#121524">
 <title>Monitoramento</title>
 <link rel="manifest" href="manifest.webmanifest"><link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -826,7 +826,7 @@ textarea.inp{height:90px;padding:10px 12px;resize:none}
  .form.larg{max-width:560px;margin:0 auto;width:100%}
  .tela.sheetlado .mapa{margin-right:0}
 }
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}} /* M60-06: a bolinha do interruptor é ::after */
 
 .ft-fund .btn{color:#1e1b14}
 .mapa{overflow:clip}
@@ -881,7 +881,7 @@ textarea.inp{height:90px;padding:10px 12px;resize:none}
 .mon-n b{font:600 22px/1.2 var(--fd);font-variant-numeric:tabular-nums}.mon-n small{color:var(--atx2);font-size:12.5px}
 .mon-n:first-child b{color:var(--aaTx)}
 .mon-ext{font-size:12.5px;color:var(--atx2)}
-.mon-copia{width:100%}
+.mon-copia{width:100%;height:auto;min-height:44px;white-space:normal;padding-top:8px;padding-bottom:8px;text-align:left} /* M40-09: o texto quebra em telas de 360 px */
 
 /* ===== C2 · talhões ===== */
 .tal-ha{font-variant-numeric:tabular-nums;color:var(--atx2);font-size:14px;flex:none}
@@ -931,7 +931,7 @@ textarea.inp{height:90px;padding:10px 12px;resize:none}
 //# sourceMappingURL=leaflet.js.map
 /* ===== versao.js ===== */
 /* Monitoramento · versão do módulo (o montar.py lê esta linha e carimba o cache do sw.js). */
-const VERSAO = '0.6.1';
+const VERSAO = '0.6.3';
 
 /* ===== icones.js ===== */
 /* Monitoramento · icones.js — ícones do módulo (traço de 24 px, cor herdada) e atalhos. Os 4 estádios têm ícone próprio. Prefixo: ico/P. */
@@ -1189,7 +1189,7 @@ const Geo = (function () {
   /* rumo (graus, 0 = norte, sentido horário) de a para b */
   function rumo(a, b) { const la1 = a[0] * RAD, la2 = b[0] * RAD, dl = (b[1] - a[1]) * RAD, y = Math.sin(dl) * Math.cos(la2), x = Math.cos(la1) * Math.sin(la2) - Math.sin(la1) * Math.cos(la2) * Math.cos(dl); return (Math.atan2(y, x) / RAD + 360) % 360; }
   /* setor do pivô de r0 até r1 no sentido horário (r1 pode passar de 360); setor de 360° é o círculo inteiro */
-  function setor(c, raio, r0, r1) { let a1 = r1; while (a1 <= r0) a1 += 360; return a1 - r0 >= 359.9 ? fatia(c, raio, 0, 360).slice(1) : fatia(c, raio, r0, a1); }
+  function setor(c, raio, r0, r1, passo) { let a1 = r1; while (a1 <= r0) a1 += 360; return a1 - r0 >= 359.9 ? fatia(c, raio, 0, 360, passo).slice(1) : fatia(c, raio, r0, a1, passo); }
   return { R, dist, caminho, plano, areaM2, areaHa, dentro, caixa, centro, destino, fatia, dividirPivo, simplificar, areaPivoHa, intensidade, codifica, decodifica, areaHaAneis, rumo, setor };
 })();
 if (typeof module !== 'undefined') module.exports = Geo;
@@ -1239,7 +1239,7 @@ const Motor = (function () {
 
   function criar(op) {
     op = op || {};
-    const C = Object.assign({}, PADRAO, op.cfg || {}), poly = op.poly || [];
+    const C = Object.assign({}, PADRAO, op.cfg || {}), poly = op.poly || [], aneis = op.aneis && op.aneis.length ? op.aneis : [poly]; /* v0.6.2 · M60-01: talhão juntado tem vários pedaços */
     const e = Object.assign({
       ini: null, ultT: null, fim: null,
       msTotal: 0, msDentro: 0, msPausa: 0, msLacuna: 0,
@@ -1279,7 +1279,7 @@ const Motor = (function () {
     }
     function situa(p, t) {
       if (e.pausado) return; /* pausado: nada entra nem sai; ao continuar, as leituras decidem de novo */
-      const em = dentro(p, poly), perto = em || aBorda(p, poly) <= C.folga;
+      const em = aneis.some(P => dentro(p, P)), perto = em || Math.min.apply(null, aneis.map(P => aBorda(p, P))) <= C.folga;
       e.esperaLeitura = false;
       if (e.dentro) { if (perto) { e.foraDesde = null; e.msJanela = 0; } else if (e.foraDesde == null) { e.foraDesde = t; e.msJanela = 0; } verificaSaida(t); return; }
       if (em) {
@@ -1427,9 +1427,14 @@ const Dados = (function () {
   /* persistência do modo local no aparelho (IndexedDB); fora do navegador cai para memória */
   function guardaIDB(nomeBanco) {
     if (typeof indexedDB === 'undefined') return undefined;
-    const abre = () => new Promise((ok, no) => { const r = indexedDB.open(nomeBanco || 'monitoramento', 1); r.onupgradeneeded = () => r.result.createObjectStore('c'); r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); });
-    const tx = (modo, f) => abre().then(db => new Promise((ok, no) => { const t = db.transaction('c', modo), q = f(t.objectStore('c')); t.oncomplete = () => ok(q && q.result); t.onerror = () => no(t.error); }));
-    return { ler: k => tx('readonly', s => s.get(k)).catch(() => null), gravar: (k, v) => tx('readwrite', s => s.put(v, k)).catch(() => null) };
+    /* v0.6.3 · uma conexão só (fecha se outra versão do banco pedir) e prazo: se o navegador não responder, não trava a visita */
+    const PRAZO_ABRIR = 4000, PRAZO_TX = 8000; let dbP = null;
+    const prazo = (pr, ms) => new Promise((ok, no) => { const t = setTimeout(() => no(new Error('prazo')), ms); pr.then(v => { clearTimeout(t); ok(v); }, e => { clearTimeout(t); no(e); }); });
+    const abre = () => dbP || (dbP = prazo(new Promise((ok, no) => { const r = indexedDB.open(nomeBanco || 'monitoramento', 1); r.onupgradeneeded = () => r.result.createObjectStore('c'); r.onsuccess = () => { const db = r.result; db.onversionchange = () => { db.close(); dbP = null; }; ok(db); }; r.onerror = () => no(r.error); r.onblocked = () => no(new Error('bloqueado')); }), PRAZO_ABRIR).catch(e => { dbP = null; throw e; }));
+    const tx = (modo, f) => abre().then(db => prazo(new Promise((ok, no) => { const t = db.transaction('c', modo), q = f(t.objectStore('c')); t.oncomplete = () => ok(q && q.result); t.onerror = () => no(t.error); t.onabort = () => no(t.error); }), PRAZO_TX));
+    /* v0.6.3 · apagar e limpar (fotos da visita em aberto); gravar devolve null quando não coube */
+    return { ler: k => tx('readonly', s => s.get(k)).catch(() => null), gravar: (k, v) => tx('readwrite', s => s.put(v, k)).catch(() => null),
+      apagar: k => tx('readwrite', s => s.delete(k)).then(() => true).catch(() => false), limpar: () => tx('readwrite', s => s.clear()).then(() => true).catch(() => false) };
   }
   return { criar, guardaIDB, PREFIXO, COLECOES, NA_NUVEM };
 })();
@@ -1668,7 +1673,7 @@ const Mapa = (function () {
         rot.length = 0;
         lista.forEach(a => {
           const e = o.estado(a), esm = o.esmaecer && o.esmaecer(a), sel = o.sel === a.id;
-          const pg = L.polygon(a.poly, { color: '#fff', weight: sel ? 3.5 : 2.2, fillColor: HEX[e.nivel] || HEX.X, fillOpacity: o.neutro ? .05 : esm ? .22 : .68, opacity: esm ? .5 : 1, lineJoin: 'round', className: 'mon-area', interactive: !o.neutro }).addTo(grupo);
+          const pg = L.polygon(Mapa.forma(a), { smoothFactor: 0.2 /* ITEM 279: o Leaflet não simplifica a curva do pivô (antes tirava pontos até 1 px e voltavam as quinas) */, color: '#fff', weight: sel ? 3.5 : 2.2, fillColor: HEX[e.nivel] || HEX.X, fillOpacity: o.neutro ? .05 : esm ? .22 : .68, opacity: esm ? .5 : 1, lineJoin: 'round', className: 'mon-area', interactive: !o.neutro }).addTo(grupo);
           pg.on('click', ev => { L.DomEvent.stopPropagation(ev); o.onClick && o.onClick(a); });
           if (o.rotulos !== false) { const c = Geo.centro(a.poly), ct = a.tipo === 'setor' && a.pivoId ? o.centroSetor && o.centroSetor(a) || c : c; const mk = L.marker(ct, { interactive: false, icon: L.divIcon({ className: 'mon-rot' + (esm ? ' esm' : ''), html: '<b>' + a.nome + '</b><span>' + (e.rot || (e.dias == null ? 'sem visita' : e.dias + ' d')) + '</span>', iconSize: [90, 30], iconAnchor: [45, 15] }) }).addTo(grupo); rot.push([pg, mk]); }
         });
@@ -1702,7 +1707,8 @@ const Mapa = (function () {
     map.on('zoomend', () => api.rotulosAuto());
     return api;
   }
-  return { criar, TILES, HEX, pinoHtml };
+  /* forma desenhada de uma área: a tela troca por formaArea (setor de pivô redondo, talhão com vários pedaços) */
+  return { criar, TILES, HEX, pinoHtml, forma: a => a.poly };
 })();
 
 /* ===== ui.js ===== */
@@ -1719,13 +1725,29 @@ function areaDeTalhao(t) {
     poly: an[0] || [], aneis: an, ha: t.geoHa != null ? t.geoHa : +Geo.areaHaAneis(an).toFixed(2), hectares: t.hectares, cultura: capital(t.cultura), variedade: capital(t.variedade),
     metodologia: t.metodologia || 'padrao', prazoDias: t.prazoDias || 7, fazenda: t.fazenda || '', pivo: t.pivo || '' };
 }
+/* v0.6.2 · forma que aparece no mapa (o que fica gravado não muda):
+   - setor de pivô: o arco refeito a cada 1,5° (ITEM 279: o giro do pivô aparecia quadrado, com quinas a cada 6°);
+   - talhão juntado: todos os pedaços (M60-01). */
+const PASSO_ARCO = 1.5;
+function formaArea(a) {
+  if (a.tipo === 'setor' && a.rumo0 != null) { const pv = pivo(a.pivoId), R = pv && (pv.raioM || pv.raio);
+    if (pv && R && pv.centro) { const k = pv.centro.join(',') + ':' + R + ':' + a.rumo0 + ':' + a.rumo1; if (a._fk !== k) { a._fk = k; a._forma = Geo.setor(pv.centro, R, a.rumo0, a.rumo1, PASSO_ARCO); } return a._forma; } }
+  return a.aneis && a.aneis.length > 1 ? a.aneis.map(r => [r]) : a.poly;
+}
+Mapa.forma = formaArea;
 const areasDeTalhoes = l => l.filter(t => talhaoAtivo(t) && t.geo).map(areaDeTalhao);
 /* v0.6.0 · C12 · talhões encerrados (inativos ou com fim): só aparecem no mapa com "Mostrar encerrados" ligado, em cinza-escuro, sem toque */
 const areasEncerradas = l => l.filter(t => !talhaoAtivo(t) && t.geo).map(t => Object.assign(areaDeTalhao(t), { encerrado: true }));
 const limDias = () => +((D.cfg && D.cfg.limiteDias) || 0);
 let DB = null;
-const S = { tema: 'claro', stack: [], indG: 'todas', enc: false, indA: null, cult: 'Todas', atr: false, visita: 0, viz: 'reg', o: { cor: 1, val: 0, num: 1, cam: 0, calor: 'off' }, pt: null, dsel: -1 };
+/* v0.6.2 · M60-16: o tema fica guardado; na primeira vez segue o do aparelho */
+const temaInicial = () => { try { const t = localStorage.getItem('monitoramento-tema'); if (t === 'claro' || t === 'escuro') return t; } catch (e) {} return typeof matchMedia !== 'undefined' && matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro'; };
+const S = { tema: temaInicial(), stack: [], indG: 'todas', enc: false, indA: null, cult: 'Todas', atr: false, visita: 0, viz: 'reg', o: { cor: 1, val: 0, num: 1, cam: 0, calor: 'off' }, pt: null, dsel: -1 };
 const layers = [];
+/* v0.6.2 · toda gaveta ou lista que abre ou fecha acerta o histórico do Voltar do celular (inclusive as que não usam sheet) */
+{ const _push = layers.push.bind(layers), _pop = layers.pop.bind(layers);
+  layers.push = (...a) => { const r = _push(...a); setTimeout(() => typeof syncHist === 'function' && syncHist(), 0); return r; };
+  layers.pop = () => { const r = _pop(); setTimeout(() => typeof syncHist === 'function' && syncHist(), 0); return r; }; }
 const T = {}, I = {};
 const hojeStr = () => { const m = /[?&]hoje=(\d{4}-\d\d-\d\d)/.exec(location.search); if (m) return m[1]; const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
 const fmtD = s => s.slice(8, 10) + '/' + s.slice(5, 7);
@@ -1755,7 +1777,7 @@ const nivelPt = (p, ind, a) => Sev.nivelPonto(p, ind, a.metodologia) || 'S';
 const valPt = (p, ind) => (p.v && typeof p.v[ind.id] === 'number' ? p.v[ind.id] : 0);
 const centroSetor = a => { const pv = pivo(a.pivoId); if (!pv) return Geo.centro(a.poly); const n = D.areas.filter(x => x.pivoId === a.pivoId).length; const larg = ((a.rumo1 - a.rumo0) % 360 + 360) % 360 || 360; return Geo.destino(pv.centro, a.rumo0 + larg / 2, pv.raioM * (n > 2 ? .62 : .5)); };
 const polyPivo = pv => D.areas.filter(a => a.pivoId === pv.id).flatMap(a => a.poly);
-const todosPoly = () => D.areas.flatMap(a => a.poly).concat(D.fixos.map(f => f.pos));
+const todosPoly = () => D.areas.flatMap(a => (a.aneis && a.aneis.length > 1 ? a.aneis.flat() : a.poly)).concat(D.fixos.map(f => f.pos));
 
 /* ---- componentes ---- */
 function ddHTML(id, rot, itens, sel, op) {
@@ -1786,7 +1808,7 @@ function refSync() { const b = $('#syncb'); if (b) b.outerHTML = syncIc(); }
 /* ---- roteador ---- */
 /* v0.6.0 · ITEM 251: no PC (sem toque) não se monitora; a visita é feita no celular, dentro da área. Desenhar o talhão à mão continua no PC. */
 const SO_PC = () => !((navigator.maxTouchPoints || 0) > 0 || (window.matchMedia && matchMedia('(any-pointer: coarse)').matches));
-document.documentElement.classList.toggle('pc', SO_PC());
+document.documentElement.classList.toggle('pc', SO_PC()); document.documentElement.dataset.t = S.tema;
 /* v0.6.1 · "Onde estou": o ponto azul liga o GPS enquanto a tela está aberta e desliga ao sair dela (não grava nada) */
 const EU = { w: null, m: null, pos: null, prec: null, t: 0, erro: null, cb: null, voou: false, esperando: false };
 function euLiga(m, cb) {
@@ -1827,11 +1849,25 @@ function mostrar(dir) {
   if (S.mapa) { try { S.mapa.destroy(); } catch (e) {} S.mapa = null; } S.mini = null;
   const el = document.createElement('div'); el.innerHTML = T[cur.t](cur.p || {}); const n = el.firstElementChild;
   if (dir < 0) n.style.animationName = 'entR';
-  matarTela(old); view().appendChild(n); layers.length = 0; setNav();
+  matarTela(old); view().appendChild(n); layers.length = 0; setNav(); setTimeout(syncHist, 0);
   requestAnimationFrame(() => { if (I[cur.t]) I[cur.t](n, cur.p || {}); });
 }
 const go = (t, p) => { S.stack.push({ t, p }); mostrar(1); };
 const root = t => { S.stack = [{ t }]; mostrar(1); };
+/* v0.6.2 · M60-03: o Voltar do celular faz o mesmo que o Voltar do app (pergunta antes de sair da visita; com a trava, não faz nada).
+   Enquanto há tela ou gaveta aberta, fica uma entrada a mais no histórico; na tela de início ela sai e o Voltar fecha o app como sempre. */
+const HIST = { on: false, ignora: false };
+function syncHist() {
+  const precisa = S.stack.length > 1 || layers.length > 0;
+  if (precisa && !HIST.on) { try { history.pushState({ monitoramento: 1 }, ''); HIST.on = true; } catch (e) {} }
+  else if (!precisa && HIST.on) { HIST.on = false; HIST.ignora = true; try { history.back(); } catch (e) { HIST.ignora = false; } }
+}
+window.addEventListener('popstate', () => {
+  if (HIST.ignora) { HIST.ignora = false; return; }
+  HIST.on = false;
+  if (!(typeof M !== 'undefined' && M.trava)) voltar();
+  setTimeout(syncHist, 0);
+});
 function voltar() {
   if (layers.length) { layers.pop()(); return; }
   const cur = S.stack[S.stack.length - 1]; if (cur.guard && cur.guard()) return;
@@ -1839,8 +1875,8 @@ function voltar() {
 }
 const push = fn => layers.push(fn);
 function sheet(id, html, aoFechar) {
-  const e = $('#' + id); if (html != null) e.innerHTML = html; requestAnimationFrame(() => e.classList.add('open'));
-  const f = () => { e.classList.remove('open'); if (aoFechar) aoFechar(); }; f.sheet = id; layers.push(f);
+  const e = $('#' + id); if (html != null) e.innerHTML = html; requestAnimationFrame(() => e.classList.add('open')); setTimeout(syncHist, 0);
+  const f = () => { e.classList.remove('open'); if (aoFechar) aoFechar(); setTimeout(syncHist, 0); }; f.sheet = id; layers.push(f);
 }
 /* troca o conteúdo de uma gaveta já aberta, sem empilhar outra camada */
 function sheetTroca(id, html, aoFechar) {
@@ -1852,7 +1888,7 @@ function sheetTroca(id, html, aoFechar) {
 /* Monitoramento · telas1.js — Mapa geral, Pivô, Setor/Talhão (pinos, camadas, calor), Ponto e Resumo. */
 const iconeFixo = t => '<svg viewBox="0 0 24 24" style="width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round">' + P[t === 'Pluviômetro' ? 'pluv' : 'ponto'] + '</svg>';
 /* v0.6.0 · o filtro também tem as categorias (Doença, Inseto...): a área fica com a pior praga da categoria (C9) */
-const catsMapa = () => [...new Set(D.pragas.filter(p => !Sev.naoPinta(p) && Sev.contam(p, 'padrao').length).map(p => p.categoria || 'Sem categoria'))].sort();
+const catsMapa = () => [...new Set(D.pragas.filter(p => !Sev.naoPinta(p) && Sev.contam(p, 'padrao').length).map(p => p.categoria || 'Sem categoria'))].sort((x, y) => x.localeCompare(y, 'pt-BR'));
 const INDSmapa = () => INDS().filter(x => !Sev.naoPinta(x.praga));
 const itensGerais = () => [['todas', 'Todas as pragas (pior nível)']].concat(catsMapa().map(c => ['cat:' + c, 'Categoria: ' + c]), INDSmapa().map(i => [i.id, i.nome]));
 const itensInd = () => INDS().map(i => [i.id, i.nome]);
@@ -1913,14 +1949,14 @@ function resumoHTML(a) {
   const v = Sev.ultimaVisita(D.visitas, a.id), est = estado(a), noMapa = ['mapa', 'pivo'].includes(S.stack[S.stack.length - 1].t), x = noMapa ? indDoFiltro(a, v) : piorInd(a, v);
   const lei = v && x ? Sev.resultado(v, x.ind, a.metodologia) : { v: null, n: null }, nv = noMapa ? nivelFiltro(a, S.indG) : est.nivel;
   return '<div class="grip"></div><div class="sh-h"><div style="flex:1;min-width:0"><h2>' + esc(a.nome) + '</h2><small>' + esc(a.cultura) + (a.pivoId && pivo(a.pivoId) ? ' · ' + esc(pivo(a.pivoId).nome) : '') + ' · ' + virg(a.ha) + ' ha' + (v ? ' · ' + v.pontos.length + (v.pontos.length === 1 ? ' planta' : ' plantas') : '') + '</small></div><span class="pil ' + nv + '">' + NOMESEV[nv] + '</span><button class="ib" style="margin:-8px -8px 0 0" data-act="fecha" aria-label="Fechar">' + ico('fecha') + '</button></div>' +
-    '<div class="sh-b">' + (v && x && lei.v != null ? regua(lei.v, x.ind, x.nome + ' · média de ' + lei.amostras + (lei.amostras === 1 ? ' planta' : ' plantas'), a) : (v ? '<div style="color:var(--atx3)">' + (nv === 'S' ? 'Nesta visita não foi avaliada nenhuma praga com Controle e Dano.' : 'Este indicador não foi avaliado nesta visita.') + '</div>' : '<div style="color:var(--atx3)">Sem visita registrada.</div>')) +
-    '<div class="kv"><span>Última visita</span><b>' + (v ? 'há ' + est.dias + ' dias (' + fmtD(v.data) + ')' : '—') + '</b><span>Próxima</span><b>' + (v ? prox(est.venc) : 'agora') + '</b></div></div>' +
+    '<div class="sh-b">' + (v && x && lei.v != null ? regua(lei.v, x.ind, x.nome + (Sev.tipoDe(x.ind) === 'media' ? ' · média de ' : ' · em ') + lei.amostras + (lei.amostras === 1 ? ' planta' : ' plantas'), a) : (v ? '<div style="color:var(--atx3)">' + (nv === 'S' ? 'Nesta visita não foi avaliada nenhuma praga com Controle e Dano.' : 'Este indicador não foi avaliado nesta visita.') + '</div>' : '<div style="color:var(--atx3)">Sem visita registrada.</div>')) +
+    '<div class="kv"><span>Última visita</span><b>' + (v ? (est.dias === 0 ? 'hoje' : est.dias === 1 ? 'ontem' : 'há ' + est.dias + ' dias') + ' (' + fmtD(v.data) + ')' : '—') + '</b><span>Próxima</span><b>' + (v ? prox(est.venc) : 'agora') + '</b></div></div>' +
     '<div class="sh-f"><div class="lin"><button class="btn" data-act="abrir" data-v="' + esc(a.id) + '">' + ico('mapa') + 'Abrir ' + (a.tipo === 'setor' ? 'setor' : 'talhão') + '</button><button class="btn pr" data-act="monit" data-v="' + esc(a.id) + '">' + ico('play') + 'Monitorar</button></div></div>';
 }
 function abrirResumo(a) { sheetTroca('sh', resumoHTML(a), () => {}); }
 
 /* ---- Pivô ---- */
-T.pivo = p => { const pv = pivo(p.id); return '<div class="tela" data-s="pivo">' + topo(pv.nome, pv.cultura + ' · ' + D.areas.filter(a => a.pivoId === pv.id).length + ' áreas') + '<div class="mapa" id="mp"><div class="mapael" id="mm"></div><div class="sobre" style="left:8px;top:8px;width:min(340px,calc(100% - 16px))" id="pind"></div><div class="sheet" id="sh"></div></div></div>'; };
+T.pivo = p => { const pv = pivo(p.id); return '<div class="tela" data-s="pivo">' + topo(pv.nome, pv.cultura + ' · ' + (n => n + (n === 1 ? ' área' : ' áreas'))(D.areas.filter(a => a.pivoId === pv.id).length)) + '<div class="mapa" id="mp"><div class="mapael" id="mm"></div><div class="sobre" style="left:8px;top:8px;width:min(340px,calc(100% - 16px))" id="pind"></div><div class="sheet" id="sh"></div></div></div>'; };
 function desenhaPivo() {
   const m = S.mapa, pv = S.pv; m.limpar();
   m.areas(D.areas.filter(a => a.pivoId === pv.id), { estado: a => ({ nivel: nivelFiltro(a, S.indG), dias: estado(a).dias }), centroSetor, sel: S.pvSel, esmaecer: a => S.pvSel && a.id !== S.pvSel, rotulos: !S.pvSel, onClick: a => zoomSetor(a) });
@@ -1951,7 +1987,7 @@ I.area = (n, p) => {
   const a = area(p.id); S.A = a; S.visita = 0; S.pt = null; S.indA = null; const x = indSelA(a);
   S.mapa = Mapa.criar($('#mm'), { centro: Geo.centro(a.poly), zoom: 17 }); $('#sind').innerHTML = ddHTML('indA', '', itensInd(), x.id); $('#camp').innerHTML = camPanel();
   const vs = VIS(a); $('#vdd').innerHTML = vs.length ? ddHTML('vis', '', vs.map((v, i) => [String(i), 'Visita ' + fmtD(v.data)]), '0') : '';
-  desenhaArea(); S.mapa.fit(a.poly, { animar: false, padding: [40, 40] });
+  desenhaArea(); S.mapa.fit(a.aneis && a.aneis.length > 1 ? a.aneis.flat() : a.poly, { animar: false, padding: [40, 40] });
 };
 function desenhaArea() {
   const a = S.A, m = S.mapa; if (!m || !a) return; const v = VIS(a)[S.visita], x = indSelA(a), o = S.o; m.limpar();
@@ -2016,7 +2052,7 @@ function refMon() {
 function barraMon() {
   if (!M.mo || !$('#gst')) return; const e = M.mo.estado(), st = $('#gst'), sub = $('#gsub'), dot = $('#gdot');
   const agora = Date.now(), velha = e.ultLeitura && agora - e.ultLeitura > 60000 ? Math.round((agora - e.ultLeitura) / 60000) : 0;
-  st.textContent = !M.run ? 'Gravação pausada' : M.semGps ? (M.pos ? 'Sem sinal do GPS' : 'Sem GPS: toque no mapa onde você está') : !M.pos ? 'Procurando o GPS' : (e.dentro ? 'Dentro do ' : 'Fora do ') + M.a.nome;
+  st.textContent = !M.run ? 'Gravação pausada' : M.semGps ? (M.pos ? 'Sem GPS: lugar marcado no mapa' : 'Sem GPS: toque no mapa onde você está') : !M.pos ? 'Procurando o GPS' : (e.dentro ? 'Dentro do ' : 'Fora do ') + M.a.nome;
   st.classList.toggle('fora', M.run && !M.semGps && !!M.pos && !e.dentro);
   if (dot) dot.classList.toggle('off', M.semGps || !M.run);
   sub.textContent = !M.run ? 'O tempo pausado não conta' : M.semGps ? 'Mais de 2 min sem sinal fica fora da conta' :
@@ -2039,14 +2075,34 @@ function trilhaMon() { const tr = M.mo.trilha(); M.nTr = tr.length; M.trechos = 
 /* guarda a atividade no aparelho (no máximo a cada 5 s; sempre ao marcar ponto) para não perder nada se a aba fechar */
 function guardaMon(forca) {
   if (!M.mo || M.salvo) return; const t = Date.now(); if (!forca && t - M.ultGuarda < 5000) return; M.ultGuarda = t;
-  const o = { v: 1, areaId: M.a.id, inicio: M.inicio, estPadrao: M.estPadrao, run: M.run, deixada: !!M.deixada, vid: M.vid, executor: M.executor, pontos: M.pontos.map(p => Object.assign({}, p, { fotos: [], nf: p.fotos.length })), semFotos: !!M.semFotos, motor: M.mo.exportar(), em: t };
+  const o = { v: 1, areaId: M.a.id, inicio: M.inicio, estPadrao: M.estPadrao, run: M.run, deixada: !!M.deixada, vid: M.vid, executor: M.executor, pontos: M.pontos.map(p => { const o = Object.assign({}, p, { fotos: [], nf: p.fotosOk ? (p.fotos.length || p.nf || 0) : (p.nf || 0), fp: p.fotos.length && !p.fotosOk ? p.fotos.length : 0 }); delete o.fotosOk; return o; }), /* nf só conta foto já guardada; fp = fotos ainda gravando (se o app cair agora, o aviso diz) */ semFotos: !!M.semFotos, motor: M.mo.exportar(), em: t };
   try { localStorage.setItem(GUARDA, JSON.stringify(o)); M.guardaFalhou = false; } catch (e) { if (!M.guardaFalhou) toast('A memória do celular está cheia: a visita não está sendo guardada'); M.guardaFalhou = true; }
 }
 /* as fotos de cada ponto são guardadas uma vez só, à parte */
-function guardaFotos(p) { if (!p.fotos.length) return; try { localStorage.setItem(GUARDA + '-f' + p.i, JSON.stringify(p.fotos)); } catch (e) { M.semFotos = true; } }
-function fotosGuardadas(p) { if (!p.nf) return []; try { return JSON.parse(localStorage.getItem(GUARDA + '-f' + p.i) || '[]'); } catch (e) { return []; } }
+/* v0.6.3 · as fotos da visita em aberto ficam no banco grande do navegador (IndexedDB), e não mais no localStorage,
+   que só aceita uns 5 MB por site. O rascunho da visita (pequeno, sem fotos) continua no localStorage, que se lê na hora.
+   Fotos guardadas por uma versão antiga, no localStorage, ainda são lidas (e passam para o banco na próxima gravação). */
+const FOTOS_IDB = (typeof window !== 'undefined' && window.MONITORAMENTO_SEM_IDB) ? undefined : Dados.guardaIDB('monitoramento-fotos-abertas');
+/* chave no localStorage (versões antigas e o caminho sem banco) e no banco (com o id da visita: fotos de outra visita nunca se misturam) */
+const chaveFoto = i => GUARDA + '-f' + i, chaveFotoIDB = (vid, i) => GUARDA + '-' + vid + '-f' + i;
+function guardaLS(k, fotos) { try { localStorage.setItem(k, JSON.stringify(fotos)); return true; } catch (e) { return false; } }
+/* grava as fotos de um ponto; p.fotosOk = já estão guardadas (o rascunho só diz que o ponto tem foto depois disso) */
+function guardaFotos(p) {
+  if (!p.fotos.length || p.fotosOk) return Promise.resolve(true); const k = chaveFoto(p.i), vid = M.vid;
+  const fim = ok => { if (ok) { p.fotosOk = true; if (!M.salvo) guardaMon(true); } else M.semFotos = true; return ok; };
+  if (FOTOS_IDB) return FOTOS_IDB.gravar(chaveFotoIDB(vid, p.i), p.fotos).then(r => { if (r != null) { try { localStorage.removeItem(k); } catch (e) {} return fim(true); } return fim(guardaLS(k, p.fotos)); /* banco falhou: tenta o jeito antigo */ });
+  return Promise.resolve(fim(guardaLS(k, p.fotos)));
+}
+function fotosGuardadas(p, vid) {
+  if (!p.nf) return Promise.resolve([]); const k = chaveFoto(p.i), ls = () => { try { return JSON.parse(localStorage.getItem(k) || '[]'); } catch (e) { return []; } };
+  if (!FOTOS_IDB) return Promise.resolve(ls());
+  return FOTOS_IDB.ler(chaveFotoIDB(vid, p.i)).then(v => { if (Array.isArray(v) && v.length) return v; const a = ls();
+    /* foto de versão antiga (localStorage): passa para o banco agora, para liberar o localStorage */
+    if (a.length) FOTOS_IDB.gravar(chaveFotoIDB(vid, p.i), a).then(r => { if (r != null) { try { localStorage.removeItem(k); } catch (e) {} } });
+    return a; });
+}
 const guardada = () => { try { const o = JSON.parse(localStorage.getItem(GUARDA) || 'null'); return o && o.v === 1 && area(o.areaId) && (o.deixada || Date.now() - o.em < 24 * 3600e3) ? o : null; } catch (e) { return null; } };
-const limpaGuarda = () => { try { Object.keys(localStorage).filter(k => k === GUARDA || k.indexOf(GUARDA + '-f') === 0).forEach(k => localStorage.removeItem(k)); } catch (e) {} };
+const limpaGuarda = () => { if (FOTOS_IDB) FOTOS_IDB.limpar(); try { Object.keys(localStorage).filter(k => k === GUARDA || k.indexOf(GUARDA + '-f') === 0).forEach(k => localStorage.removeItem(k)); } catch (e) {} };
 async function telaAcesa() {
   if (!('wakeLock' in navigator) || document.visibilityState !== 'visible' || M.wake || M.pedindo || !M.ativa) { barraMon(); return; }
   M.pedindo = true;
@@ -2056,11 +2112,17 @@ async function telaAcesa() {
 function visMon() { if (!M.mo || M.salvo) return; const t = Date.now(); if (document.visibilityState === 'hidden') { M.mo.oculto(t); guardaMon(true); } else { M.mo.visivel(t); telaAcesa(); barraMon(); } }
 I.monitorar = (n, p) => {
   const a = area(p.id), g = p.retomar ? guardada() : null;
-  Object.assign(M, { a, pontos: g ? g.pontos.map(q => Object.assign({}, q, { fotos: fotosGuardadas(q) })) : [], semFotos: g ? !!g.semFotos : false, trechos: [], nTr: 0, ativa: true, caminho: [], pos: null, prec: null, d: 0, run: g ? g.run !== false : true, semGps: false, seguir: true, cur: null, salvo: false, inicio: g ? g.inicio : new Date().toISOString(), ultGuarda: 0, estPadrao: g ? g.estPadrao : M.estPadrao, deixada: false, salvando: false, vid: (g && g.vid) || DB.novoId(), executor: (g && g.executor) || usuario() });
+  Object.assign(M, { a, pontos: g ? g.pontos.map(q => Object.assign({}, q, { fotos: [] })) : [], semFotos: g ? !!g.semFotos : false, trechos: [], nTr: 0, ativa: true, caminho: [], pos: null, prec: null, d: 0, run: g ? g.run !== false : true, semGps: false, seguir: true, cur: null, salvo: false, inicio: g ? g.inicio : new Date().toISOString(), ultGuarda: 0, estPadrao: g ? g.estPadrao : M.estPadrao, deixada: false, salvando: false, vid: (g && g.vid) || DB.novoId(), executor: (g && g.executor) || usuario() });
+  /* v0.6.3 · as fotos voltam do banco do navegador sem travar a tela; salvar a visita espera por elas */
+  M.fotosProntas = Promise.all(M.pontos.map(q => fotosGuardadas(q, M.vid).then(f => { q.fotos = f; q.fotosOk = !!f.length; }))).then(() => {
+    /* foto que não chegou a ser guardada (o app caiu logo depois de salvar o ponto): avisa, em vez de sumir calado */
+    const perdeu = M.pontos.filter(q => (q.fp || (q.nf && !q.fotos.length))).length; M.pontos.forEach(q => { delete q.fp; });
+    if (perdeu && M.ativa) setTimeout(() => toast(perdeu === 1 ? 'A foto de 1 ponto não chegou a ser guardada' : 'As fotos de ' + perdeu + ' pontos não chegaram a ser guardadas'), 700);
+  });
   M.cfgMotor = (window.MONITORAMENTO_TESTE || {}).motor;
-  M.mo = Motor.criar({ poly: a.poly, de: g ? g.motor : null, cfg: (window.MONITORAMENTO_TESTE || {}).motor }); /* MONITORAMENTO_TESTE só existe nos testes */
+  M.mo = Motor.criar({ poly: a.poly, aneis: a.aneis, de: g ? g.motor : null, cfg: (window.MONITORAMENTO_TESTE || {}).motor }); /* MONITORAMENTO_TESTE só existe nos testes */
   if (g) { M.mo.retomar(g.em, Date.now()); if (g.deixada && !M.run) { M.mo.continuar(Date.now()); M.run = true; } trilhaMon(); }
-  S.mapa = Mapa.criar($('#mm'), { centro: Geo.centro(a.poly), zoom: 18 }); refMon(); S.mapa.fit(a.poly, { animar: false, padding: [50, 50] });
+  S.mapa = Mapa.criar($('#mm'), { centro: Geo.centro(a.poly), zoom: 18 }); refMon(); S.mapa.fit(a.aneis && a.aneis.length > 1 ? a.aneis.flat() : a.poly, { animar: false, padding: [50, 50] });
   S.mapa.map.on('dragstart', () => { M.seguir = false; });
   S.mapa.map.on('click', ev => { if (M.semGps) gpsManual([ev.latlng.lat, ev.latlng.lng]); });
   $('#bpa').innerHTML = M.run ? ico('pausa') + 'Pausar' : ico('play') + 'Continuar';
@@ -2088,7 +2150,8 @@ function travaMon(on) {
   b.onpointerup = b.onpointerleave = b.onpointercancel = solta;
 }
 function marcar() {
-  if (M.salvando) return;
+  /* v0.6.2 · M60-02: o segundo toque de um toque duplo não abre outro ponto nem empilha a gaveta */
+  if (M.salvando || layers.some(f => f.sheet === 'sh') || Date.now() - (M.tSalvo || 0) < 600) return;
   if (!M.pos) { toast(M.semGps ? 'Toque no mapa para marcar onde você está' : 'Aguardando o GPS'); return; }
   /* v0.6.0 · ITEM 251: só marca ponto quem está dentro da área (o motor confirmou a entrada, ou a posição está dentro do desenho) */
   const aneis = M.a.aneis && M.a.aneis.length ? M.a.aneis : [M.a.poly], folga = Motor.PADRAO.folga || 10;
@@ -2113,7 +2176,13 @@ function pfBody() {
     '<div class="fld"><span>Nesta planta</span>' + D.pragas.filter(g => (g.indicadores || []).length).map(g => '<div class="pr-g"><b class="pr-gn">' + esc(g.nome) + '</b>' + g.indicadores.map(i => linhaInd(i, c.v[i.id])).join('') + '</div>').join('') + '</div>';
   $('#pf').scrollTop = sc;
 }
-function salvarPonto() { M.estPadrao = M.cur.estadio; M.pontos.push(M.cur); guardaFotos(M.cur); M.cur = null; voltar(); refMon(); barraMon(); guardaMon(true); toast('Ponto ' + M.pontos.length + ' salvo'); }
+function salvarPonto() {
+  if (!M.cur) return; M.tSalvo = Date.now(); const semAntes = M.semFotos, nf = M.cur.fotos.length;
+  const p = M.cur, n = M.pontos.length + 1; M.estPadrao = p.estadio; M.pontos.push(p); M.cur = null; voltar(); refMon(); barraMon(); guardaMon(true);
+  /* v0.6.2 · M40-03: o aviso de memória cheia não fica escondido atrás do "Ponto salvo" */
+  toast('Ponto ' + n + ' salvo' + (M.guardaFalhou ? ', mas a memória do celular está cheia: a visita não está sendo guardada' : ''));
+  if (nf) guardaFotos(p).then(ok => { if (!ok && !semAntes && !M.salvo) toast('Ponto ' + n + ' salvo, mas as fotos não couberam na memória do celular'); });
+}
 /* resumo da atividade (o mesmo do relatório): tempo dentro, total, distância, pontos, e o que mais houver */
 function resumoMon() {
   const e = M.mo.estado(), extra = [];
@@ -2145,7 +2214,8 @@ async function copiaTeste() { const t = textoTeste(); try { await navigator.clip
    guardar, a visita continua aberta como estava. */
 async function salvarVisita() {
   if (M.salvando || M.salvo) return; M.salvando = true; const bt = $('#sh [data-act=salvaVisita]'); if (bt) { bt.classList.add('des'); bt.lastChild.textContent = 'Salvando'; }
-  const a = M.a, fim = Motor.criar({ poly: a.poly, de: M.mo.exportar(), cfg: M.cfgMotor }).encerrar(Date.now()), tr = M.mo.trilha(), k = Math.max(1, Math.ceil(tr.length / 400)), cam = [], cortes = [];
+  if (M.fotosProntas) await M.fotosProntas; /* v0.6.3: as fotos de uma visita retomada já voltaram do banco */
+  const a = M.a, fim = Motor.criar({ poly: a.poly, aneis: a.aneis, de: M.mo.exportar(), cfg: M.cfgMotor }).encerrar(Date.now()), tr = M.mo.trilha(), k = Math.max(1, Math.ceil(tr.length / 400)), cam = [], cortes = [];
   tr.forEach((q, i) => { if (q[3] || i % k === 0 || i === tr.length - 1) { if (q[3] && cam.length) cortes.push(cam.length); cam.push(q); } });
   const min = ms => Math.round(ms / 6000) / 10;
   /* a data é a do começo da visita (uma visita guardada de um dia para o outro não vira visita de hoje) */
@@ -2166,14 +2236,20 @@ async function salvarVisita() {
   M.recusada = false; r.enviada.then(x => { if (x.ok) return; M.recusada = true; if (mostrou) toast(recusa); else setTimeout(() => toast(recusa), 320); });
 }
 /* sair agora e continuar depois (almoço): pausa, guarda no aparelho e volta ao mapa, que mostra o aviso da visita em aberto */
-function deixarMon() {
-  if (!M.mo || M.salvo || M.salvando) return; const t = Date.now(), antes = M.mo.exportar(), run = M.run;
+async function deixarMon() {
+  if (!M.mo || M.salvo || M.salvando || M.deixando) return; M.deixando = true;
+  const bt = $('#sh [data-act=deixaVisita]'); if (bt) { bt.classList.add('des'); bt.lastChild.textContent = 'Guardando'; } /* v0.6.3: a espera aparece na tela */
+  /* v0.6.2 · M40-02: primeiro garante as fotos (só as que ainda não estão guardadas); se não couberem, não sai (elas sumiriam) */
+  M.semFotos = false; if (M.fotosProntas) await M.fotosProntas; await Promise.all(M.pontos.map(guardaFotos)); M.deixando = false;
+  if (!M.mo || M.salvo || M.salvando) return;
+  /* se, enquanto guardava, a pessoa voltou à visita ou abriu um ponto, não sai (o ponto em andamento não se perde) */
+  if (M.cur || !layers.some(f => f.sheet === 'sh') || !$('#sh [data-act=deixaVisita]')) return; const t = Date.now(), antes = M.mo.exportar(), run = M.run;
   M.run = false; M.mo.deixar(t); M.deixada = true; guardaMon(true);
   /* confere que o que ficou no aparelho é ESTA gravação (com a memória cheia sobraria o rascunho antigo) */
   const gg = guardada();
-  if (!gg || !gg.deixada || gg.em !== M.ultGuarda) {
-    M.mo = Motor.criar({ poly: M.a.poly, de: antes, cfg: M.cfgMotor }); M.run = run; M.deixada = false;
-    $('#bpa').innerHTML = M.run ? ico('pausa') + 'Pausar' : ico('play') + 'Continuar'; voltar(); toast('A memória do celular está cheia: não deu para guardar a visita'); return;
+  if (!gg || !gg.deixada || gg.em !== M.ultGuarda || M.semFotos) {
+    M.mo = Motor.criar({ poly: M.a.poly, aneis: M.a.aneis, de: antes, cfg: M.cfgMotor }); M.run = run; M.deixada = false; guardaMon(true); /* o rascunho volta a ser o da visita em andamento */
+    $('#bpa').innerHTML = M.run ? ico('pausa') + 'Pausar' : ico('play') + 'Continuar'; voltar(); toast(M.semFotos ? 'A memória do celular está cheia: as fotos não cabem. Salve a visita agora ou libere espaço' : 'A memória do celular está cheia: não deu para guardar a visita'); return;
   }
   layers.length = 0; const cur = S.stack[S.stack.length - 1]; cur.guard = null; S.stack = [{ t: 'mapa' }]; mostrar(-1);
   setTimeout(() => toast('Visita guardada no celular. Continue pelo aviso no mapa'), 300);
@@ -2185,7 +2261,7 @@ function quandoGuardou(ms) {
   return d === dia(Date.now()) ? h.slice(1) : d === dia(Date.now() - 864e5) ? 'ontem' + h : 'em ' + fmtD(d) + h;
 }
 function ofereceRetomar(abrindo, outraId) {
-  const g = guardada(); if (!g || (abrindo && g.deixada) || SO_PC()) return; const a = area(g.areaId), n = (g.pontos || []).length, outra = outraId && area(outraId);
+  const g = guardada(); if (!g || (abrindo && g.deixada) || SO_PC()) return; S.retOutra = outraId || null; const a = area(g.areaId), n = (g.pontos || []).length, outra = outraId && area(outraId);
   const de = g.executor && g.executor !== usuario() ? ' Começada por ' + g.executor + '.' : '';
   sheet('gsh2', '<div class="grip"></div><div class="sh-h"><h2>Continuar a visita do ' + esc(a.nome) + '?</h2></div><div class="sh-b"><div style="color:var(--atx2)" id="ret-txt">' +
     (outra ? 'Só uma visita fica aberta por vez no celular. Continue a do ' + esc(a.nome) + ' ou descarte para começar a do ' + esc(outra.nome) + '. ' : '') +
@@ -2198,13 +2274,19 @@ function confirmaDescarte() {
   tx.textContent = 'Descartar apaga a visita do ' + area(g.areaId).nome + (n ? ', com ' + n + (n === 1 ? ' ponto marcado' : ' pontos marcados') : '') + ' e todo o tempo gravado. Não dá para desfazer.';
   f.innerHTML = '<div class="lin"><button class="btn" data-act="retoma">Continuar a visita</button><button class="btn cr" data-act="retDescartaOk">Descartar mesmo</button></div>';
 }
+/* v0.6.2 · M60-04: "Descartar" na pergunta "Sair da visita" também pede a segunda confirmação */
+function confirmaDescarteVisita() {
+  const f = $('#sh .sh-f'), b = $('#sh .sh-b'); if (!f || !b) return; const n = M.pontos.length;
+  b.innerHTML = '<div style="color:var(--atx2)">Descartar apaga a visita do ' + esc(M.a.nome) + (n ? ', com ' + n + (n === 1 ? ' ponto marcado' : ' pontos marcados') : '') + ' e todo o tempo gravado. Não dá para desfazer.</div>';
+  f.innerHTML = '<div class="lin"><button class="btn" data-act="fecha">Voltar à visita</button><button class="btn cr" data-act="descartaVisitaOk">Descartar mesmo</button></div>';
+}
 
 /* ---- Semana ---- */
 const NS = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sáb'];
 const linhasSemana = () => D.areas.map(a => { const e = estado(a); return { a, e, venc: e.visita ? e.venc : -99 }; }).sort((x, y) => x.venc - y.venc);
 T.semana = () => {
   const L = linhasSemana(), dias = Array.from({ length: 7 }, (_, i) => addDias(hojeStr(), i)), cont = dias.map((_, i) => L.filter(r => i === 0 ? r.venc <= 0 : r.venc === i).length), mx = Math.max(1, ...cont);
-  return '<div class="tela" data-s="semana">' + topoRaiz('Semana', 'Pelo vencimento, a cada 7 dias') + '<div class="sem"><div class="cols">' + cont.map((c, i) => '<button class="' + (S.dsel === i ? 'on' : '') + '" data-act="dia" data-v="' + i + '" aria-label="' + c + ' áreas"><span>' + c + '</span><i style="height:' + Math.max(4, c / mx * 46) + 'px"></i></button>').join('') + '</div><div class="esc">' + dias.map((d, i) => '<div class="' + (i === 0 ? 'hoje' : '') + '">' + (i === 0 ? 'hoje' : NS[new Date(d + 'T12:00:00Z').getUTCDay()]) + '<b>' + d.slice(8) + '</b></div>').join('') + '</div></div><div class="lista" id="sl">' + semLista() + '</div></div>';
+  return '<div class="tela" data-s="semana">' + topoRaiz('Semana', 'Pelo vencimento, a cada 7 dias') + '<div class="sem"><div class="cols">' + cont.map((c, i) => '<button class="' + (S.dsel === i ? 'on' : '') + '" data-act="dia" data-v="' + i + '" aria-label="' + c + (c === 1 ? ' área' : ' áreas') + '"><span>' + c + '</span><i style="height:' + Math.max(4, c / mx * 46) + 'px"></i></button>').join('') + '</div><div class="esc">' + dias.map((d, i) => '<div class="' + (i === 0 ? 'hoje' : '') + '">' + (i === 0 ? 'hoje' : NS[new Date(d + 'T12:00:00Z').getUTCDay()]) + '<b>' + d.slice(8) + '</b></div>').join('') + '</div></div><div class="lista" id="sl">' + semLista() + '</div></div>';
 };
 function semLista() {
   const L = linhasSemana(), d = S.dsel;
@@ -2231,16 +2313,26 @@ function salvarNota() {
 /* ===== telas3.js ===== */
 /* Monitoramento · telas3.js — Mais, Sincronização, Novo pivô, Novo talhão (3 passos), Pontos fixos, Pragas. */
 const MAIS = [['tals', 'retang', 'Talhões', 'Cadastro, lugar no mapa e hectares'], ['piv', 'pivo', 'Novo pivô', 'Centro, raio e as áreas de cada um, no lugar real'], ['pfx', 'pino', 'Pontos fixos', 'Pluviômetro e pontos genéricos no mapa'], ['prg', 'praga', 'Pragas', 'Cadastro e limites dos indicadores'], ['sync', 'sync', 'Sincronização', 'Fila de envio e conexão']];
-T.mais = () => '<div class="tela" data-s="mais">' + topoRaiz('Mais') + '<div class="lista">' + MAIS.map(m => '<button class="row" data-act="go" data-v="' + m[0] + '" style="min-height:64px">' + ico(m[1]) + '<div class="g"><b>' + m[2] + '</b><small>' + m[3] + '</small></div>' + ico('dir', 'sp') + '</button>').join('') + '</div></div>';
+T.mais = () => '<div class="tela" data-s="mais">' + topoRaiz('Mais') + '<div class="lista">' + MAIS.map(m => '<button class="row" data-act="go" data-v="' + m[0] + '" style="min-height:64px">' + ico(m[1]) + '<div class="g"><b>' + m[2] + '</b><small>' + m[3] + '</small></div>' + ico('dir', 'sp') + '</button>').join('') + '</div><p style="text-align:center;color:var(--atx3);font-size:13px;margin:16px 0">Monitoramento · versão ' + VERSAO + '</p></div>';
 
 /* ---- Sincronização ---- */
 const filaHTML = () => { const f = DB.fila.lista(); return f.length ? f.map(x => '<div class="row"><div class="g"><b>' + esc(x.t) + '</b><small>' + fmtD(x.d.slice(0, 10)) + ' ' + x.d.slice(11, 16) + '</small></div>' + ico('nuvem', 'sp') + '</div>').join('') : '<div style="padding:16px;color:var(--atx3)">Tudo enviado.</div>'; };
 T.sync = () => { const on = DB.online.get(), loc = Mon.modoLocal; return '<div class="tela" data-s="sync">' + topo('Sincronização', on ? 'Conectado' : 'Sem sinal: guardando no celular') + '<div class="form larg">' +
   (loc ? '<div style="display:flex;align-items:center;gap:10px;min-height:44px;border:1px solid var(--abd);border-radius:var(--rs);padding:0 12px;background:var(--ab1)"><span style="flex:1"><b>Conexão</b><small style="display:block;color:var(--atx3);font-size:12.5px">Demonstração: simula estar sem sinal no campo</small></span><button class="sw2 ' + (on ? 'on' : '') + '" data-act="onoff" aria-label="Conexão"></button></div>' : '') +
-  '<div id="caixa" class="caixa"></div><div class="gr" style="padding:0" id="fila-t">Na fila para enviar · ' + DB.fila.lista().length + '</div><div id="fila" style="border:1px solid var(--abd);border-radius:var(--r);overflow:hidden">' + filaHTML() + '</div><p style="color:var(--atx3);font-size:12.5px;margin:0">Tudo o que você grava fica no celular e sai sozinho quando houver sinal. Os mapas já abertos ficam guardados; na primeira vez em cada fazenda é preciso internet.</p></div></div>'; };
+  '<div id="caixa" class="caixa"></div><div class="gr" style="padding:0" id="fila-t">Na fila para enviar · ' + DB.fila.lista().length + '</div><div id="fila" style="border:1px solid var(--abd);border-radius:var(--r);overflow:hidden">' + filaHTML() + '</div><div id="esp" class="kv" style="border:1px solid var(--abd);border-radius:var(--r);padding:12px"></div><p style="color:var(--atx3);font-size:12.5px;margin:0">Tudo o que você grava fica no celular e sai sozinho quando houver sinal. Os mapas já abertos ficam guardados; na primeira vez em cada fazenda é preciso internet.</p></div></div>'; };
 /* v0.4.0 · visitas guardadas no celular que a nuvem ainda não confirmou, com o motivo e "Tentar de novo" */
 const MOTIVO = { grande: 'Passa do limite da nuvem (fotos demais). Fica no celular até as fotos irem em documento próprio', 'permission-denied': 'A nuvem recusou (permissão)', unavailable: 'Sem sinal' };
-I.sync = () => refCaixa();
+I.sync = () => { refCaixa(); refEspaco(); };
+/* v0.6.3 · quanto o app ocupa no celular e quanto o navegador deixa usar (as fotos da visita em aberto agora usam esse espaço) */
+const tamTxt = b => (b >= 1e9 ? virg(b / 1e9, 1) + ' GB' : b >= 1e6 ? virg(b / 1e6, 1) + ' MB' : Math.max(1, Math.round(b / 1e3)) + ' KB');
+function refEspaco() {
+  const e = $('#esp'); if (!e) return; const st = navigator.storage;
+  if (!st || !st.estimate) { e.innerHTML = '<span>Espaço no celular</span><b>o navegador não informa</b>'; return; }
+  Promise.all([st.estimate(), st.persisted ? st.persisted().catch(() => false) : Promise.resolve(false)]).then(([q, fixo]) => {
+    const el = $('#esp'); if (!el) return; const livre = Math.max(0, (q.quota || 0) - (q.usage || 0));
+    el.innerHTML = '<span>Usado pelo app</span><b>' + tamTxt(q.usage || 0) + '</b><span>Ainda cabe</span><b>' + tamTxt(livre) + '</b><span>Guardado de vez</span><b>' + (fixo ? 'sim' : 'não (o navegador pode apagar se o celular encher)') + '</b>';
+  }).catch(() => { const el = $('#esp'); if (el) el.innerHTML = '<span>Espaço no celular</span><b>o navegador não informa</b>'; });
+}
 function refCaixa() {
   const el = $('#caixa'); if (!el || !SAIDA) return;
   SAIDA.lista().then(l => { if (!$('#caixa')) return; l.sort((x, y) => (x.em < y.em ? -1 : 1));
@@ -2251,7 +2343,7 @@ function tentaCaixa(id) { SAIDA.tentar(id).then(r => { toast(r.ok ? 'Visita envi
 function refFila() { refCaixa(); refSync(); const f = $('#fila'); if (f) { f.innerHTML = filaHTML(); $('#fila-t').textContent = 'Na fila para enviar · ' + DB.fila.lista().length; const t = $('.tela[data-s=sync] .top h1 small'); if (t) t.textContent = DB.online.get() ? 'Conectado' : 'Sem sinal: guardando no celular'; } }
 
 /* ---- mapa pequeno de prévia (sem interação) ---- */
-function miniMapa(el, poly, extra) { const m = Mapa.criar(el, { centro: Geo.centro(poly), zoom: 16 }); m.map.dragging.disable(); m.map.touchZoom.disable(); m.map.doubleClickZoom.disable(); m.map.scrollWheelZoom.disable(); m.map.boxZoom.disable(); m.map.keyboard.disable(); L.polygon(poly, { color: '#fff', weight: 2.2, fillColor: '#d9b46a', fillOpacity: .5 }).addTo(m.grupo); if (extra) extra(m); m.map.fitBounds(L.latLngBounds(poly), { padding: [20, 20], animate: false }); return m; }
+function miniMapa(el, poly, extra) { if (Array.isArray(poly[0]) && Array.isArray(poly[0][0]) && poly.length === 1) poly = poly[0]; const varios = Array.isArray(poly[0]) && Array.isArray(poly[0][0]), tudo = varios ? poly.flat() : poly; const m = Mapa.criar(el, { centro: Geo.centro(tudo), zoom: 16 }); m.map.dragging.disable(); m.map.touchZoom.disable(); m.map.doubleClickZoom.disable(); m.map.scrollWheelZoom.disable(); m.map.boxZoom.disable(); m.map.keyboard.disable(); L.polygon(poly, { color: '#fff', weight: 2.2, fillColor: '#d9b46a', fillOpacity: .5 }).addTo(m.grupo); if (extra) extra(m); m.map.fitBounds(L.latLngBounds(tudo), { padding: [20, 20], animate: false }); return m; }
 /* como no EFClaudian: o código não pode repetir nem com talhão desativado */
 const nomeUsado = (n, exceto) => D.talhoes.some(t => t.id !== exceto && String(t.codigo || '').toUpperCase() === n.toUpperCase()) || D.pivos.some(p => p.nome.toUpperCase() === n.toUpperCase());
 /* o EFClaudian tira a fazenda do começo do código: letras e 2 números (TD13, TD07) */
@@ -2281,7 +2373,7 @@ T.talDet = p => { const t = D.talhoes.find(x => x.id === p.id); if (!t) return '
     (t.inicio ? kv('Desde', fmtD(t.inicio) + '/' + t.inicio.slice(0, 4)) : '') + '</div>' +
     (t.geo && Math.abs(d) > .05 ? '<div class="aviso D">O desenho tem ' + virg(Math.abs(d) * 100, 0) + '% ' + (d > 0 ? 'a mais' : 'a menos') + ' que o documento. Confira o contorno ou os hectares.</div>' : '') +
     '</div><div class="rodape"><button class="btn pr" data-act="talMarca" data-v="' + esc(t.id) + '">' + ico('retang') + (t.geo ? 'Refazer o lugar no mapa' : 'Marcar o lugar no mapa') + '</button></div></div>'; };
-I.talDet = (n, p) => { const t = D.talhoes.find(x => x.id === p.id), el = n && n.querySelector('#tdm'); if (t && t.geo && el && n.isConnected && !el._leaflet_id) S.mapa = miniMapa(el, Geo.decodifica(t.geo)[0]); };
+I.talDet = (n, p) => { const t = D.talhoes.find(x => x.id === p.id), el = n && n.querySelector('#tdm'); if (t && t.geo && el && n.isConnected && !el._leaflet_id) S.mapa = miniMapa(el, Geo.decodifica(t.geo)); }; /* M60-01: todos os pedaços */
 
 /* ---- C2 · Novo pivô: centro, raio e as divisões no lugar real (arraste as alças na borda) ---- */
 const PF = { nome: '', raio: 260, n: 3, cult: 'Acerola', cortes: [0, 120, 240], mexeu: false };
@@ -2291,7 +2383,8 @@ T.piv = () => { Object.assign(PF, { nome: '', raio: 260, n: 3, cult: 'Acerola', 
   '<div class="fld"><span>Áreas dentro do pivô (no máximo 4)</span><div class="step"><button data-act="pn" data-d="-1" aria-label="Menos">−</button><b id="pf-c">3</b><button data-act="pn" data-d="1" aria-label="Mais">+</button></div></div>' + ddHTML('pcult', 'Cultura', culturasItens(), 'Acerola') + '<div class="kv" id="pf-kv"></div></div><div class="rodape"><button class="btn" data-act="back">Cancelar</button><button class="btn pr" id="pf-sv" data-act="salvaPiv">Salvar pivô</button></div></div>'; };
 const culturasItens = () => [...new Set(D.areas.map(a => a.cultura).concat(['Acerola', 'Goiaba', 'Mamão']))].filter(Boolean).sort().map(c => [c, c]);
 const letra = k => String.fromCharCode(65 + k);
-const partesPF = cen => { const c = PF.cortes.slice().sort((a, b) => a - b); return c.map((r0, k) => { const r1 = k + 1 < c.length ? c[k + 1] : c[0] + 360, poly = Geo.setor(cen, PF.raio || 1, r0, c.length === 1 ? r0 + 360 : r1); return { rumo0: r0, rumo1: c.length === 1 ? r0 + 360 : r1, poly, ha: Geo.areaHa(poly) }; }); };
+/* o desenho na tela é redondo (1,5°); o que é gravado continua a cada 6°, como sempre (decisão a confirmar com o Elias) */
+const partesPF = (cen, passo = PASSO_ARCO) => { const c = PF.cortes.slice().sort((a, b) => a - b); return c.map((r0, k) => { const r1 = k + 1 < c.length ? c[k + 1] : c[0] + 360, poly = Geo.setor(cen, PF.raio || 1, r0, c.length === 1 ? r0 + 360 : r1, passo); return { rumo0: r0, rumo1: c.length === 1 ? r0 + 360 : r1, poly, ha: Geo.areaHa(poly) }; }); };
 const alca = (k, cls) => L.divIcon({ className: 'mon-alca' + (cls ? ' ' + cls : ''), html: '<i></i>', iconSize: [44, 44], iconAnchor: [22, 22] });
 function prevPiv() {
   const m = S.mapa, c = m.map.getCenter(), cen = [c.lat, c.lng]; m.limpar(); const partes = partesPF(cen), nm = PF.nome || 'RU';
@@ -2317,7 +2410,7 @@ I.piv = n => {
 };
 function mudaNPiv(d) { PF.n = Math.max(1, Math.min(4, PF.n + d)); PF.cortes = cortesIguais(PF.n).map(r => (r + (PF.cortes[0] || 0)) % 360); prevPiv(); }
 function salvarPivo() {
-  const m = S.mapa.map, c = m.getCenter(), cen = [+c.lat.toFixed(6), +c.lng.toFixed(6)], partes = partesPF(cen), id = DB.novoId(), hoje = hojeStr();
+  const m = S.mapa.map, c = m.getCenter(), cen = [+c.lat.toFixed(6), +c.lng.toFixed(6)], partes = partesPF(cen, 6), id = DB.novoId(), hoje = hojeStr();
   DB.col('pivos').set(id, { nome: PF.nome, centro: cen, raioM: PF.raio, n: PF.n, cultura: PF.cult, criadoEm: new Date().toISOString(), criadoPor: usuario() }, 'Pivô ' + PF.nome);
   partes.forEach((s, k) => { const poly = s.poly.map(p => [+p[0].toFixed(6), +p[1].toFixed(6)]), ha = +Geo.areaHa(poly).toFixed(2);
     DB.col('talhoes').add({ codigo: PF.nome + letra(k), pivo: PF.nome, hectares: +ha.toFixed(1), cultura: PF.cult.toUpperCase(), variedade: '', ptsSolo: '', ptsFolha: '', ptsFruta: '', ativo: true,
@@ -2335,7 +2428,7 @@ const areaTF = () => Geo.areaHa(TF.cant);
 const numBR = v => { v = String(v == null ? '' : v).trim(); if (v.indexOf(',') >= 0) v = v.replace(/\./g, '').replace(',', '.'); return v === '' ? NaN : +v; };
 T.tal = p => { const t = p && p.id ? D.talhoes.find(x => x.id === p.id) : null;
   Object.assign(TF, { avisouCod: false, passo: t ? 1 : 0, id: t ? t.id : null, nome: t ? t.codigo : '', cult: t ? capital(t.cultura) || 'Acerola' : 'Acerola', variedade: t ? capital(t.variedade) : '', ha: t ? String(t.hectares || '').replace('.', ',') : '', ps: t ? t.ptsSolo || '' : '', pf: t ? t.ptsFolha || '' : '', pr: t ? t.ptsFruta || '' : '',
-    cant: t && t.geo ? Geo.decodifica(t.geo)[0] : [], modo: t && t.pivoGeo ? 'setor' : 'cantos', andando: false, trilha: [], pivoId: t && t.pivoGeo ? t.pivoGeo.pivoId : (D.pivos[0] || {}).id || null, r0: t && t.pivoGeo ? t.pivoGeo.rumo0 : 0, r1: t && t.pivoGeo ? t.pivoGeo.rumo1 : 90, fonte: t && t.geoFonte || 'cantos', voou: false });
+    cant: t && t.geo ? Geo.decodifica(t.geo)[0] : [], modo: t && t.pivoGeo ? 'setor' : 'cantos', andando: false, trilha: [], pivoId: t && t.pivoGeo ? t.pivoGeo.pivoId : (D.pivos[0] || {}).id || null, r0: t && t.pivoGeo ? t.pivoGeo.rumo0 : 0, r1: t && t.pivoGeo ? t.pivoGeo.rumo1 : 90, fonte: t && t.geoFonte || 'cantos', voou: false, voouBom: false });
   return '<div class="tela" data-s="tal">' + topo(t ? 'Lugar do ' + t.codigo : 'Novo talhão', '') + '<div class="passos" id="pas"></div><div id="tcorpo" style="flex:1;min-height:0;display:flex;flex-direction:column;position:relative"></div><div class="rodape" id="trod"></div><div class="sheet" id="sh"></div></div>'; };
 I.tal = n => {
   S.stack[S.stack.length - 1].guard = () => { if (!TF.id && (TF.nome || TF.cant.length) || TF.id && TF.mexeu) { sheet('sh', '<div class="grip"></div><div class="sh-h"><h2>Descartar o que você preencheu?</h2></div><div class="sh-b"><div style="color:var(--atx2)">' + (TF.id ? 'O novo lugar ainda não foi salvo.' : 'O talhão ainda não foi salvo.') + '</div></div><div class="sh-f"><div class="lin"><button class="btn" data-act="fecha">Continuar editando</button><button class="btn cr" data-act="descarta">Descartar</button></div></div>'); return true; } return false; };
@@ -2391,10 +2484,10 @@ function desenhoRender() {
 function desenhaSetorTF(m) {
   const pv = pivo(TF.pivoId); if (!pv) { TF.cant = []; return; } const cen = pv.centro, R = pv.raioM;
   L.circle(cen, { radius: R, color: '#fff', weight: 1.4, fill: false, dashArray: '4 5', interactive: false }).addTo(m.grupo);
-  D.areas.filter(a => a.pivoId === pv.id && a.id !== TF.id).forEach(a => L.polygon(a.poly, { color: '#fff', weight: 1.2, fillColor: '#fff', fillOpacity: .12, interactive: false }).addTo(m.grupo));
-  TF.cant = Geo.setor(cen, R, TF.r0, TF.r1); TF.fonte = 'pivo';
+  D.areas.filter(a => a.pivoId === pv.id && a.id !== TF.id).forEach(a => L.polygon(formaArea(a), { color: '#fff', weight: 1.2, fillColor: '#fff', fillOpacity: .12, interactive: false }).addTo(m.grupo));
+  TF.cant = Geo.setor(cen, R, TF.r0, TF.r1, PASSO_ARCO); TF.fonte = 'pivo';
   [['r0', 'ini'], ['r1', 'fim']].forEach(([k, cls]) => { const mk = L.marker(Geo.destino(cen, TF[k], R), { icon: alca(k, cls), draggable: true, keyboard: false, autoPan: false }).addTo(m.grupo);
-    mk.on('drag', () => { const q = mk.getLatLng(); TF[k] = Math.round(Geo.rumo(cen, [q.lat, q.lng])); TF.mexeu = true; mk.setLatLng(Geo.destino(cen, TF[k], R)); const poly = Geo.setor(cen, R, TF.r0, TF.r1); TF.cant = poly; m.grupo.eachLayer(l => { if (l.options && l.options._tf) m.grupo.removeLayer(l); }); L.polygon(poly, { color: '#d9b46a', weight: 2.6, fillColor: '#d9b46a', fillOpacity: .24, interactive: false, _tf: 1 }).addTo(m.grupo); $('#da').textContent = virg(areaTF()) + ' ha'; $('#dc').textContent = Math.round(((TF.r1 - TF.r0) % 360 + 360) % 360 || 360) + '°'; });
+    mk.on('drag', () => { const q = mk.getLatLng(); TF[k] = Math.round(Geo.rumo(cen, [q.lat, q.lng])); TF.mexeu = true; mk.setLatLng(Geo.destino(cen, TF[k], R)); const poly = Geo.setor(cen, R, TF.r0, TF.r1, PASSO_ARCO); TF.cant = poly; m.grupo.eachLayer(l => { if (l.options && l.options._tf) m.grupo.removeLayer(l); }); L.polygon(poly, { color: '#d9b46a', weight: 2.6, fillColor: '#d9b46a', fillOpacity: .24, interactive: false, _tf: 1 }).addTo(m.grupo); $('#da').textContent = virg(areaTF()) + ' ha'; $('#dc').textContent = Math.round(((TF.r1 - TF.r0) % 360 + 360) % 360 || 360) + '°'; });
     mk.on('dragend', () => desenhoRender()); });
 }
 /* setores do mesmo pivô que este setor cobre (rumos em graus, sentido horário) */
@@ -2417,13 +2510,16 @@ function iniciaDesenho() {
   S.mapa = Mapa.criar($('#dmm'), { centro: ref, zoom: 17 }); const mp = S.mapa.map;
   if (TF.cant.length > 2) mp.fitBounds(L.latLngBounds(TF.cant), { animate: false, padding: [60, 60] }); else if (D.areas.length) { mp.fitBounds(L.latLngBounds(todosPoly()), { animate: false }); mp.setZoom(Math.min(18, mp.getZoom() + 1), { animate: false }); }
   /* contornos que já existem, em tom neutro, para encostar o novo talhão */
-  D.areas.filter(a => a.id !== TF.id).forEach(a => L.polygon(a.poly, { color: '#fff', weight: 1.4, fillOpacity: .06, opacity: .7, interactive: false }).addTo(mp));
+  D.areas.filter(a => a.id !== TF.id).forEach(a => L.polygon(formaArea(a), { color: '#fff', weight: 1.4, fillOpacity: .06, opacity: .7, interactive: false }).addTo(mp));
   $('#tarq').onchange = ev => { const f = ev.target.files[0]; ev.target.value = ''; if (f) lerArquivo(f); };
   desenhoRender();
   /* v0.6.1 · o GPS liga com a tela: ponto azul; talhão novo e vazio abre onde você está */
   /* voa uma vez só, e só se a pessoa ainda não mexeu no mapa nem marcou canto, e com a posição boa (até 100 m) */
-  const m0 = S.mapa; TF.mexeuMapa = false; mp.on('dragstart', () => { TF.mexeuMapa = true; });
-  euLiga(m0, () => { if (S.mapa !== m0) return; if (EU.pos && EU.prec <= 100 && !TF.voou && !TF.mexeuMapa && !TF.id && !TF.cant.length && TF.modo !== 'setor') { TF.voou = true; mp.setView(EU.pos, 18, { animate: !REDUZ_MOV() }); } });
+  const m0 = S.mapa; TF.mexeuMapa = false; TF.voando = false; TF.voou = false; TF.voouBom = false; /* mapa novo: pode voar de novo */ mp.on('dragstart', () => { TF.mexeuMapa = true; }); mp.on('zoomstart', () => { if (!TF.voando) TF.mexeuMapa = true; }); mp.on('moveend', () => { TF.voando = false; });
+  /* v0.6.2 · ITEM 277: no PC (posição pela internet) também abre no lugar, aproximado e sem zoom de rua; quando o sinal melhora, chega mais perto */
+  euLiga(m0, () => { if (S.mapa !== m0 || !EU.pos || TF.mexeuMapa || TF.id || TF.cant.length || TF.modo === 'setor') return;
+    const bom = EU.prec <= 100; if (TF.voou && (TF.voouBom || !bom)) return; if (EU.prec > 5000) return; /* mais de 5 km de erro: não adianta ir */
+    TF.voou = true; TF.voouBom = bom; TF.voando = true; mp.setView(EU.pos, bom ? 18 : 15, { animate: !REDUZ_MOV() }); if (!bom) toast('Posição aproximada (±' + (EU.prec >= 1000 ? virg(EU.prec / 1000, 1).replace(/,0$/, '') + ' km' : EU.prec + ' m') + '). Ajuste o mapa até o talhão'); });
   if (!TF.id && !TF.cant.length) setTimeout(() => { if (S.mapa === m0 && !EU.pos && !TF.voou && !TF.mexeuMapa && !TF.cant.length) toast(EU.erro === 1 ? euErroTxt() : 'Sem sinal do GPS ainda. O mapa abriu nos talhões que já existem'); }, 8000);
   mp.on('click', ev => { if (TF.modo !== 'cantos' || (S._lupaFim && Date.now() - S._lupaFim < 400)) return; TF.cant.push([ev.latlng.lat, ev.latlng.lng]); TF.fonte = 'cantos'; TF.mexeu = true; desenhoRender(); });
   /* toque longo: lupa para escolher o ponto com precisão */
@@ -2481,6 +2577,7 @@ function caminhar() {
   desenhoRender();
 }
 function salvarTalhao() {
+  if (TF.modo === 'setor') { const pv0 = pivo(TF.pivoId), R0 = pv0 && (pv0.raioM || pv0.raio); if (pv0 && R0) TF.cant = Geo.setor(pv0.centro, R0, TF.r0, TF.r1); } /* gravado a cada 6°, como antes */
   const poly = TF.cant.map(p => [+p[0].toFixed(6), +p[1].toFixed(6)]), gh = +Geo.areaHa(poly).toFixed(2), pv = TF.modo === 'setor' ? pivo(TF.pivoId) : null, pn = v => (v === '' ? '' : parseInt(v, 10));
   const o = { codigo: TF.nome.trim().toUpperCase(), hectares: numBR(TF.ha), cultura: TF.cult.toUpperCase(), variedade: TF.variedade.trim().toUpperCase(), ptsSolo: pn(TF.ps), ptsFolha: pn(TF.pf), ptsFruta: pn(TF.pr),
     geo: Geo.codifica(poly), geoHa: gh, geoFonte: TF.fonte, geoEm: new Date().toISOString(), geoPor: usuario(), pivoGeo: pv ? { pivoId: pv.id, rumo0: TF.r0, rumo1: TF.r1 } : null };
@@ -2600,8 +2697,13 @@ document.addEventListener('click', e => {
   if (a === 'dd') { const d = t.closest('.dd'); if (d.classList.contains('open')) { [d].concat([...d.querySelectorAll('.dd.open')]).forEach(x => { x.classList.remove('open'); const i = layers.findIndex(f => f.dd === x); if (i >= 0) layers.splice(i, 1); }); } else { fecharDDs(d); d.classList.add('open'); const f = () => d.classList.remove('open'); f.dd = d; layers.push(f); } return; }
   if (a === 'ddsel') { const d = t.closest('.dd'); d.classList.remove('open'); const i = layers.findIndex(f => f.dd === d); if (i >= 0) layers.splice(i, 1); const b = d.querySelector('.ddb b'); if (b) b.textContent = t.textContent; d.querySelectorAll('.ddl>button').forEach(x => x.setAttribute('aria-selected', x === t)); setDD(t.dataset.id, t.dataset.v); return; }
   if (a === 'back' || a === 'fecha' || a === 'gfecha') { voltar(); return; }
+  /* v0.6.2 · M40-01: a barra de baixo não sai de uma tela com coisa por salvar (visita, desenho) sem perguntar; com a trava, não faz nada */
+  if ((a === 'root' || a === 'mon') && M.trava) return;
+  if (a === 'root' || (a === 'mon' && !SO_PC())) { const cur = S.stack[S.stack.length - 1];
+    if (cur && cur.t === 'monitorar' && M.cur && layers.some(f => f.sheet === 'sh')) { toast('Salve ou feche o ponto antes de sair da visita'); return; } /* o ponto aberto não se perde */
+    if (cur && cur.guard) { while (layers.length) layers.pop()(); if (cur.guard()) return; } }
   if (a === 'root') { root(v); return; } if (a === 'go') { go(v); return; }
-  if (a === 'tema') { S.tema = S.tema === 'claro' ? 'escuro' : 'claro'; document.documentElement.dataset.t = S.tema; $$('[data-act=tema]').forEach(b => { b.innerHTML = ico(S.tema === 'claro' ? 'lua' : 'sol'); }); return; }
+  if (a === 'tema') { S.tema = S.tema === 'claro' ? 'escuro' : 'claro'; document.documentElement.dataset.t = S.tema; try { localStorage.setItem('monitoramento-tema', S.tema); } catch (e) {} $$('[data-act=tema]').forEach(b => { b.innerHTML = ico(S.tema === 'claro' ? 'lua' : 'sol'); }); return; }
   if ((a === 'mon' || a === 'monit' || a === 'retomaAb') && SO_PC()) { toast('A visita é feita no celular, dentro da área'); return; }
   if (a === 'mon') { abrirEscolher(); return; }
   if (a === 'ldias') { mudaLimDias(+t.dataset.d); return; }
@@ -2620,7 +2722,9 @@ document.addEventListener('click', e => {
   if (a === 'copiaTeste') { copiaTeste(); return; }
   if (a === 'retoma') { const g = guardada(); voltar(); if (g) { layers.length = 0; S.stack.push({ t: 'monitorar', p: { id: g.areaId, retomar: true } }); mostrar(1); } return; }
   if (a === 'retDescarta') { confirmaDescarte(); return; }
-  if (a === 'retDescartaOk') { limpaGuarda(); voltar(); avisoAberta(); toast('Visita descartada'); return; }
+  if (a === 'retDescartaOk') { const outra = S.retOutra && area(S.retOutra); S.retOutra = null; limpaGuarda(); voltar(); avisoAberta(); toast('Visita descartada');
+    /* v0.6.2 · M40-13: descartando para começar a de outra área, a outra começa */
+    if (outra) { layers.length = 0; S.stack.push({ t: 'monitorar', p: { id: outra.id } }); mostrar(1); } return; }
   if (a === 'caixaTenta') { tentaCaixa(v); return; }
   if (a === 'retomaAb') { const g = guardada(); if (g) { layers.length = 0; S.stack.push({ t: 'monitorar', p: { id: g.areaId, retomar: true } }); mostrar(1); } else avisoAberta(); return; }
   if (a === 'deixaVisita') { deixarMon(); return; }
@@ -2633,11 +2737,12 @@ document.addEventListener('click', e => {
   if (a === 'salvarPt') { salvarPonto(); return; }
   if (a === 'fim') { finalizar(); return; }
   if (a === 'salvaVisita') { salvarVisita(); return; }
-  if (a === 'descartaVisita') { if (M.salvando) return; M.salvo = true; limpaGuarda(); layers.length = 0; S.stack[S.stack.length - 1].guard = null; S.stack.pop(); mostrar(-1); return; }
+  if (a === 'descartaVisita') { confirmaDescarteVisita(); return; }
+  if (a === 'descartaVisitaOk') { if (M.salvando) return; M.salvo = true; limpaGuarda(); layers.length = 0; S.stack[S.stack.length - 1].guard = null; S.stack.pop(); mostrar(-1); return; }
   if (a === 'dia') { S.dsel = S.dsel === +v ? -1 : +v; $$('.sem .cols button').forEach((b, i) => b.classList.toggle('on', i === S.dsel)); $('#sl').innerHTML = semLista(); return; }
   if (a === 'novaNota') { formNota(); return; }
   if (a === 'salvaNota') { salvarNota(); return; }
-  if (a === 'onoff') { DB.online.set(!DB.online.get()); const s = $('.tela[data-s=sync]'); if (s) { s.querySelector('.sw2').classList.toggle('on', DB.online.get()); } refFila(); return; }
+  if (a === 'onoff') { DB.online.set(!DB.online.get()); const s = $('.tela[data-s=sync]'); if (s) { s.querySelector('.sw2').classList.toggle('on', DB.online.get()); } refFila(); if (DB.online.get()) SAIDA.reenviar().then(() => { if ($('.tela[data-s=sync]')) refCaixa(); }); return; } /* M60-05 */
   if (a === 'pn') { mudaNPiv(+t.dataset.d); return; }
   if (a === 'talAb') { go('talDet', { id: v }); return; }
   if (a === 'talMarca') { go('tal', { id: v }); return; }
