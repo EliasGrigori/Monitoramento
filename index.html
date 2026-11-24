@@ -972,6 +972,22 @@ textarea.inp{height:90px;padding:10px 12px;resize:none}
 .mon-med.on{opacity:1;transform:none;pointer-events:auto}.mon-med .med-tx{flex:1;min-width:0;display:flex;flex-direction:column}.mon-med .med-tx b{font-size:15px}.mon-med .med-tx small{font-size:12.5px;color:var(--atx2)}
 .mon-med .ib{transition:opacity .15s}.mon-med .ib:disabled{opacity:.4}
 @media (prefers-reduced-motion:reduce){.mon-med{transition:none;transform:none}}
+/* v0.6.10 · pinos agrupados com o mapa afastado: círculo com o número de pinos (toque de 44 px) */
+.mon-grp{background:none;border:0}.mon-grp b{display:flex;align-items:center;justify-content:center;width:36px;height:36px;margin:4px;border-radius:50%;border:2px solid #fff;font:700 14px/1 var(--f);box-shadow:0 2px 6px rgba(0,0,0,.35)}
+/* v0.6.10 · Atividades: recentes por dia e tabela dos talhões */
+.at-bar{display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--abd);background:var(--ab1)}
+.at-q{flex:1;min-width:0;position:relative;display:block}.at-q>.ic{position:absolute;left:11px;top:12px;color:var(--atx3);pointer-events:none}.at-q .inp{padding-left:38px}
+.at-fl{display:flex;gap:8px;padding:10px 12px 0}.at-fl .dd{flex:1;min-width:0}.at-fl .ddb{box-shadow:none}
+.at-ic{display:flex;color:var(--atx3);flex:none}.at-seg{width:178px}.at-vazio{padding:30px;text-align:center;color:var(--atx3)}
+.at-t{width:100%;border-collapse:collapse;table-layout:fixed;font-size:14px;background:var(--ab1)}
+.at-t th{padding:0;text-align:left;border-bottom:1px solid var(--abd);position:sticky;top:0;background:var(--ab1);z-index:1}
+.at-t th:nth-child(2){width:66px}.at-t th:nth-child(3){width:70px}.at-t th:nth-child(4){width:100px}
+.at-t th button{display:flex;align-items:center;gap:2px;width:100%;min-height:44px;padding:0 8px;border:0;background:none;font:600 12.5px var(--f);color:var(--atx3);text-align:left}
+.at-t th button.on{color:var(--atx)}.at-t th.n button{justify-content:flex-end}.at-s{width:14px;height:14px}.at-s.inv{transform:rotate(180deg)}
+.at-t td{padding:6px 8px;border-bottom:1px solid var(--abd);vertical-align:middle;overflow:hidden}.at-t td small{display:block;color:var(--atx3);font-size:12.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.at-t td.n{text-align:right;font-weight:600}.at-t tbody tr{cursor:pointer;transition:background-color .15s}.at-t tbody tr:hover{background:var(--ab2)}.at-t .pil{white-space:nowrap}
+.at-nm{display:block;width:100%;min-height:44px;border:0;background:none;padding:0;text-align:left;font:inherit;color:inherit}.at-nm b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (min-width:900px){.at-t th:nth-child(2){width:120px}.at-t th:nth-child(3){width:110px}.at-t th:nth-child(4){width:140px}.at-seg{width:220px}.at-q{max-width:420px}.at-fl .dd{flex:0 1 320px}}
 </style></head><body>
 <div id="app"><nav class="rail" id="rail"></nav><div id="view"></div><nav class="nav" id="nav"></nav></div>
 <div class="sheet cheia" id="gsh" style="z-index:900"></div><div class="sheet" id="gsh2" style="z-index:910"></div><div class="ft-fund" id="fg" style="z-index:950"></div><div class="toast" id="toast" role="status" style="z-index:990"></div>
@@ -986,7 +1002,7 @@ textarea.inp{height:90px;padding:10px 12px;resize:none}
 //# sourceMappingURL=leaflet.js.map
 /* ===== versao.js ===== */
 /* Monitoramento · versão do módulo (o montar.py lê esta linha e carimba o cache do sw.js). */
-const VERSAO = '0.6.9';
+const VERSAO = '0.6.10';
 
 /* ===== icones.js ===== */
 /* Monitoramento · icones.js — ícones do módulo (traço de 24 px, cor herdada) e atalhos. Os 4 estádios têm ícone próprio. Prefixo: ico/P. */
@@ -1007,7 +1023,7 @@ lupa:'<circle cx="11" cy="11" r="6"/><path d="M16 16l4.5 4.5"/>',dir:'<path d="M
 pluv:'<path d="M12 3c3 4 5 6.5 5 9.5a5 5 0 0 1-10 0C7 9.5 9 7 12 3z"/>',ponto:'<circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/>',
 praga:'<ellipse cx="12" cy="13" rx="4" ry="5.5"/><path d="M12 7.5V4M8.5 10L4 8M8.5 14L4 16M15.5 10L20 8M15.5 14L20 16"/>',
 baixar:'<path d="M12 4v11M7 10.5l5 5 5-5"/><path d="M5 19.5h14"/>',enviar:'<circle cx="6" cy="12" r="2.5"/><circle cx="17.5" cy="5.5" r="2.5"/><circle cx="17.5" cy="18.5" r="2.5"/><path d="M8.2 10.8l7.1-4M8.2 13.2l7.1 4"/>',
-regua:'<path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/>',halo:'<rect x="8" y="8" width="8" height="8" rx="1"/><rect x="3" y="3" width="18" height="18" rx="4" stroke-dasharray="3 3"/>',lapis:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',abrir:'<path d="M3.5 7V18a1.5 1.5 0 0 0 1.5 1.5h14a1.5 1.5 0 0 0 1.5-1.5V9a1.5 1.5 0 0 0-1.5-1.5h-7l-2-2.5H5A1.5 1.5 0 0 0 3.5 6.5z"/><path d="M12 16.5v-6M9.5 13l2.5-2.5 2.5 2.5"/>',bateria:'<rect x="3" y="7" width="16" height="10" rx="2"/><path d="M21 10.5v3"/><path d="M6 10v4"/>',
+lista:'<path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2"/><circle cx="4.5" cy="12" r="1.2"/><circle cx="4.5" cy="18" r="1.2"/>',regua:'<path d="M3 17L17 3l4 4L7 21z"/><path d="M7 13l2 2M10 10l2 2M13 7l2 2"/>',halo:'<rect x="8" y="8" width="8" height="8" rx="1"/><rect x="3" y="3" width="18" height="18" rx="4" stroke-dasharray="3 3"/>',lapis:'<path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13 7l4 4"/>',abrir:'<path d="M3.5 7V18a1.5 1.5 0 0 0 1.5 1.5h14a1.5 1.5 0 0 0 1.5-1.5V9a1.5 1.5 0 0 0-1.5-1.5h-7l-2-2.5H5A1.5 1.5 0 0 0 3.5 6.5z"/><path d="M12 16.5v-6M9.5 13l2.5-2.5 2.5 2.5"/>',bateria:'<rect x="3" y="7" width="16" height="10" rx="2"/><path d="M21 10.5v3"/><path d="M6 10v4"/>',
 /* v0.6.7 · estruturas da fazenda */
 fazenda:'<path d="M3 20h18"/><path d="M5 20V9l7-5 7 5v11"/><path d="M9 20v-6h6v6"/>',sede:'<path d="M4 11l8-6 8 6"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/>',
 galpao:'<path d="M3 20V10l9-5 9 5v10z"/><path d="M7 20v-6h10v6M7 17h10"/>',packing:'<path d="M4 8l8-4 8 4v9l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v9"/>',
@@ -1916,6 +1932,20 @@ const Mapa = (function () {
       (o.foto ? '<i class="pn-f"><svg viewBox="0 0 24 24"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.2"/></svg></i>' : '') + (o.val != null ? '<b class="pn-v">' + o.val + '</b>' : '');
   };
 
+  /* pior nível entre pinos: Dano, Controle, Equilíbrio, Sem situação, sem visita */
+  const PESO_PINO = { D: 5, C: 4, E: 3, S: 2, V: 1, X: 0 };
+  const piorPino = (a, b) => (a == null ? b : (PESO_PINO[b] || 0) > (PESO_PINO[a] || 0) ? b : a);
+  /* agrupa pinos que ficariam a menos de 40 px um do outro na tela (o pino tem 34 px e o círculo 36 px). Junta de novo até nenhum
+     círculo encostar em outro (círculos encostados também se cobririam). O pino escolhido fica sozinho. */
+  const RAIO_GRUPO = 40;
+  function agrupaPinos(m, pontos, sel) {
+    let gs = pontos.map(p => { const q = m.latLngToLayerPoint([p.lat, p.lng]); return { ps: [p], x: q.x, y: q.y, fixo: p.i === sel }; }), mudou = true;
+    while (mudou) { mudou = false;
+      for (let i = 0; i < gs.length && !mudou; i++) for (let j = i + 1; j < gs.length; j++) { const A = gs[i], B = gs[j]; if (A.fixo || B.fixo) continue;
+        const dx = A.x - B.x, dy = A.y - B.y; if (dx * dx + dy * dy < RAIO_GRUPO * RAIO_GRUPO) { const n = A.ps.length + B.ps.length;
+          A.x = (A.x * A.ps.length + B.x * B.ps.length) / n; A.y = (A.y * A.ps.length + B.y * B.ps.length) / n; A.ps = A.ps.concat(B.ps); gs.splice(j, 1); mudou = true; break; } } }
+    return gs.map(g => g.ps);
+  }
   function criar(el, op) {
     op = op || {};
     const map = L.map(el, { zoomControl: false, attributionControl: true, zoomSnap: 0.25, zoomDelta: 1, wheelPxPerZoomLevel: 90, preferCanvas: false, tap: true, maxZoom: TILES.maxZoom, zoomAnimation: true }).setView(op.centro || [-5.2731, -38.1547], op.zoom || 15);
@@ -1934,8 +1964,11 @@ const Mapa = (function () {
         if (suave && velhos.length && !REDUZ_MOV()) {
           /* desenho que ainda estava entrando (troca seguida de outra, ex.: o filtro grava e o banco avisa de novo) sai na hora; o anterior continua sumindo */
           velhos.forEach(l => { const el = l.getElement && l.getElement(); if (el && el.classList.contains('mon-entra') && !el.classList.contains('mon-sai')) grupo.removeLayer(l); else if (el) el.classList.add('mon-sai'); });
+          /* v0.6.10: os pinos ficam num grupo próprio dentro do desenho; somem junto (150 ms) */
+          velhos.forEach(l => { if (!l.getElement && l.eachLayer) l.eachLayer(x => { const el = x.getElement && x.getElement(); if (el) el.classList.add('mon-sai'); }); });
           setTimeout(() => velhos.forEach(l => { if (grupo.hasLayer(l)) grupo.removeLayer(l); }), 150); api._entra = true;
         } else grupo.clearLayers();
+        api._pin = null; api._entraPin = api._entra;
         if (api._calor) { map.removeLayer(api._calor); api._calor = null; }
       },
       fit(poly, o) { const b = L.latLngBounds(poly); const op2 = Object.assign({ padding: [24, 24], maxZoom: 19 }, o || {}); if ((o && o.animar === false) || REDUZ_MOV()) map.fitBounds(b, Object.assign({}, op2, { animate: false })); /* v0.6.6: sem animação de verdade (antes o zoom ainda animava, e sair da tela no meio dava erro do Leaflet) */ else map.flyToBounds(b, Object.assign({ duration: .5, easeLinearity: .25 }, op2)); },
@@ -1953,12 +1986,37 @@ const Mapa = (function () {
       },
       /* esconde o rótulo de área que ficou pequena demais na tela (volta ao aproximar) */
       rotulosAuto() { rot.forEach(([pg, mk]) => { const b = pg.getBounds(), p1 = map.latLngToContainerPoint(b.getNorthWest()), p2 = map.latLngToContainerPoint(b.getSouthEast()); const el = mk.getElement(); if (el) el.style.display = (Math.abs(p2.x - p1.x) < 70 || Math.abs(p2.y - p1.y) < 36) ? 'none' : ''; }); },
+      /* v0.6.10 · com o mapa afastado, os pinos que ficariam um em cima do outro viram um círculo com o número deles (como na Cropwise).
+         A cor do círculo é a pior entre os pinos dele. Tocar no círculo aproxima até eles. O pino escolhido nunca entra num círculo.
+         No zoom máximo não agrupa (pinos no mesmo lugar ficam visíveis um por cima do outro, como antes). */
       pinos(pontos, o) {
-        pontos.forEach(p => {
-          const nivel = o.nivelDe(p), val = o.val ? o.valorDe(p) : null;
-          const m = L.marker([p.lat, p.lng], { icon: L.divIcon({ className: 'mon-pino' + (o.sel === p.i ? ' sel' : ''), html: pinoHtml(nivel, p.ordem != null ? p.ordem : p.i, { cor: o.cor, num: o.num, val: val, foto: p.foto || (p.fotos && p.fotos.length) }), iconSize: [34, 44], iconAnchor: [17, 42] }), riseOnHover: true, keyboard: false }).addTo(grupo);
-          m.on('click', ev => { L.DomEvent.stopPropagation(ev); if (api.captura) { api.captura([ev.latlng.lat, ev.latlng.lng]); return; } o.onClick && o.onClick(p); });
+        const g = L.layerGroup().addTo(grupo); api._pin = { g, pontos, o, chave: null }; api._pinDesenha(!!api._entraPin); api._entraPin = false;
+      },
+      _pinDesenha(entra) {
+        const P = api._pin; if (!P || !grupo.hasLayer(P.g)) return; const { g, pontos, o } = P, red = REDUZ_MOV();
+        const grupos = o.agrupar && map.getZoom() < map.getMaxZoom() - .01 ? agrupaPinos(map, pontos, o.sel) : pontos.map(p => [p]);
+        const chave = grupos.map(x => x.map(p => p.i).join('.')).join('|'); if (chave === P.chave) return; const troca = P.chave != null; P.chave = chave;
+        /* revisor 5: só o que mudou sai e entra (150 ms); o pino ou círculo que continua igual fica parado */
+        const antes = P.mk || new Map(), novo = new Map();
+        grupos.forEach(gs => { const k = gs.map(p => p.i).join('.'); if (antes.has(k)) { novo.set(k, antes.get(k)); antes.delete(k); return; }
+          let m;
+          if (gs.length === 1) { const p = gs[0], nivel = o.nivelDe(p), val = o.val ? o.valorDe(p) : null, sel = o.sel === p.i;
+            /* revisor 3: o pino escolhido fica por cima de qualquer círculo */
+            m = L.marker([p.lat, p.lng], { zIndexOffset: sel ? 100000 : 0, icon: L.divIcon({ className: 'mon-pino' + (sel ? ' sel' : ''), html: pinoHtml(nivel, p.ordem != null ? p.ordem : p.i, { cor: o.cor, num: o.num, val: val, foto: p.foto || (p.fotos && p.fotos.length) }), iconSize: [34, 44], iconAnchor: [17, 42] }), riseOnHover: true, keyboard: false }).addTo(g);
+            m.on('click', ev => { L.DomEvent.stopPropagation(ev); if (api.captura) { api.captura([ev.latlng.lat, ev.latlng.lng]); return; } o.onClick && o.onClick(p); });
+          } else {
+            let nv = null, la = 0, lo = 0; gs.forEach(p => { nv = piorPino(nv, o.nivelDe(p)); la += p.lat; lo += p.lng; });
+            const cor = o.cor === false ? '#3a3f4a' : HEX[nv] || HEX.X, tx = (nv === 'C' || nv === 'S') && o.cor !== false ? '#2a1f00' : '#fff';
+            m = L.marker([la / gs.length, lo / gs.length], { title: gs.length + ' pontos', icon: L.divIcon({ className: 'mon-grp', html: '<b data-nv="' + nv + '" style="background:' + cor + ';color:' + tx + '">' + gs.length + '</b>', iconSize: [44, 44], iconAnchor: [22, 22] }), riseOnHover: true, keyboard: false, zIndexOffset: 500 }).addTo(g);
+            /* revisor 16: aproxima até o zoom 19 (as imagens vão até 18; acima disso ficam esticadas) */
+            m.on('click', ev => { L.DomEvent.stopPropagation(ev); if (api.captura) { api.captura([ev.latlng.lat, ev.latlng.lng]); return; }
+              const b = L.latLngBounds(gs.map(p => [p.lat, p.lng])), op = { padding: [70, 70], maxZoom: Math.max(map.getZoom() + 1, 19) };
+              if (red) map.fitBounds(b, Object.assign(op, { animate: false })); else map.flyToBounds(b, Object.assign(op, { duration: .4 })); });
+          }
+          novo.set(k, m); const el = m.getElement(); if ((entra || troca) && el && !red) { el.classList.add('mon-entra'); setTimeout(() => el.classList.remove('mon-entra'), 160); }
         });
+        antes.forEach(l => { const el = l.getElement && l.getElement(); if (el && !red) { el.classList.add('mon-sai'); setTimeout(() => g.removeLayer(l), 150); } else g.removeLayer(l); });
+        P.mk = novo;
       },
       caminho(pts, cor) { if (pts.length > 1) L.polyline(pts, { color: cor || '#fff', weight: cor ? 3 : 2.5, dashArray: cor ? null : '7 6', opacity: .95, lineCap: 'round', interactive: false }).addTo(grupo); }, /* v0.6.8: cor = a da pessoa (linha cheia) */
       calor(o) { if (api._calor) map.removeLayer(api._calor); api._calor = new Calor(o).addTo(map); },
@@ -2007,11 +2065,11 @@ const Mapa = (function () {
       euSai() { if (api._rumoOff) { api._rumoOff(); api._rumoOff = null; } api._rumoAng = null; if (api._eu) { map.removeLayer(api._eu); api._eu = null; } if (api._euC) { map.removeLayer(api._euC); api._euC = null; } },
       destroy() { if (api._rumoOff) { api._rumoOff(); api._rumoOff = null; } try { map.stop(); } catch (e) {} map.remove(); } /* v0.6.6: para o voo do mapa antes de sair (sair no meio do voo dava erro do Leaflet) */
     };
-    map.on('zoomend', () => { api.rotulosAuto(); api.fzPerto(); });
+    map.on('zoomend', () => { api.rotulosAuto(); api.fzPerto(); api._pinDesenha(false); }); /* v0.6.10: reagrupa os pinos */
     return api;
   }
   /* forma desenhada de uma área: a tela troca por formaArea (setor de pivô redondo, talhão com vários pedaços) */
-  return { criar, TILES, HEX, pinoHtml, forma: a => a.poly };
+  return { criar, TILES, HEX, pinoHtml, agrupaPinos, piorPino, forma: a => a.poly };
 })();
 
 /* ===== ui.js ===== */
@@ -2095,7 +2153,8 @@ const nivelPt = (p, ind, a) => Sev.nivelPonto(p, ind, a.metodologia) || 'S';
 const valPt = (p, ind) => (p.v && typeof p.v[ind.id] === 'number' ? p.v[ind.id] : 0);
 const centroSetor = a => { const pv = pivo(a.pivoId); if (!pv) return Geo.centro(a.poly); const n = D.areas.filter(x => x.pivoId === a.pivoId).length; const larg = ((a.rumo1 - a.rumo0) % 360 + 360) % 360 || 360; return Geo.destino(pv.centro, a.rumo0 + larg / 2, pv.raioM * (n > 2 ? .62 : .5)); };
 const polyPivo = pv => D.areas.filter(a => a.pivoId === pv.id).flatMap(a => a.poly);
-const todosPoly = () => D.areas.flatMap(a => (a.aneis && a.aneis.length > 1 ? a.aneis.flat() : a.poly)).concat(D.fixos.map(f => f.pos));
+const talhoesPoly = () => D.areas.flatMap(a => (a.aneis && a.aneis.length > 1 ? a.aneis.flat() : a.poly)); /* v0.6.10 */
+const todosPoly = () => talhoesPoly().concat(D.fixos.map(f => f.pos));
 
 /* ---- componentes ---- */
 function ddHTML(id, rot, itens, sel, op) {
@@ -2247,7 +2306,7 @@ const padSheet = () => (innerWidth >= 900 ? { paddingTopLeft: [30, 70], paddingB
 const prox = ev => (ev < 0 ? 'atrasada ' + (-ev) + ' d' : ev === 0 ? 'vence hoje' : 'em ' + ev + ' d');
 
 /* ---- Mapa geral ---- */
-T.mapa = () => '<div class="tela" data-s="mapa">' + topoRaiz((D.cfg.fazenda || 'Fazenda Demonstração'), (D.cfg.local || 'Dados inventados')) + '<div class="mapa" id="mp"><div class="mapael" id="mm"></div><div class="sobre mon-ctl" style="top:auto;bottom:30px"><button class="ib" data-act="medir" aria-pressed="false" aria-label="Medir distância e área" title="Medir distância e área">' + ico('regua') + '</button><button class="ib" data-act="haloAb" aria-pressed="false" aria-label="Halos" title="Halos (faixas em volta dos talhões)">' + ico('halo') + '</button><button class="ib" data-act="euVai" aria-label="Onde estou" title="Onde estou">' + ico('gps') + '</button></div>' + medBarHTML() +
+T.mapa = () => '<div class="tela" data-s="mapa">' + topoRaiz((D.cfg.fazenda || 'Fazenda Demonstração'), (D.cfg.local || 'Dados inventados'), '<button class="ib" data-act="go" data-v="ativ" aria-label="Atividades" title="Atividades recentes e tabela dos talhões">' + ico('lista') + '</button>') + '<div class="mapa" id="mp"><div class="mapael" id="mm"></div><div class="sobre mon-ctl" style="top:auto;bottom:30px"><button class="ib" data-act="medir" aria-pressed="false" aria-label="Medir distância e área" title="Medir distância e área">' + ico('regua') + '</button><button class="ib" data-act="haloAb" aria-pressed="false" aria-label="Halos" title="Halos (faixas em volta dos talhões)">' + ico('halo') + '</button><button class="ib" data-act="euVai" aria-label="Onde estou" title="Onde estou">' + ico('gps') + '</button></div>' + medBarHTML() +
   '<div class="sobre mon-ab" id="mab" role="status" aria-live="polite"></div><div class="sobre" style="left:8px;top:8px;width:min(340px,calc(100% - 16px))"><div class="dd" data-dd="filtro"><button class="ddb" data-act="dd" data-id="filtro">' + ico('filtro') + '<b id="fsum"></b>' + ico('desce', 'ch') + '</button>' +
   '<div class="ddl" style="padding:12px;overflow:visible;max-height:none"><div style="display:flex;flex-direction:column;gap:10px"><div id="f-cult"></div><div id="f-ind"></div><div style="display:flex;align-items:center;gap:10px;min-height:44px"><span style="flex:1;font-size:15px">Só atrasados</span><button class="sw2" id="f-atr" data-act="sw" data-id="atr" aria-label="Só atrasados"></button></div><div style="display:flex;align-items:center;gap:10px;min-height:44px"><span style="flex:1;font-size:15px">Mostrar encerrados</span><button class="sw2" id="f-enc" data-act="sw" data-id="enc" aria-label="Mostrar encerrados"></button></div><div style="display:flex;align-items:center;gap:10px;min-height:44px"><span style="flex:1;font-size:15px">Fazenda e estruturas</span><button class="sw2" id="f-fz" data-act="sw" data-id="fz" aria-label="Fazenda e estruturas"></button></div>' +
   '<div style="border-top:1px solid var(--abd);padding-top:10px"><div class="tag" style="margin-bottom:6px">Cores, pelo último monitoramento</div><div id="f-leg" style="display:flex;flex-direction:column;gap:6px;font-size:14px"></div></div></div></div></div></div><div class="sheet" id="sh"></div></div></div>';
@@ -2282,7 +2341,21 @@ function avisoAberta() {
   el.innerHTML = '<div class="mon-ab-t"><b>Visita do ' + esc(a.nome) + ' em aberto</b><small>Guardada ' + esc(quandoGuardou(g.em)) + (n ? ' · ' + n + (n === 1 ? ' ponto' : ' pontos') : '') + esc(de) + '</small></div><button class="btn pr sm" data-act="retomaAb">' + ico('play') + 'Continuar</button>';
   el.classList.add('on');
 }
-I.mapa = n => { MED.on = false; MED.g = null; if (n) n._fim = () => { euDesliga(); medirFecha(); }; S.mapa = Mapa.criar($('#mm'), { centro: (D.cfg.centro) || [-5.2731, -38.1547], zoom: D.cfg.zoom || 15 }); filtroGeral(); desenhaGeral(); if (D.areas.length) S.mapa.fit(todosPoly(), { animar: false }); S.mapa.map.on('click', ev => { fecharDDs(); if (MED.on) medirPonto([ev.latlng.lat, ev.latlng.lng]); });
+/* v0.6.10 · pedido do Elias (23/11, 19h15: "abrir o mapa mais perto dos meus lotes"; escolha: "Onde parei"): o mapa geral abre no lugar
+   e no zoom em que foi deixado neste aparelho. Na primeira vez (ou sem lugar guardado), enquadra só os talhões, de perto, sem contar
+   pontos fixos e estruturas, e com folga para o filtro em cima. Sem talhão nenhum, nada é guardado. */
+const VISTA_CH = 'monitoramento-vista';
+function vistaLe() { try { const v = JSON.parse(localStorage.getItem(VISTA_CH) || 'null'); if (v && Array.isArray(v.c) && v.c.length === 2 && isFinite(v.c[0]) && isFinite(v.c[1]) && Math.abs(v.c[0]) <= 90 && Math.abs(v.c[1]) <= 180 && isFinite(v.z) && v.z >= 3 && v.z <= 20) return v; } catch (e) {} return null; }
+/* revisor 8: grava assim que o mapa para (sair logo depois de mexer não perde o lugar) */
+function vistaGuarda(m) { if (S.mapa !== m || !D.areas.length) return; const c = m.map.getCenter(); try { localStorage.setItem(VISTA_CH, JSON.stringify({ c: [+c.lat.toFixed(6), +c.lng.toFixed(6)], z: +m.map.getZoom().toFixed(2) })); } catch (e) {} }
+/* revisor 1: folga só para o filtro em cima (64 px) e 8 px nos lados; os botões ficam no canto de baixo e não pedem folga */
+const enquadraTalhoes = (m, animar) => { const p = talhoesPoly(); if (p.length) m.fit(p, { animar, maxZoom: 18, paddingTopLeft: [8, 64], paddingBottomRight: [8, 8] }); };
+/* revisor 2: o lugar guardado vale se algum talhão aparece nele, mesmo sem nenhum canto à vista (zoom no meio de um talhão grande) */
+const vistaTemTalhao = b => D.areas.some(a => L.latLngBounds(a.aneis && a.aneis.length > 1 ? a.aneis.flat() : a.poly).intersects(b));
+I.mapa = n => { MED.on = false; MED.g = null; if (n) n._fim = () => { euDesliga(); medirFecha(); }; const vs = vistaLe(); S.mapa = Mapa.criar($('#mm'), vs ? { centro: vs.c, zoom: vs.z } : { centro: (D.cfg.centro) || [-5.2731, -38.1547], zoom: D.cfg.zoom || 15 }); filtroGeral(); desenhaGeral();
+  /* o lugar guardado só vale se mostra pelo menos um talhão (senão o mapa abriria num lugar vazio, longe dos lotes) */
+  if (!vs || (D.areas.length && !vistaTemTalhao(S.mapa.map.getBounds()))) enquadraTalhoes(S.mapa, false);
+  { const m = S.mapa; m.map.on('moveend', () => vistaGuarda(m)); } S.mapa.map.on('click', ev => { fecharDDs(); if (MED.on) medirPonto([ev.latlng.lat, ev.latlng.lng]); });
   /* revisor 11: com o filtro aberto, o toque só fecha o filtro (vê antes de o clique fechar) */
   $('#mm').addEventListener('pointerdown', () => { MED.ddAberto = !!document.querySelector('.dd.open'); }, true); avisoAberta(); };
 /* v0.6.0 · C12 · Limite de dias (como na legenda da Cropwise): fica na configuração geral, vale para todos */
@@ -2310,7 +2383,7 @@ function desenhaPivo() {
   const m = S.mapa, pv = S.pv; m.limpar();
   m.areas(D.areas.filter(a => a.pivoId === pv.id), { estado: a => ({ nivel: nivelFiltro(a, S.indG), dias: estado(a).dias }), centroSetor, sel: S.pvSel, esmaecer: a => S.pvSel && a.id !== S.pvSel, rotulos: !S.pvSel, onClick: a => zoomSetor(a) });
   if (S.pvSel && !area(S.pvSel)) S.pvSel = null;
-  if (S.pvSel) { const a = area(S.pvSel), v = Sev.ultimaVisita(D.visitas, a.id), x = indDoFiltro(a, v); if (v && x) m.pinos(v.pontos, { nivelDe: pt => nivelPt(pt, x.ind, a), cor: true, num: !v._visitas, /* revisor 20: com duas pessoas os números repetiriam */ onClick: () => {} }); }
+  if (S.pvSel) { const a = area(S.pvSel), v = Sev.ultimaVisita(D.visitas, a.id), x = indDoFiltro(a, v); if (v && x) m.pinos(v.pontos, { agrupar: true /* v0.6.10 */, nivelDe: pt => nivelPt(pt, x.ind, a), cor: true, num: !v._visitas, /* revisor 20: com duas pessoas os números repetiriam */ onClick: () => {} }); }
 }
 I.pivo = (n, p) => {
   S.pv = pivo(p.id); S.pvSel = null; S.mapa = Mapa.criar($('#mm'), { centro: S.pv.centro, zoom: 16 }); $('#pind').innerHTML = ddHTML('indG', '', itensGerais(), S.indG);
@@ -2383,7 +2456,9 @@ const legPes = d => (d && d.pes.length > 1 ? '<div class="tag" style="margin:8px
 /* v0.5.0 · a legenda mostra os limites no formato do indicador (0,5 folha por planta, 20 %) e vale para cada planta */
 function legArea(x, a) { const L = limDe(x.ind, a); if (!L) return '<div class="tag">' + esc(x.ind.nome) + '</div><div>Sem limite definido</div>'; const f = v => fmtV(v, x.ind); return '<div class="tag" style="margin-bottom:5px">' + esc(x.ind.nome) + ' · cada planta</div><div style="display:flex;flex-direction:column;gap:3px"><span><i class="sw E"></i> abaixo de ' + f(L.c) + '</span><span><i class="sw C"></i> de ' + f(L.c) + ' a menos de ' + f(L.d) + '</span><span><i class="sw D"></i> ' + f(L.d) + ' ou mais</span></div>'; }
 I.area = (n, p) => {
-  const a = area(p.id); S.A = a; S.visita = 0; S.diaData = DIAS(a)[0] || null; S.pt = null; S.ptKey = null; S.indA = null; S.oculto = {}; autoCam(); const x = indSelA(a);
+  const a = area(p.id); S.A = a; S.visita = 0; S.diaData = DIAS(a)[0] || null; S.pt = null; S.ptKey = null; S.indA = null; S.oculto = {};
+  if (p.dia) { const k = DIAS(a).indexOf(p.dia); if (k >= 0) { S.visita = k; S.diaData = p.dia; } } /* v0.6.10: aberta pelas Atividades, já no dia tocado */
+  autoCam(); const x = indSelA(a);
   S.mapa = Mapa.criar($('#mm'), { centro: Geo.centro(a.poly), zoom: 17 }); $('#sind').innerHTML = ddHTML('indA', '', itensInd(), x.id); $('#camp').innerHTML = camPanel();
   const f = $('#fdias'); f.innerHTML = faixaDias(a); semDias(); marcaDia(true);
   /* revisor 7: no PC, a rodinha do mouse rola a faixa para os lados */
@@ -2402,7 +2477,7 @@ function desenhaArea() {
     if (o.cam) dia.pes.forEach(q => { if (oc[q.nome]) return; const cor = dia.pes.length > 1 ? q.cor : null; q.vs.forEach(vv => {
       if (vv.caminho && vv.caminho.length) { const cam = typeof vv.caminho === 'string' ? (Geo.decodifica(vv.caminho)[0] || []) : vv.caminho; const cs = [0].concat(vv.cortes || [], [cam.length]); for (let k = 1; k < cs.length; k++) m.caminho(cam.slice(cs[k - 1], cs[k]), cor); }
       else m.caminho((vv.pontos || []).map(p => [p.lat, p.lng]), cor); }); });
-    m.pinos(pts, { nivelDe: pt => nivelPt(pt, x.ind, a), valorDe: pt => valPt(pt, x.ind), cor: !!o.cor, num: !!o.num, val: !!o.val, sel: S.pt && S.pt !== 'res' ? S.pt : null, onClick: pt => abrirPonto(pt.i) });
+    m.pinos(pts, { agrupar: true /* v0.6.10 */, nivelDe: pt => nivelPt(pt, x.ind, a), valorDe: pt => valPt(pt, x.ind), cor: !!o.cor, num: !!o.num, val: !!o.val, sel: S.pt && S.pt !== 'res' ? S.pt : null, onClick: pt => abrirPonto(pt.i) });
   }
   $('#leg').innerHTML = legArea(x, a) + legPes(dia);
 }
@@ -3407,6 +3482,101 @@ function baixaFmt(v) {
 /* revisor 5: no celular, a folha de compartilhar (Salvar em Arquivos, Drive, WhatsApp); no PC, o download */
 function entregaArq(f, base, fmt) { Exporta.entrega(f, base, fmt, !SO_PC()).then(r => toast(r.como === 'share' ? 'Arquivo pronto: ' + r.nome : r.como === 'cancelou' ? 'Não foi salvo' : 'Baixado: ' + r.nome)); }
 
+/* ===== telas7.js ===== */
+/* Monitoramento · telas7.js — v0.6.10 · Atividades: os monitoramentos e anotações recentes, por dia, e a tabela dos talhões.
+   Função vista na Cropwise (Protector › Linha do tempo: "Atividades recentes" e "Tabela"); o visual é o do app. Prefixo: AT/at. */
+const AT = { aba: 'rec', busca: '', cult: 'Todas', sit: 'todas', ord: 'ult', inv: false };
+const AT_DIAS = 30;
+/* busca sem acento e sem maiúscula ("acai" acha "Açaí") */
+const semAcento = s => String(s == null ? '' : s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const atBate = (...ts) => { const q = semAcento(AT.busca).trim(); return !q || ts.some(t => semAcento(t).indexOf(q) >= 0); };
+const plantasTxt = n => n + (n === 1 ? ' planta' : ' plantas');
+const haCult = a => virg(a.ha) + ' ha' + (a.cultura ? ' · ' + a.cultura : '');
+/* nome do dia no cabeçalho: Hoje, Ontem, ou "sex, 21/11" */
+function atDiaTxt(d) {
+  const n = Sev.diasDesde(d, hojeStr());
+  return (n === 0 ? 'Hoje' : n === 1 ? 'Ontem' : NS[new Date(d + 'T12:00:00Z').getUTCDay()]) + ', ' + fmtD(d);
+}
+/* as atividades dos últimos 30 dias: um monitoramento por área e por dia (as visitas do mesmo dia juntas, como na tela da área)
+   e cada anotação. A mais recente primeiro. */
+function atividadesRecentes() {
+  const hoje = hojeStr(), lim = addDias(hoje, -(AT_DIAS - 1)), m = {}, l = [];
+  /* revisor 11: talhão encerrado continua nas Recentes (sem abrir a área, que não existe mais no mapa) */
+  const acha = id => area(id) || (D.encerradas || []).find(x => x.id === id) || null;
+  D.visitas.forEach(v => { if (!v.data || v.data < lim || v.data > hoje) return; const a = acha(v.areaId); if (!a) return;
+    const k = v.data + '|' + a.id; (m[k] = m[k] || { tipo: 'mon', data: v.data, a, vs: [] }).vs.push(v); });
+  Object.keys(m).forEach(k => { const x = m[k], j = Sev.juntaDia(x.vs);
+    x.n = (j.pontos || []).length; x.nivel = Sev.nivelArea(j, D.pragas, x.a.metodologia) || 'S';
+    x.hora = x.vs.reduce((h, v) => (String(v.fim || v.inicio || '') > h ? String(v.fim || v.inicio || '') : h), ''); l.push(x); });
+  D.notas.forEach(n => { if (!n.data || n.data < lim || n.data > hoje) return; const t = n.areaId ? D.talhoes.find(x => x.id === n.areaId) : null; l.push({ tipo: 'nota', data: n.data, a: n.areaId ? acha(n.areaId) : null, onde: t ? t.codigo : n.areaId || '', nota: n, hora: '' }); });
+  /* revisor 10: a anotação não tem hora; no mesmo dia, vem depois dos monitoramentos */
+  return l.sort((x, y) => (x.data < y.data ? 1 : x.data > y.data ? -1 : x.hora < y.hora ? 1 : x.hora > y.hora ? -1 : 0));
+}
+function atRecentesHTML() {
+  const l = atividadesRecentes().filter(x => (x.tipo === 'mon' ? atBate(x.a.nome, x.a.cultura) : atBate(x.nota.assunto, x.a && x.a.nome)));
+  if (!l.length) return '<div class="at-vazio">' + (AT.busca ? 'Nada encontrado com essa busca nos últimos ' + AT_DIAS + ' dias.' : 'Nenhum monitoramento nem anotação nos últimos ' + AT_DIAS + ' dias.') + '</div>';
+  let dia = '', h = '';
+  l.forEach(x => {
+    if (x.data !== dia) { dia = x.data; h += '<div class="gr">' + atDiaTxt(dia) + '</div>'; }
+    /* revisor 7: a situação aparece escrita (pílula), não só pela cor; à esquerda, o ícone da atividade */
+    if (x.tipo === 'mon') { const enc = !!x.a.encerrado, tag = enc ? 'div' : 'button';
+      h += '<' + tag + ' class="row"' + (enc ? '' : ' data-act="atAbre" data-v="' + esc(x.a.id) + '" data-d="' + x.data + '"') + '><span class="at-ic" aria-hidden="true">' + ico('pino') + '</span><div class="g"><b>' + esc(x.a.nome) + '</b><small>' + esc(enc ? 'encerrado · ' + plantasTxt(x.n) : haCult(x.a) + ' · ' + plantasTxt(x.n)) + '</small></div><span class="pil ' + x.nivel + '">' + NOMESEV[x.nivel] + '</span></' + tag + '>'; }
+    else h += '<div class="row at-nota"><span class="at-ic" aria-hidden="true">' + ico('nota') + '</span><div class="g"><b>' + esc(x.nota.assunto) + '</b><small>Anotação · ' + esc(x.a ? x.a.nome : x.onde || 'sem área') + '</small></div></div>';
+  });
+  return h;
+}
+/* ---- tabela dos talhões: última atividade, amostras e situação ---- */
+function atLinhas() {
+  return D.areas.map(a => {
+    const ds = DIAS(a), d = ds.length ? diaDe(a, 0) : null, nv = nivelFiltro(a, 'todas');
+    return { a, data: d ? d.data : '', n: d ? d.pontos.length : 0, nivel: nv };
+  });
+}
+const AT_SIT = [['todas', 'Todas'], ['D', 'Dano'], ['C', 'Controle'], ['E', 'Equilíbrio'], ['S', 'Sem situação'], ['V', 'Vencida'], ['X', 'Sem visita']];
+const AT_PESO = { D: 0, C: 1, E: 2, S: 3, V: 4, X: 5, F: 6 };
+function atTabelaHTML() {
+  let l = atLinhas().filter(r => (AT.cult === 'Todas' || r.a.cultura === AT.cult) && (AT.sit === 'todas' || r.nivel === AT.sit) && atBate(r.a.nome, r.a.cultura));
+  const cmpNome = (x, y) => String(x.a.nome).localeCompare(String(y.a.nome), 'pt-BR', { numeric: true });
+  const cmp = { nome: cmpNome, ult: (x, y) => (x.data < y.data ? 1 : x.data > y.data ? -1 : cmpNome(x, y)), amo: (x, y) => y.n - x.n || cmpNome(x, y), sit: (x, y) => AT_PESO[x.nivel] - AT_PESO[y.nivel] || cmpNome(x, y) }[AT.ord];
+  l.sort((x, y) => (AT.inv ? -1 : 1) * cmp(x, y));
+  const ha = l.reduce((s, r) => s + (+r.a.ha || 0), 0);
+  const th = (k, t, cl) => '<th class="' + (cl || '') + '" aria-sort="' + (AT.ord === k ? ((k === 'nome' || k === 'sit') !== AT.inv ? 'ascending' : 'descending') : 'none') + '"><button data-act="atOrd" data-v="' + k + '"' + (AT.ord === k ? ' class="on"' : '') + '>' + t + (AT.ord === k ? ico('desce', 'at-s' + (AT.inv ? ' inv' : '')) : '') + '</button></th>';
+  const tot = '<div class="gr">' + l.length + (l.length === 1 ? ' talhão · ' : ' talhões · ') + virg(ha) + ' ha</div>';
+  if (!D.areas.length) return '<div class="at-vazio">Nenhum talhão com lugar no mapa ainda.</div>'; /* revisor 9 */
+  if (!l.length) return tot + '<div class="at-vazio">Nenhum talhão com esse filtro.</div>';
+  return tot + '<table class="at-t"><thead><tr>' + th('nome', 'Talhão') + th('ult', 'Última') + th('amo', 'Plantas', 'n') + th('sit', 'Situação') + '</tr></thead><tbody>' + l.map(r => {
+    const dd = r.data ? Sev.diasDesde(r.data, hojeStr()) : null;
+    return '<tr data-act="atAbre" data-v="' + esc(r.a.id) + '"' + (r.data ? ' data-d="' + r.data + '"' : '') + '><td><button class="at-nm" data-act="atAbre" data-v="' + esc(r.a.id) + '"' + (r.data ? ' data-d="' + r.data + '"' : '') + '><b>' + esc(r.a.nome) + '</b><small>' + esc(haCult(r.a)) + '</small></button></td>' +
+      '<td>' + (r.data ? '<b>' + fmtD(r.data) + '</b><small>' + (dd < 0 ? 'data à frente' : dd === 0 ? 'hoje' : dd === 1 ? 'ontem' : 'há ' + dd + ' d') + '</small>' : '<small>sem visita</small>') + '</td><td class="n">' + (r.data ? r.n : '—') + '</td><td><span class="pil ' + r.nivel + '">' + NOMESEV[r.nivel] + '</span></td></tr>';
+  }).join('') + '</tbody></table>';
+}
+function atFiltrosHTML() {
+  if (AT.aba !== 'tab') return '';
+  const culturas = [...new Set(D.areas.map(a => a.cultura))].filter(Boolean).sort();
+  if (AT.cult !== 'Todas' && culturas.indexOf(AT.cult) < 0) AT.cult = 'Todas';
+  return '<div class="at-fl">' + ddHTML('atCult', 'Cultura', [['Todas', 'Todas']].concat(culturas.map(c => [c, c])), AT.cult) + ddHTML('atSit', 'Situação', AT_SIT, AT.sit) + '</div>';
+}
+T.ativ = () => '<div class="tela" data-s="ativ">' + topo('Atividades', 'Monitoramentos dos últimos ' + AT_DIAS + ' dias e talhões') +
+  '<div class="at-bar"><div class="seg2 at-seg" role="group" aria-label="Ver como"><button data-act="atAba" data-v="rec">Recentes</button><button data-act="atAba" data-v="tab">Tabela</button></div>' +
+  '<label class="at-q">' + ico('lupa') + '<input class="inp" id="at-q" type="search" placeholder="Buscar" aria-label="Buscar talhão ou anotação" autocomplete="off"></label></div><div id="at-f"></div><div class="lista" id="at-l"></div></div>';
+function atLista(anima) {
+  const l = $('#at-l'), f = $('#at-f'); if (!l) return;
+  $$('.at-seg button').forEach(b => { const on = b.dataset.v === AT.aba; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); });
+  /* revisor 4: os filtros só são refeitos quando mudam (comparando com o último texto gerado); assim um filtro aberto não fecha quando chegam dados */
+  if (f) { const fh = atFiltrosHTML(); if (AT._fh !== fh) { const tinha = !!AT._fh; AT._fh = fh; fecharDDs(); f.innerHTML = fh; if (fh && !tinha && anima) entra(f); } }
+  /* revisor 6: ordenar, filtrar, buscar e trocar de aba fazem a lista entrar em 150 ms (opacidade); dado novo chegando troca sem piscar */
+  const novo = AT.aba === 'tab' ? atTabelaHTML() : atRecentesHTML(); if (l.innerHTML === novo) return; l.innerHTML = novo; if (anima) entra(l);
+}
+/* troca de aba: a lista entra suave (opacidade, 150 ms) e volta ao topo */
+function atAba(v) { if (v === AT.aba) return; AT.aba = v; const l = $('#at-l'); if (l) l.scrollTop = 0; atLista(true); }
+function atOrdena(k) { if (AT.ord === k) AT.inv = !AT.inv; else { AT.ord = k; AT.inv = false; } atLista(true); }
+const refAtiv = () => atLista();
+I.ativ = n => {
+  const q = $('#at-q'); q.value = AT.busca; let t;
+  q.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => { AT.busca = q.value; atLista(true); }, 150); });
+  AT._fh = null; atLista();
+};
+
 /* ===== copia.js ===== */
 /* Monitoramento · copia.js — cópia de segurança do que ainda não foi para a nuvem (v0.6.4, 23/11/2026). Prefixo: Copia.
    A cópia é um arquivo .json que vai para a pasta Downloads do celular (fora do navegador): se alguém limpar os dados do
@@ -3688,6 +3858,7 @@ function setDD(id, v) {
   else if (id === 'indA') { S.indA = v; desenhaArea(); if (typeof S.pt === 'number') abrirPonto(S.pt); }
   else if (id === 'calor') { S.o.calor = v; desenhaArea(); }
   else if (id === 'viz') { S.viz = v; const a = S.A, dia = diaSel(); if (S.pt === 'res') abrirResumoArea(); else if (S.pt && dia) { const q = dia.pontos.find(x => x.i === S.pt); if (q) $('#ptb').innerHTML = indTab(q.v || {}, a); } }
+  else if (id === 'atCult') { AT.cult = v; atLista(true); } else if (id === 'atSit') { AT.sit = v; atLista(true); } /* v0.6.10 */
   else if (id === 'modo') mudaModoTF(v);
   else if (id === 'estcat') { fazLeDados(); const eraPadrao = !TF.nome || TF.nome === estTipo(TF.cat)[1]; TF.cat = v; if (!TF.cant.length && !TF.eid) estTrocaForma(estTipo(v)[2]); if (eraPadrao) TF.nome = ''; tPasso(); } /* v0.6.7 revisor 3: com lugar marcado, o tipo não troca a forma sozinho */
   else if (id === 'estforma') { fazLeDados(); estTrocaForma(v); tPasso(); }
@@ -3754,6 +3925,10 @@ document.addEventListener('click', e => {
   if (a === 'baixaFmt') { baixaFmt(v); return; }
   if (a === 'talBaixa') { const t = D.talhoes.find(x => x.id === v); if (t) baixarAbre('tal:' + v, 'Baixar o contorno de ' + (t.codigo || 'talhão')); return; }
   if (a === 'fzBaixa') { const e = fazItem(v); if (e) baixarAbre('est:' + v, v === 'fazenda' ? 'Baixar o contorno da fazenda' : 'Baixar: ' + (e.nome || estTipo(e.cat)[1]), true); return; }
+  /* v0.6.10 · Atividades: aba, ordem da tabela, abrir a área no dia */
+  if (a === 'atAba') { atAba(v); return; }
+  if (a === 'atOrd') { atOrdena(v); return; }
+  if (a === 'atAbre') { $('#gsh').classList.remove('open'); layers.length = 0; S.stack.push({ t: 'area', p: { id: v, dia: t.dataset.d || null } }); mostrar(1); return; }
   if (a === 'fdia') { escolheDia(+v); return; } /* revisor 1: 'dia' é da Semana */
   if (a === 'swp') { S.oculto = S.oculto || {}; S.oculto[v] = !S.oculto[v]; t.classList.toggle('on', !S.oculto[v]); fechaShArea(); S.pt = null; desenhaArea(); return; }
   if (a === 'fotoG') { const dia = diaSel(), p = dia && dia.pontos.find(q => q.i === +v); if (!p) return; const pOrd = p.ordem != null ? p.ordem : p.i, x = indSelA(S.A), val = valPt(p, x.ind); $('#fg').innerHTML = (p.fotos && p.fotos.length ? '<img src="' + p.fotos[0] + '" alt="" style="max-width:min(92%,640px);max-height:70%;border-radius:10px">' : fotoSVG(val, +v + S.A.id.length)) + '<div style="font-weight:600">' + esc(S.A.nome) + ' · ponto ' + pOrd + ' · ' + esc(x.ind.nome) + ': ' + val + '</div>' + (p.fotos && p.fotos.length ? '' : '<div style="font-size:12.5px;opacity:.75">Imagem ilustrativa da demonstração</div>') + '<button class="btn" style="margin-top:6px" data-act="fgfecha">Fechar</button>'; $('#fg').classList.add('on'); const f = () => $('#fg').classList.remove('on'); layers.push(f); return; }
@@ -3831,6 +4006,7 @@ function refTela(n) {
   if (cur.t === 'tals') { refTals(); return; }
   if (cur.t === 'faz') { refFaz(); return; }
   if (cur.t === 'talDet' && n === 'talhoes') { const old = $('.tela[data-s=talDet]'); if (!old) return; if (S.mapa) { try { S.mapa.destroy(); } catch (e) {} S.mapa = null; } const el = document.createElement('div'); el.innerHTML = T.talDet(cur.p || {}); const nn = el.firstElementChild; nn.style.animation = 'none'; old.replaceWith(nn); I.talDet(nn, cur.p || {}); return; }
+  if (cur.t === 'ativ') { refAtiv(); return; } /* v0.6.10 */
   if (cur.t === 'mapa') refGeral(); else if (cur.t === 'pivo' && S.mapa) desenhaPivo(); else if (cur.t === 'area' && S.mapa) refArea();
   else if (cur.t === 'semana') { const sl = $('#sl'); if (sl) sl.innerHTML = semLista(); } else if (cur.t === 'notas') { const nl = $('#nl'); if (nl) nl.innerHTML = notasLista(); } else if (cur.t === 'prg') { const pl = $('#pl'); if (pl) pl.innerHTML = prgLista(); }
 }
